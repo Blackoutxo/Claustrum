@@ -2,6 +2,7 @@ package me.blackout.Sentry.ui;
 
 import me.blackout.Sentry.Main;
 import me.blackout.Sentry.ui.elements.CardRenderer;
+import me.blackout.Sentry.ui.elements.ScrollBar;
 import me.blackout.Sentry.utils.file.FileManager;
 import me.blackout.Sentry.utils.Utils;
 
@@ -40,10 +41,9 @@ public class Panel extends JFrame {
     private static final Color CARD_BORDER = new Color(255, 255, 255);
 
     // Field vars
-    private final JList<Utils.Entry> entryList = new JList<>(listModel);
     private static FileManager file = new FileManager();
 
-    private final CardRenderer cardRenderer = new CardRenderer(TEXT, CARD_BG, CARD_HOVER, CARD_BORDER, entry -> openDetailDialog());
+    private final CardRenderer cardRenderer = new CardRenderer(TEXT, PANEL_BG, CARD_BG, CARD_HOVER, CARD_BORDER, entry -> openDetailDialog());
 
     // Panel
     public Panel() throws IOException, FontFormatException {
@@ -75,25 +75,21 @@ public class Panel extends JFrame {
 
         // Top panel
         JPanel top = new JPanel(new BorderLayout());
+
         top.setOpaque(false);
         top.setBorder(new EmptyBorder(0, 0, 16, 0));
         top.add(search, BorderLayout.CENTER);
         center.add(top, BorderLayout.NORTH);
 
-        // Entry card
-//        entryList.setCellRenderer(new CardRenderer(TEXT, CARD_BG, CARD_HOVER, CARD_BORDER));
-//        entryList.setBackground(PANEL_BG);
-//        entryList.setFixedCellHeight(64);
-//        entryList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-//        entryList.addListSelectionListener(e -> {
-//            if (!e.getValueIsAdjusting() && entryList.getSelectedValue() != null) {
-//                openDetailDialog();
-//            }
-//        });
-
-        // Scroll panel
-        JScrollPane scroll = new JScrollPane(cardRenderer.getContainer());
+        // Entry card & Scroll Panel
+        JScrollPane scroll = new JScrollPane(CardRenderer.listContainer);
+        scroll.setHorizontalScrollBar(new ScrollBar());
         scroll.setBorder(null);
+        scroll.setOpaque(false);
+        scroll.setBackground(PANEL_BG);
+        scroll.getViewport().setOpaque(false);
+        scroll.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+        scroll.getVerticalScrollBar().setUnitIncrement(16);
         center.add(scroll);
 
         // Button
@@ -110,7 +106,7 @@ public class Panel extends JFrame {
         bottomBar.add(addButton);
 
         center.add(bottomBar, BorderLayout.SOUTH);
-        cardRenderer.refresh();
+        cardRenderer.refresh("");
         return center;
     }
 
@@ -261,17 +257,18 @@ public class Panel extends JFrame {
                 if (choice != JOptionPane.OK_OPTION) return;
 
                 // Remove former entry
-                allEntries.remove(option.get());
-                listModel.removeElement(option.get());
+                //allEntries.remove(option.get());
+                CardRenderer.listContainer.remove(cardRenderer.buildCard(option.get()));
             }
 
             try {
-                allEntries.add(new Utils.Entry(strTitle, passKey));
-                listModel.addElement(new Utils.Entry(strTitle, passKey));
+               // allEntries.add(new Utils.Entry(strTitle, passKey));
+                CardRenderer.listContainer.add(cardRenderer.buildCard(new Utils.Entry(strTitle, passKey)));
 
                 file.saveEntries(); // Save file
                 dialog.dispose();
 
+                CardRenderer.selectedEntry = null; // Set as null
             } catch (IOException | GeneralSecurityException ex) {
                 throw new RuntimeException(ex);
             }
@@ -293,7 +290,7 @@ public class Panel extends JFrame {
         JDialog dialog = new JDialog(this, "Detail", true);
         JPanel form = new JPanel(new GridBagLayout());
 
-        Utils.Entry entry = entryList.getSelectedValue();
+        Utils.Entry entry = CardRenderer.selectedEntry;
 
         dialog.setBackground(PANEL_BG);
         form.setBackground(PANEL_BG);
@@ -342,7 +339,10 @@ public class Panel extends JFrame {
         delete.addActionListener(e -> {
             try {
                 deleteEntry(entry);
+                cardRenderer.refresh();
                 dialog.dispose();
+
+                CardRenderer.selectedEntry = null; // Set as null
             } catch (GeneralSecurityException | IOException ex) {
                 throw new RuntimeException(ex);
             }
