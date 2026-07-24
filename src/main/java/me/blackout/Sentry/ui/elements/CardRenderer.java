@@ -26,7 +26,7 @@ public class CardRenderer extends JPanel {
     public static Utils.Entry selectedEntry = null;
     private String currentFilter = "";
 
-    public CardRenderer(Color textColor, Color background, Color hover, Color border, Consumer<Utils.Entry> consumer) {
+    public CardRenderer(Color textColor, Color panelBg, Color background, Color hover, Color border, Consumer<Utils.Entry> consumer) {
         this.background = background;
         this.hover = hover;
         this.textColor = textColor;
@@ -35,8 +35,8 @@ public class CardRenderer extends JPanel {
         this.consumer = consumer;
 
         listContainer.setLayout(new BoxLayout(listContainer, BoxLayout.Y_AXIS));
-        listContainer.setBackground(Color.BLACK);
-        listContainer.setOpaque(false);
+        listContainer.setBackground(panelBg);
+        listContainer.setOpaque(true);
     }
 
     public JPanel getContainer() {
@@ -44,22 +44,26 @@ public class CardRenderer extends JPanel {
     }
 
     // Build card
-    private JPanel buildCard(Utils.Entry entry) {
+    public JPanel buildCard(Utils.Entry entry) {
         boolean isSelected = entry.equals(selectedEntry);
 
         JLabel title = new JLabel(entry.title());
         title.setForeground(textColor);
-        title.setFont(Utils.spaceGrotesk.deriveFont(14f));
+        title.setAlignmentX(CENTER_ALIGNMENT);
+        title.setFont(Utils.spaceGrotesk.deriveFont(Font.BOLD, 16f));
+        title.setBorder(new EmptyBorder(0, 10, 0, 0));
 
         JLabel avatar = new JLabel(entry.title().substring(0, 1).toUpperCase());
+        avatar.setBorder(new EmptyBorder(10, 10, 10, 0));
         avatar.setOpaque(true);
         avatar.setHorizontalAlignment(SwingConstants.CENTER);
         avatar.setForeground(textColor);
         avatar.setBackground(color(entry.title()));
-        avatar.setFont(Utils.spaceGrotesk.deriveFont(Font.BOLD, 15f));
-        avatar.setPreferredSize(new Dimension(70, 0));
+        avatar.setFont(Utils.spaceGrotesk.deriveFont(Font.BOLD, 30f));
+        avatar.setPreferredSize(new Dimension(100, 0));
 
         JLabel favouriteIcon = setFavouriteIcon(entry);
+        favouriteIcon.setBorder(new EmptyBorder(0, 0, 0, 14));
 
         RoundedPanel card = new RoundedPanel(20);
         card.setLayout(new BorderLayout());
@@ -68,7 +72,8 @@ public class CardRenderer extends JPanel {
         card.add(avatar, BorderLayout.WEST);
         card.add(title, BorderLayout.CENTER);
         card.add(favouriteIcon, BorderLayout.EAST);
-        card.setSize(new Dimension(0, 30));
+        card.setPreferredSize(new Dimension(0, 60));
+        card.setMaximumSize(new Dimension(Integer.MAX_VALUE, 60));
 
         card.addMouseListener(new MouseAdapter() {
             @Override
@@ -82,6 +87,7 @@ public class CardRenderer extends JPanel {
         JPanel outer = new JPanel(new BorderLayout());
         outer.setOpaque(false);
         outer.setBorder(new EmptyBorder(10, 0, 10, 0));
+        outer.setMaximumSize(new Dimension(Integer.MAX_VALUE, 80));
         outer.add(card, BorderLayout.CENTER);
 
         return outer;
