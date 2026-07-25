@@ -36,7 +36,7 @@ public class Utils {
 
     // Icon
     public static void setIcon(JFrame frame) throws IOException {
-        URL iconURL = Main.class.getResource("/sentry.png");
+        URL iconURL = Main.class.getResource("/Claustrum.png");
         if (iconURL == null) return;
 
         BufferedImage original = ImageIO.read(iconURL);
