@@ -9,7 +9,7 @@ import java.awt.*;
 import java.io.IOException;
 import java.security.GeneralSecurityException;
 
-public class Sentry {
+public class Claustrum {
     public static String input, masterKey;
     public static byte[] salt;
 
