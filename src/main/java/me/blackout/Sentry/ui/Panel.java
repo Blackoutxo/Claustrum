@@ -83,11 +83,11 @@ public class Panel extends JFrame {
 
         // Entry card & Scroll Panel
         JScrollPane scroll = new JScrollPane(CardRenderer.listContainer);
-        scroll.setHorizontalScrollBar(new ScrollBar());
         scroll.setBorder(null);
         scroll.setOpaque(false);
         scroll.setBackground(PANEL_BG);
         scroll.getViewport().setOpaque(false);
+        scroll.getVerticalScrollBar().setUI(new ScrollBar(PRIMARY, ON_PRIMARY));
         scroll.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
         scroll.getVerticalScrollBar().setUnitIncrement(16);
         center.add(scroll);
