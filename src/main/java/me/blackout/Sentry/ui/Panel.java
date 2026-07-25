@@ -40,6 +40,9 @@ public class Panel extends JFrame {
     private static final Color CARD_HOVER = new Color(48, 46, 54);
     private static final Color CARD_BORDER = new Color(255, 255, 255);
 
+    private static final Color ScrollThumb = PRIMARY;
+    private static final Color ThumbHover = PRIMARY.darker();
+
     // Field vars
     private static FileManager file = new FileManager();
 
@@ -47,7 +50,7 @@ public class Panel extends JFrame {
 
     // Panel
     public Panel() throws IOException, FontFormatException {
-        super("Sentry");
+        super("Claustrum");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(980, 600);
         setMinimumSize(new Dimension(760, 440));
@@ -84,12 +87,15 @@ public class Panel extends JFrame {
         // Entry card & Scroll Panel
         JScrollPane scroll = new JScrollPane(CardRenderer.listContainer);
         scroll.setBorder(null);
+        scroll.getViewport().setBackground(PANEL_BG);
         scroll.setOpaque(false);
-        scroll.setBackground(PANEL_BG);
-        scroll.getViewport().setOpaque(false);
-        scroll.getVerticalScrollBar().setUI(new ScrollBar(PRIMARY, ON_PRIMARY));
+
+        scroll.getVerticalScrollBar().setUI(new ScrollBar(ScrollThumb, ThumbHover));
         scroll.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+
+        scroll.setPreferredSize(new Dimension(12, 0));
         scroll.getVerticalScrollBar().setUnitIncrement(16);
+        scroll.getVerticalScrollBar().setOpaque(false);
         center.add(scroll);
 
         // Button
@@ -120,19 +126,12 @@ public class Panel extends JFrame {
         sideBar.setBorder(new EmptyBorder(24, 0, 0, 0));
 
         // Logo
-        JLabel logoLabel = new JLabel("SENTRY");
+        JLabel logoLabel = new JLabel("CLAUSTRUM");
         logoLabel.setHorizontalAlignment(SwingConstants.CENTER);
-        logoLabel.setBorder(new EmptyBorder(0, 20, 20, 0));
+        logoLabel.setBorder(new EmptyBorder(0,  10,10 , 0));
 
         logoLabel.setForeground(TEXT);
-        logoLabel.setFont(Utils.spaceGrotesk.deriveFont(Font.BOLD, 30f));
-
-        URL iconURL = Main.class.getResource("/sentry_transparent.png");
-        if (iconURL != null) {
-            BufferedImage original = ImageIO.read(iconURL);
-            Image scaled = original.getScaledInstance(48, 48, Image.SCALE_SMOOTH);
-            logoLabel.setIcon(new ImageIcon(scaled));
-        }
+        logoLabel.setFont(Utils.spaceGrotesk.deriveFont(Font.BOLD, 25f));
 
         // Home
         JLabel home = new JLabel("Home");
@@ -160,7 +159,9 @@ public class Panel extends JFrame {
         settings.setFont(Utils.spaceGrotesk.deriveFont(20f));
         settings.setIcon(new ImageIcon(icon("light/settings_light.png")));
 
+        //sideBar.add(header);
         sideBar.add(logoLabel);
+
         sideBar.add(home);
         sideBar.add(favourite);
         sideBar.add(settings);
@@ -257,13 +258,17 @@ public class Panel extends JFrame {
                 if (choice != JOptionPane.OK_OPTION) return;
 
                 // Remove former entry
-                //allEntries.remove(option.get());
-                CardRenderer.listContainer.remove(cardRenderer.buildCard(option.get()));
+                allEntries.remove(option.get());
+
+                CardRenderer.listContainer.remove(cardRenderer.buildCard(option.get())); // Remove from list container
+                cardRenderer.refresh();
             }
 
             try {
-               // allEntries.add(new Utils.Entry(strTitle, passKey));
-                CardRenderer.listContainer.add(cardRenderer.buildCard(new Utils.Entry(strTitle, passKey)));
+                allEntries.add(new Utils.Entry(strTitle, passKey)); // Add to entries
+
+                CardRenderer.listContainer.add(cardRenderer.buildCard(new Utils.Entry(strTitle, passKey))); // Add to list container
+                cardRenderer.refresh();
 
                 file.saveEntries(); // Save file
                 dialog.dispose();
