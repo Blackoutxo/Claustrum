@@ -1,7 +1,6 @@
 package me.blackout.Sentry.utils.file;
 
-import me.blackout.Sentry.Main;
-import me.blackout.Sentry.Sentry;
+import me.blackout.Sentry.Claustrum;
 import me.blackout.Sentry.utils.Utils;
 
 import javax.crypto.*;
@@ -12,8 +11,8 @@ import java.security.*;
 import java.util.*;
 
 public class FileManager {
-    public String DATA_FILE = "Sentry.txt";
-    public String SALT_FILE = "SalTY.txt";
+    public String DATA_FILE = "clstDat.txt";
+    public String SALT_FILE = "clst.txt";
 
     public List<String> favourite = new ArrayList<>();
     public Key key;
@@ -53,7 +52,7 @@ public class FileManager {
      * Load the file
      */
     public void load(String file) throws IOException, GeneralSecurityException {
-        key = Utils.generateKey(Sentry.masterKey);
+        key = Utils.generateKey(Claustrum.masterKey);
         try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
             String line;
             while ((line = reader.readLine()) != null) {
@@ -79,7 +78,7 @@ public class FileManager {
      */
     public void save(String title, String passkey, boolean append) throws GeneralSecurityException, IOException {
         // Set key
-        key = Utils.generateKey(Sentry.masterKey);
+        key = Utils.generateKey(Claustrum.masterKey);
 
         // String into bytes
         String encryptedTitle = encryptField(title, key);
@@ -98,7 +97,7 @@ public class FileManager {
         StringBuilder line = new StringBuilder();
 
         // Set key
-        key = Utils.generateKey(Sentry.masterKey);
+        key = Utils.generateKey(Claustrum.masterKey);
 
         // Normal entries
         for (Utils.Entry entry : Utils.allEntries) {
