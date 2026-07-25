@@ -1,6 +1,7 @@
 package me.blackout.Sentry;
 
 import me.blackout.Sentry.ui.Panel;
+import me.blackout.Sentry.ui.elements.PasswordField;
 import me.blackout.Sentry.utils.Utils;
 import me.blackout.Sentry.utils.file.FileManager;
 
@@ -13,15 +14,34 @@ public class Claustrum {
     public static String input, masterKey;
     public static byte[] salt;
 
+    private Color TEXT = new Color(56, 30, 114);
+    private Color FIELD = new Color(202, 196, 208);
+    private Color BACKGROUND = new Color(28, 27, 31);
+
     public void run() throws IOException, GeneralSecurityException, FontFormatException {
         // Open file manager
         FileManager file = new FileManager();
+
+        // Register font
+        Utils.registerFont();
+
+        // Password field
+        JPasswordField passwordField = new PasswordField(TEXT, FIELD, TEXT);
 
         // Create file
         file.create();
 
         // Input Box
-        input = file.read(file.DATA_FILE).isEmpty() ? JOptionPane.showInputDialog("Set master key") : JOptionPane.showInputDialog("Enter master key");
+        String message = file.read(file.DATA_FILE).isEmpty() ? "Set master key" : "Enter master key";
+
+        int result = JOptionPane.showConfirmDialog(
+                null, passwordField, message,
+                JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE
+        );
+
+        if (result != JOptionPane.OK_OPTION) System.exit(0); // Exit on empty
+
+        input = new String(passwordField.getPassword());
 
         // Generate salt once
         if (file.read(file.SALT_FILE).isEmpty()) {

@@ -2,7 +2,9 @@ package me.blackout.Sentry.ui;
 
 import me.blackout.Sentry.Main;
 import me.blackout.Sentry.ui.elements.CardRenderer;
+import me.blackout.Sentry.ui.elements.PasswordField;
 import me.blackout.Sentry.ui.elements.ScrollBar;
+import me.blackout.Sentry.ui.elements.TextFieldUI;
 import me.blackout.Sentry.utils.file.FileManager;
 import me.blackout.Sentry.utils.Utils;
 
@@ -44,7 +46,7 @@ public class Panel extends JFrame {
     private static final Color ThumbHover = PRIMARY.darker();
 
     // Field vars
-    private static FileManager file = new FileManager();
+    private static final FileManager file = new FileManager();
 
     private final CardRenderer cardRenderer = new CardRenderer(TEXT, PANEL_BG, CARD_BG, CARD_HOVER, CARD_BORDER, entry -> openDetailDialog());
 
@@ -53,7 +55,7 @@ public class Panel extends JFrame {
         super("Claustrum");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(980, 600);
-        setMinimumSize(new Dimension(760, 440));
+        setPreferredSize(new Dimension(760, 440));
 
         Utils.registerFont();
 
@@ -128,10 +130,10 @@ public class Panel extends JFrame {
         // Logo
         JLabel logoLabel = new JLabel("CLAUSTRUM");
         logoLabel.setHorizontalAlignment(SwingConstants.CENTER);
-        logoLabel.setBorder(new EmptyBorder(0,  10,10 , 0));
+        logoLabel.setBorder(new EmptyBorder(0,  20,10 , 0));
 
         logoLabel.setForeground(TEXT);
-        logoLabel.setFont(Utils.spaceGrotesk.deriveFont(Font.BOLD, 25f));
+        logoLabel.setFont(Utils.spaceGrotesk.deriveFont(Font.BOLD, 30f));
 
         // Home
         JLabel home = new JLabel("Home");
@@ -200,7 +202,7 @@ public class Panel extends JFrame {
 
         // Title
         JLabel titleL = new JLabel("TITLE");
-        JTextField title = new TextField("");
+        JTextField title = new TextFieldUI("", FIELD, ON_PRIMARY);
 
         gbc.gridx = 0; gbc.gridy = 0; gbc.weightx = 0; // For title label
         titleL.setFont(Utils.spaceGrotesk.deriveFont(14f));
@@ -212,7 +214,7 @@ public class Panel extends JFrame {
 
         // Passkey
         JLabel passL = new JLabel("PASSWORD");
-        JPasswordField password = new PasswordField();
+        JPasswordField password = new PasswordField(ON_PRIMARY, FIELD, ON_PRIMARY);
 
         gbc.gridx = 0; gbc.gridy = 1; gbc.weightx = 0;
         passL.setFont(Utils.spaceGrotesk.deriveFont(14f));
@@ -307,7 +309,7 @@ public class Panel extends JFrame {
 
         // Title
         JLabel titleL = new JLabel("TITLE");
-        JTextField title = new TextField(entry.title());
+        JTextField title = new TextFieldUI(entry.title(), FIELD, ON_PRIMARY);
 
         gbc.gridx = 0; gbc.gridy = 0; gbc.weightx = 0; // For title label
         titleL.setFont(Utils.spaceGrotesk.deriveFont(14f));
@@ -320,7 +322,7 @@ public class Panel extends JFrame {
 
         // Passkey
         JLabel passL = new JLabel("PASSWORD");
-        JPasswordField password = new PasswordField();
+        JPasswordField password = new PasswordField(ON_PRIMARY, FIELD, ON_PRIMARY);
 
         gbc.gridx = 0; gbc.gridy = 1; gbc.weightx = 0; // For passkey label
         passL.setFont(Utils.spaceGrotesk.deriveFont(14f));
@@ -444,75 +446,5 @@ public class Panel extends JFrame {
 
     public static Color withAlpha(Color c, int a) {
         return new Color(c.getRed(), c.getGreen(), c.getBlue(), a);
-    }
-
-    static class TextField extends JTextField {
-        private final String placeholder;
-
-        public TextField(String placeholder) {
-            this.placeholder = placeholder;
-            setOpaque(false);
-            setBorder(new EmptyBorder(8, 14, 8, 14));
-            setFont(Utils.spaceGrotesk.deriveFont(13f));
-            setForeground(ON_PRIMARY);
-        }
-
-        @Override
-        public void paintComponent(Graphics g) {
-            Graphics2D g2 = (Graphics2D) g.create();
-            g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-
-            // Box
-            g2.setColor(FIELD);
-            g2.fill(new RoundRectangle2D.Float(0, 0, getWidth() - 1, getHeight() - 1, 30, 30));
-
-            // Box border
-            //g2.setColor(CARD_BORDER);
-            //g2.draw(new RoundRectangle2D.Float(0, 0, getWidth() - 2, getHeight() - 2, 12, 12));
-
-            g2.dispose();
-            super.paintComponent(g);
-
-            if (getText().isEmpty() && !isFocusOwner()) {
-                Graphics2D pg = (Graphics2D) g.create();
-                pg.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-
-                //pg.setColor(TEXT);
-                pg.setFont(Utils.spaceGrotesk.deriveFont(13f));
-
-                FontMetrics fm = pg.getFontMetrics();
-                pg.drawString(placeholder, getInsets().left + 10, (getHeight() + fm.getAscent() - fm.getDescent()) / 2);
-                pg.dispose();
-            }
-        }
-    }
-
-    // Password field
-    static class PasswordField extends JPasswordField {
-
-        PasswordField() {
-            setOpaque(false);
-            setBorder(new EmptyBorder(8, 14, 8, 14));
-            setFont(Utils.spaceGrotesk.deriveFont(13f));
-            setForeground(ON_PRIMARY);
-            setCaretColor(ON_PRIMARY);
-        }
-
-        @Override
-        public void paintComponent(Graphics g) {
-            Graphics2D g2 = (Graphics2D) g.create();
-            g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-
-            // Box
-            g2.setColor(FIELD);
-            g2.fill(new RoundRectangle2D.Float(0, 0, getWidth() - 1, getHeight() - 1, 30, 30));
-
-            // Box border
-            //g2.setColor(CARD_BORDER);
-            //g2.draw(new RoundRectangle2D.Float(0, 0, getWidth() - 2, getHeight() - 2, 12, 12));
-
-            g2.dispose();
-            super.paintComponent(g);
-        }
     }
 }
