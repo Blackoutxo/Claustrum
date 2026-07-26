@@ -23,7 +23,6 @@ import java.util.Optional;
 
 public class Utils {
     public static List<Entry> allEntries = new ArrayList<>();
-    public static final DefaultListModel<Utils.Entry> listModel = new DefaultListModel<>();
 
     private static FileManager file = new FileManager();
     public static Font spaceGrotesk;
@@ -48,13 +47,6 @@ public class Utils {
         }
 
         frame.setIconImages(icons);
-    }
-
-    // Set in list model
-    public static void setListModel() {
-        for (Entry entry : allEntries) {
-            listModel.addElement(entry);
-        }
     }
 
     // Find by title
