@@ -5,6 +5,7 @@ import me.blackout.claustrum.ui.elements.CardRenderer;
 import me.blackout.claustrum.ui.elements.PasswordField;
 import me.blackout.claustrum.ui.elements.ScrollBar;
 import me.blackout.claustrum.ui.elements.TextFieldUI;
+import me.blackout.claustrum.ui.panels.SettingsPanel;
 import me.blackout.claustrum.utils.file.FileManager;
 import me.blackout.claustrum.utils.Utils;
 
@@ -20,7 +21,6 @@ import java.security.GeneralSecurityException;
 import java.util.Optional;
 
 import static me.blackout.claustrum.utils.Utils.allEntries;
-import static me.blackout.claustrum.utils.Utils.listModel;
 
 public class Panel extends JFrame {
     // ---------------------------------------------------------------
@@ -29,25 +29,26 @@ public class Panel extends JFrame {
     static final Color PRIMARY = new Color(208, 188, 255);
     static final Color ON_PRIMARY = new Color(56, 30, 114);
 
-    private static final Color BUTTON = PRIMARY;
-    private static final Color BUTTON_TEXT = ON_PRIMARY;
+    public static final Color BUTTON = PRIMARY;
+    public static final Color BUTTON_TEXT = ON_PRIMARY;
 
-    private static final Color TEXT = new Color(230, 225, 229);
-    private static final Color FIELD = new Color(202, 196, 208);
+    public static final Color TEXT = new Color(230, 225, 229);
+    public static final Color FIELD = new Color(202, 196, 208);
+    public static final Color FIELDTEXT = ON_PRIMARY;
 
-    private static final Color PANEL_BG = new Color(28, 27, 31);
-    private static final Color SIDEBAR_BG = new Color(35, 33, 39);
+    public static final Color PANEL_BG = new Color(28, 27, 31);
+    public static final Color SIDEBAR_BG = new Color(35, 33, 39);
 
-    private static final Color CARD_BG = new Color(35, 33, 39);
-    private static final Color CARD_HOVER = new Color(48, 46, 54);
-    private static final Color CARD_BORDER = new Color(255, 255, 255);
+    public static final Color CARD_BG = new Color(35, 33, 39);
+    public static final Color CARD_HOVER = new Color(48, 46, 54);
+    public static final Color CARD_BORDER = new Color(255, 255, 255);
 
-    private static final Color ScrollThumb = PRIMARY;
-    private static final Color ThumbHover = PRIMARY.darker();
+    public static final Color ScrollThumb = PRIMARY;
+    public static final Color ThumbHover = PRIMARY.darker();
 
     // Field vars
     private final CardLayout cardLayout = new CardLayout();
-    private final JPanel panelContainer = new JPanel();
+    private final JPanel panelContainer = new JPanel(cardLayout);
 
     private static final FileManager file = new FileManager();
     private final CardRenderer cardRenderer = new CardRenderer(TEXT, PANEL_BG, CARD_BG, CARD_HOVER, CARD_BORDER, entry -> openDetailDialog());
@@ -64,9 +65,12 @@ public class Panel extends JFrame {
         getContentPane().setBackground(PANEL_BG);
 
         panelContainer.add(mainPanel(), "home");
-        add(sideBar(), BorderLayout.WEST);
+        panelContainer.add(new SettingsPanel().settings(), "settings");
 
-        cardLayout.show(panelContainer, "home");
+        add(sideBar(), BorderLayout.WEST);
+        add(panelContainer, BorderLayout.CENTER);
+
+        cardLayout.show(panelContainer, "settings");
     }
 
     // ---------------------------------------------------------------
@@ -78,7 +82,7 @@ public class Panel extends JFrame {
         center.setBorder(new EmptyBorder(24, 24, 24, 16));
 
         // Search bar
-        TextField search = new TextField("Search for items.....");
+        TextFieldUI search = new TextFieldUI("Search for items.....", FIELD, ON_PRIMARY);
         search.setPreferredSize(new Dimension(0, 38));
         search.setEditable(true);
 
@@ -395,7 +399,6 @@ public class Panel extends JFrame {
 
         if (confirm == JOptionPane.YES_OPTION) {
             allEntries.remove(entry);
-            listModel.removeElement(entry);
             file.saveEntries();
         }
     }
@@ -405,7 +408,6 @@ public class Panel extends JFrame {
     // ---------------------------------------------------------------
 
     static class Button extends JButton {
-        public static int ARC = 12;
         public final Color textColor;
 
         Button(String text, Color textColor) {
