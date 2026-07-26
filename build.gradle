@@ -13,6 +13,6 @@ dependencies {
 
 jar {
     manifest {
-        attributes("Main-Class": "me.blackout.Sentry.Main")
+        attributes("Main-Class": "me.blackout.claustrum.Main")
     }
 }

@@ -8,15 +8,10 @@ import java.awt.*;
 import java.awt.geom.RoundRectangle2D;
 
 public class PasswordField extends JPasswordField {
-    private final Color textColor;
     private final Color background;
-    private final Color caretColor;
 
     public PasswordField(Color textColor, Color background, Color caretColor) {
-        this.textColor = textColor;
         this.background = background;
-        this.caretColor = caretColor;
-
         setOpaque(false);
         setBorder(new EmptyBorder(8, 14, 8, 14));
         setFont(Utils.spaceGrotesk.deriveFont(13f));
