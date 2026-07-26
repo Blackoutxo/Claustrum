@@ -1,4 +1,4 @@
-package me.blackout.Sentry;
+package me.blackout.claustrum;
 
 import java.awt.*;
 import java.io.IOException;

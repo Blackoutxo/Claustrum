@@ -1,25 +1,27 @@
-package me.blackout.Sentry.ui.elements;
+package me.blackout.claustrum.ui.elements;
 
-import me.blackout.Sentry.utils.Utils;
+import me.blackout.claustrum.utils.Utils;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.geom.RoundRectangle2D;
 
-public class TextFieldUI extends JTextField {
-    private final String placeholder;
-
+public class PasswordField extends JPasswordField {
+    private final Color textColor;
     private final Color background;
+    private final Color caretColor;
 
-    public TextFieldUI(String placeholder, Color background, Color textColor) {
-        this.placeholder = placeholder;
+    public PasswordField(Color textColor, Color background, Color caretColor) {
+        this.textColor = textColor;
         this.background = background;
+        this.caretColor = caretColor;
 
         setOpaque(false);
         setBorder(new EmptyBorder(8, 14, 8, 14));
         setFont(Utils.spaceGrotesk.deriveFont(13f));
         setForeground(textColor);
+        setCaretColor(caretColor);
     }
 
     @Override
@@ -37,17 +39,5 @@ public class TextFieldUI extends JTextField {
 
         g2.dispose();
         super.paintComponent(g);
-
-        if (getText().isEmpty() && !isFocusOwner()) {
-            Graphics2D pg = (Graphics2D) g.create();
-            pg.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-
-            //pg.setColor(TEXT);
-            pg.setFont(Utils.spaceGrotesk.deriveFont(13f));
-
-            FontMetrics fm = pg.getFontMetrics();
-            pg.drawString(placeholder, getInsets().left + 10, (getHeight() + fm.getAscent() - fm.getDescent()) / 2);
-            pg.dispose();
-        }
     }
 }

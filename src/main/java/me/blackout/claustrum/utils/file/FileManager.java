@@ -1,7 +1,7 @@
-package me.blackout.Sentry.utils.file;
+package me.blackout.claustrum.utils.file;
 
-import me.blackout.Sentry.Claustrum;
-import me.blackout.Sentry.utils.Utils;
+import me.blackout.claustrum.Claustrum;
+import me.blackout.claustrum.utils.Utils;
 
 import javax.crypto.*;
 import javax.crypto.spec.GCMParameterSpec;

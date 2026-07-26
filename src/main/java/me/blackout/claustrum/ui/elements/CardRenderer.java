@@ -1,8 +1,8 @@
-package me.blackout.Sentry.ui.elements;
+package me.blackout.claustrum.ui.elements;
 
-import me.blackout.Sentry.Main;
-import me.blackout.Sentry.utils.Utils;
-import me.blackout.Sentry.utils.file.FileManager;
+import me.blackout.claustrum.Main;
+import me.blackout.claustrum.utils.Utils;
+import me.blackout.claustrum.utils.file.FileManager;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -10,13 +10,12 @@ import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.net.URL;
 import java.util.function.Consumer;
 
-import static me.blackout.Sentry.utils.Utils.allEntries;
+import static me.blackout.claustrum.utils.Utils.allEntries;
 
 public class CardRenderer extends JPanel {
     public final Color background, hover, textColor, border;

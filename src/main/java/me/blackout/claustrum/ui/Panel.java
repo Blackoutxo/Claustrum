@@ -1,12 +1,12 @@
-package me.blackout.Sentry.ui;
+package me.blackout.claustrum.ui;
 
-import me.blackout.Sentry.Main;
-import me.blackout.Sentry.ui.elements.CardRenderer;
-import me.blackout.Sentry.ui.elements.PasswordField;
-import me.blackout.Sentry.ui.elements.ScrollBar;
-import me.blackout.Sentry.ui.elements.TextFieldUI;
-import me.blackout.Sentry.utils.file.FileManager;
-import me.blackout.Sentry.utils.Utils;
+import me.blackout.claustrum.Main;
+import me.blackout.claustrum.ui.elements.CardRenderer;
+import me.blackout.claustrum.ui.elements.PasswordField;
+import me.blackout.claustrum.ui.elements.ScrollBar;
+import me.blackout.claustrum.ui.elements.TextFieldUI;
+import me.blackout.claustrum.utils.file.FileManager;
+import me.blackout.claustrum.utils.Utils;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -19,8 +19,8 @@ import java.net.URL;
 import java.security.GeneralSecurityException;
 import java.util.Optional;
 
-import static me.blackout.Sentry.utils.Utils.allEntries;
-import static me.blackout.Sentry.utils.Utils.listModel;
+import static me.blackout.claustrum.utils.Utils.allEntries;
+import static me.blackout.claustrum.utils.Utils.listModel;
 
 public class Panel extends JFrame {
     // ---------------------------------------------------------------
@@ -46,8 +46,10 @@ public class Panel extends JFrame {
     private static final Color ThumbHover = PRIMARY.darker();
 
     // Field vars
-    private static final FileManager file = new FileManager();
+    private final CardLayout cardLayout = new CardLayout();
+    private final JPanel panelContainer = new JPanel();
 
+    private static final FileManager file = new FileManager();
     private final CardRenderer cardRenderer = new CardRenderer(TEXT, PANEL_BG, CARD_BG, CARD_HOVER, CARD_BORDER, entry -> openDetailDialog());
 
     // Panel
@@ -61,8 +63,10 @@ public class Panel extends JFrame {
 
         getContentPane().setBackground(PANEL_BG);
 
-        add(sidePanel(), BorderLayout.WEST);
-        add(mainPanel(), BorderLayout.CENTER);
+        panelContainer.add(mainPanel(), "home");
+        add(sideBar(), BorderLayout.WEST);
+
+        cardLayout.show(panelContainer, "home");
     }
 
     // ---------------------------------------------------------------
@@ -118,7 +122,7 @@ public class Panel extends JFrame {
         return center;
     }
 
-    public JPanel sidePanel() throws IOException {
+    public JPanel sideBar() {
         JPanel sideBar = new JPanel(new BorderLayout());
 
         // Set layout

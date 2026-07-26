@@ -1,9 +1,9 @@
-package me.blackout.Sentry;
+package me.blackout.claustrum;
 
-import me.blackout.Sentry.ui.Panel;
-import me.blackout.Sentry.ui.elements.PasswordField;
-import me.blackout.Sentry.utils.Utils;
-import me.blackout.Sentry.utils.file.FileManager;
+import me.blackout.claustrum.ui.Panel;
+import me.blackout.claustrum.ui.elements.PasswordField;
+import me.blackout.claustrum.utils.Utils;
+import me.blackout.claustrum.utils.file.FileManager;
 
 import javax.swing.*;
 import java.awt.*;

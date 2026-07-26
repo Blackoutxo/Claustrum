@@ -1,7 +1,7 @@
-package me.blackout.Sentry.utils;
+package me.blackout.claustrum.utils;
 
-import me.blackout.Sentry.Main;
-import me.blackout.Sentry.utils.file.FileManager;
+import me.blackout.claustrum.Main;
+import me.blackout.claustrum.utils.file.FileManager;
 
 import javax.crypto.*;
 import javax.crypto.spec.PBEKeySpec;

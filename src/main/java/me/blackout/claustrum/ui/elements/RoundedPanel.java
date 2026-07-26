@@ -1,4 +1,4 @@
-package me.blackout.Sentry.ui.elements;
+package me.blackout.claustrum.ui.elements;
 
 import javax.swing.*;
 import java.awt.*;
