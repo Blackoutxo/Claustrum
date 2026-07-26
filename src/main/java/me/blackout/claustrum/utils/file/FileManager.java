@@ -69,8 +69,6 @@ public class FileManager {
                 Utils.allEntries.add(new Utils.Entry(title, password));
             }
         }
-
-        Utils.setListModel();
     }
 
     /**
