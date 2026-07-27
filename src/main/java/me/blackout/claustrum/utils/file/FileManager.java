@@ -26,12 +26,21 @@ public class FileManager {
         File file = new File(DATA_FILE);
         File saltyFile = new File(SALT_FILE);
 
+        createDirectory();
+
         // Check for existing file
         if (file.exists() && saltyFile.exists()) return;
 
         // Create file
         file.createNewFile();
         saltyFile.createNewFile();
+    }
+
+    public void createDirectory() {
+        File file = new File(System.getenv("ProgramFiles") + File.separator + "Claustrum");
+        System.out.println("Made directory");
+        System.out.println(System.getenv("ProgramFiles") + File.separator + "Claustrum");
+        file.mkdir();
     }
 
     /**
