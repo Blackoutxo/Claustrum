@@ -11,7 +11,8 @@ import java.security.*;
 import java.util.*;
 
 public class FileManager {
-    public String DATA_FILE = "clstDat.txt";
+    public String CONFIG_FILE = "cnfgClstrm.txt";
+    public String KEY_FILE = "clstDat.txt";
     public String SALT_FILE = "clst.txt";
 
     public List<String> favourite = new ArrayList<>();
@@ -23,7 +24,7 @@ public class FileManager {
      * Create File
      * */
     public void create() throws IOException{
-        File file = new File(DATA_FILE);
+        File file = new File(KEY_FILE);
         File saltyFile = new File(SALT_FILE);
 
         createDirectory();
