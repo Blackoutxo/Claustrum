@@ -39,8 +39,6 @@ public class FileManager {
 
     public void createDirectory() {
         File file = new File(System.getenv("ProgramFiles") + File.separator + "Claustrum");
-        System.out.println("Made directory");
-        System.out.println(System.getenv("ProgramFiles") + File.separator + "Claustrum");
         file.mkdir();
     }
 
@@ -95,7 +93,7 @@ public class FileManager {
         String line = encryptedTitle + "|" + encryptedPassword;
 
         // Write the input into the save file
-        try (FileWriter writer = new FileWriter(DATA_FILE, append)) { // Made ts to append (I kept overwriting the files as it wasn't append)......Bravo!
+        try (FileWriter writer = new FileWriter(KEY_FILE, append)) { // Made ts to append (I kept overwriting the files as it wasn't append)......Bravo!
             writer.write(line);
             writer.write(System.lineSeparator());
         }
@@ -125,7 +123,7 @@ public class FileManager {
         }
         line.append(encryptField("]", key));
 
-        try (FileWriter writer = new FileWriter(DATA_FILE, false)) {
+        try (FileWriter writer = new FileWriter(KEY_FILE, false)) {
             writer.write(line.toString());
         }
     }
