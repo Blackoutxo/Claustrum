@@ -32,7 +32,7 @@ public class Claustrum {
         file.create();
 
         // Input Box
-        String message = file.read(file.DATA_FILE).isEmpty() ? "Set master key" : "Enter master key";
+        String message = file.read(file.KEY_FILE).isEmpty() ? "Set master key" : "Enter master key";
 
         int result = JOptionPane.showConfirmDialog(
                 null, passwordField, message,
@@ -55,7 +55,7 @@ public class Claustrum {
         masterKey = input;
 
         // Load file
-        file.load(file.DATA_FILE);
+        file.load(file.KEY_FILE);
 
         // Init panel here
         Panel panel = new Panel();
