@@ -7,12 +7,14 @@ import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.geom.RoundRectangle2D;
 
-public class Button extends JButton {
-    public final Color textColor;
+public class RoundedButton extends JButton {
+    public final Color textColor, button, hs;
 
-    public Button(String text, Color textColor) {
+    public RoundedButton(String text, Color textColor, Color button, Color hs) {
         super(text);
         this.textColor = textColor;
+        this.button = button;
+        this.hs = hs;
 
         setForeground(textColor);
         setFont(Utils.spaceGrotesk.deriveFont(Font.BOLD, 13f));
@@ -29,16 +31,16 @@ public class Button extends JButton {
         Graphics2D g2 = (Graphics2D) g.create();
         g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
-        float arc = getHeight(); // radius = height/2 -> full pill/stadium shape
+        float arc = getHeight(); // (radius = height/2) -> full pill/stadium shape
 
-        g2.setColor(BUTTON);
+        g2.setColor(button);
         g2.fill(new RoundRectangle2D.Float(0, 0, getWidth() - 1, getHeight() - 1, arc, arc));
 
         if (getModel().isPressed()) {
-            g2.setColor(withAlpha(ON_PRIMARY, 32));
+            g2.setColor(withAlpha(hs, 32));
             g2.fill(new RoundRectangle2D.Float(0, 0, getWidth() - 1, getHeight() - 1, arc, arc));
         } else if (getModel().isRollover()) {
-            g2.setColor(withAlpha(ON_PRIMARY, 20));
+            g2.setColor(withAlpha(hs, 20));
             g2.fill(new RoundRectangle2D.Float(0, 0, getWidth() - 1, getHeight() - 1, arc, arc));
         }
 
