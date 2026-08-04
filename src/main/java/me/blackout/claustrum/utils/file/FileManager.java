@@ -11,9 +11,13 @@ import java.security.*;
 import java.util.*;
 
 public class FileManager {
-    public String CONFIG_FILE = "cnfgClstrm.txt";
-    public String KEY_FILE = "clstDat.txt";
-    public String SALT_FILE = "clst.txt";
+    public String KEY_PATH = "";
+    public String SALT_PATH = "";
+
+    public String CLAUSTRUM_CONFIG = "C:\\Claustrum\\config.txt";
+
+    public String KEY_FILE = KEY_PATH + "clstDat.txt";
+    public String SALT_FILE =  SALT_PATH + "clst.txt";
 
     public List<String> favourite = new ArrayList<>();
     public Key key;
@@ -26,20 +30,28 @@ public class FileManager {
     public void create() throws IOException{
         File file = new File(KEY_FILE);
         File saltyFile = new File(SALT_FILE);
+        File concifg = new File(CLAUSTRUM_CONFIG);
 
         createDirectory();
+        nullPath();
 
         // Check for existing file
-        if (file.exists() && saltyFile.exists()) return;
+        if (file.exists() && saltyFile.exists() && concifg.exists()) return;
 
         // Create file
+        concifg.createNewFile();
         file.createNewFile();
         saltyFile.createNewFile();
     }
 
+    public void nullPath() {
+        KEY_PATH = KEY_PATH.isEmpty() ? "C:\\Claustrum" + File.separator : KEY_PATH;
+        SALT_PATH = SALT_PATH.isEmpty() ? "C:\\Claustrum" + File.separator : SALT_PATH;
+    }
+
     public void createDirectory() {
-        File file = new File(System.getenv("ProgramFiles") + File.separator + "Claustrum");
-        file.mkdir();
+        File file = new File("C:\\" + File.separator + "Claustrum");
+        if (!file.exists()) file.mkdir();
     }
 
     /**
