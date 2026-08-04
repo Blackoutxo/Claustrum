@@ -16,7 +16,6 @@ public class Claustrum {
 
     private Color TEXT = new Color(56, 30, 114);
     private Color FIELD = new Color(202, 196, 208);
-    private Color BACKGROUND = new Color(28, 27, 31);
 
     public void run() throws IOException, GeneralSecurityException, FontFormatException {
         // Open file manager
