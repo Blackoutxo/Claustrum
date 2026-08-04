@@ -6,14 +6,17 @@ import me.blackout.claustrum.ui.elements.RoundedPanel;
 import me.blackout.claustrum.ui.elements.ScrollBar;
 import me.blackout.claustrum.ui.elements.TextFieldUI;
 import me.blackout.claustrum.utils.Utils;
+import me.blackout.claustrum.utils.file.FileManager;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.plaf.FileChooserUI;
 import java.awt.*;
+import java.util.function.Consumer;
 
 public class SettingsPanel extends JPanel {
     private JTextField bpathfield = new JTextField();
+    private JRadioButton txs = new JRadioButton();
 
     public JPanel settings() {
         JPanel panel = new JPanel(new BorderLayout());
@@ -31,6 +34,14 @@ public class SettingsPanel extends JPanel {
         JPanel settings = new JPanel();
         settings.setLayout(new BoxLayout(settings, BoxLayout.Y_AXIS));
         settings.add(fieldSetting("Backup Location", bpathfield, this::browse));
+
+        settings.add(radioSettingItem("Auto-Backup",
+                new String[]{"Off", "On unlock", "Daily"},
+                selected -> {
+                    System.out.println("Auto-backup mode changed to: " + selected);
+                    //saveAutoBackupMode(selected); // persist the choice, e.g. via the Properties helper from before
+                }));
+
         settings.setOpaque(false);
 
         // Set custom scroll UI
@@ -49,7 +60,7 @@ public class SettingsPanel extends JPanel {
 
     // Settings Item
     private JPanel fieldSetting(String title, JTextField pathField, Runnable onBrowse) {
-        RoundedPanel item = new RoundedPanel(0); // Panel of item
+        RoundedPanel item = new RoundedPanel(0); // Panel
         item.setLayout(new BorderLayout(0, 8));
         item.setBackground(Panel.PANEL_BG);
         item.setBorder(new EmptyBorder(14, 16, 14, 16));
@@ -86,7 +97,46 @@ public class SettingsPanel extends JPanel {
         return outer;
     }
 
+    private JPanel radioSettingItem(String title, String[] options, Consumer<String> onSelectionChanged) {
+        RoundedPanel item = new RoundedPanel(16);
+        item.setLayout(new BorderLayout(0, 8));
+        item.setBackground(Panel.CARD_BG);
+        item.setBorder(new EmptyBorder(14, 16, 14, 16));
+
+        JLabel titleLabel = new JLabel(title);
+        titleLabel.setFont(Utils.spaceGrotesk.deriveFont(Font.BOLD, 14f));
+        titleLabel.setForeground(Panel.TEXT);
+        item.add(titleLabel, BorderLayout.NORTH);
+
+        JPanel optionsRow = new JPanel(new FlowLayout(FlowLayout.LEFT, 16, 0));
+        optionsRow.setOpaque(false);
+
+        ButtonGroup group = new ButtonGroup();
+        for (String option : options) {
+            JRadioButton radio = new JRadioButton(option);
+            radio.setOpaque(false);
+            radio.setForeground(Panel.TEXT);
+            radio.setFont(Utils.spaceGrotesk.deriveFont(13f));
+            radio.addActionListener(e -> onSelectionChanged.accept(option));
+            group.add(radio);
+            optionsRow.add(radio);
+
+            if (option.equals(options[0])) radio.setSelected(true);
+        }
+        item.add(optionsRow, BorderLayout.CENTER);
+
+        JPanel outer = new JPanel(new BorderLayout());
+        outer.setOpaque(false);
+        outer.setBorder(new EmptyBorder(0, 0, 10, 0));
+        outer.add(item, BorderLayout.CENTER);
+        outer.setAlignmentX(Component.LEFT_ALIGNMENT);
+        outer.setMaximumSize(new Dimension(Integer.MAX_VALUE, outer.getPreferredSize().height));
+        return outer;
+    }
+
     private void browse() {
+        FileManager file = new FileManager();
+
         JFileChooser chooser = new JFileChooser();
         chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
         chooser.setDialogTitle("Choose backup location");
