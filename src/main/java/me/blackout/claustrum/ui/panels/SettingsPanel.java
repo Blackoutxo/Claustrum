@@ -144,7 +144,7 @@ public class SettingsPanel extends JPanel {
             String path = chooser.getSelectedFile().getAbsolutePath();
             bpathfield.setText(path);
             System.out.println(bpathfield.getText());
-            try {file.save("back_up_path", bpathfield.getText() + "\\backup.txt", bpathfield.getText() + "\\backup.txt", true);} catch (GeneralSecurityException | IOException e) {throw new RuntimeException(e);}
+            try {file.save("back_up_path", bpathfield.getText() + "/backup.txt", "C:\\Claustrum\\config.txt", true, false);} catch (GeneralSecurityException | IOException e) {throw new RuntimeException(e);}
         }
     }
 }
