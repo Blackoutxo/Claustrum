@@ -26,8 +26,8 @@ public class Panel extends JFrame {
     // ---------------------------------------------------------------
     //                          Color palette
     // ---------------------------------------------------------------
-    static final Color PRIMARY = new Color(208, 188, 255);
-    static final Color ON_PRIMARY = new Color(56, 30, 114);
+    public static final Color PRIMARY = new Color(208, 188, 255);
+    public static final Color ON_PRIMARY = new Color(56, 30, 114);
 
     public static final Color BUTTON = PRIMARY;
     public static final Color BUTTON_TEXT = ON_PRIMARY;

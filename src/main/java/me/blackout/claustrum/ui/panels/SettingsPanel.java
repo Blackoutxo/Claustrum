@@ -1,10 +1,7 @@
 package me.blackout.claustrum.ui.panels;
 
 import me.blackout.claustrum.ui.Panel;
-import me.blackout.claustrum.ui.elements.RoundedButton;
-import me.blackout.claustrum.ui.elements.RoundedPanel;
-import me.blackout.claustrum.ui.elements.ScrollBar;
-import me.blackout.claustrum.ui.elements.TextFieldUI;
+import me.blackout.claustrum.ui.elements.*;
 import me.blackout.claustrum.utils.Utils;
 import me.blackout.claustrum.utils.file.FileManager;
 
@@ -12,6 +9,8 @@ import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.plaf.FileChooserUI;
 import java.awt.*;
+import java.io.IOException;
+import java.security.GeneralSecurityException;
 import java.util.function.Consumer;
 
 public class SettingsPanel extends JPanel {
@@ -33,14 +32,13 @@ public class SettingsPanel extends JPanel {
         // Settings list
         JPanel settings = new JPanel();
         settings.setLayout(new BoxLayout(settings, BoxLayout.Y_AXIS));
-        settings.add(fieldSetting("Backup Location", bpathfield, this::browse));
-
-        settings.add(radioSettingItem("Auto-Backup",
+        settings.add(radioSettingItem("Auto-Backup", // AUTO BACK UP
                 new String[]{"Off", "On unlock", "Daily"},
                 selected -> {
                     System.out.println("Auto-backup mode changed to: " + selected);
-                    //saveAutoBackupMode(selected); // persist the choice, e.g. via the Properties helper from before
-                }));
+                    //saveAutoBackupMode(selected);
+        }));
+        settings.add(fieldSetting("Backup Location", bpathfield, this::browse)); // BACKUP LOCATION
 
         settings.setOpaque(false);
 
@@ -100,7 +98,7 @@ public class SettingsPanel extends JPanel {
     private JPanel radioSettingItem(String title, String[] options, Consumer<String> onSelectionChanged) {
         RoundedPanel item = new RoundedPanel(16);
         item.setLayout(new BorderLayout(0, 8));
-        item.setBackground(Panel.CARD_BG);
+        item.setBackground(Panel.PANEL_BG);
         item.setBorder(new EmptyBorder(14, 16, 14, 16));
 
         JLabel titleLabel = new JLabel(title);
@@ -113,7 +111,7 @@ public class SettingsPanel extends JPanel {
 
         ButtonGroup group = new ButtonGroup();
         for (String option : options) {
-            JRadioButton radio = new JRadioButton(option);
+            JRadioButton radio = new RadioButton(option);
             radio.setOpaque(false);
             radio.setForeground(Panel.TEXT);
             radio.setFont(Utils.spaceGrotesk.deriveFont(13f));
@@ -145,7 +143,8 @@ public class SettingsPanel extends JPanel {
         if (result == JFileChooser.APPROVE_OPTION) {
             String path = chooser.getSelectedFile().getAbsolutePath();
             bpathfield.setText(path);
-            /**TODO: ADD BACKUP PATH SAVE*/
+            System.out.println(bpathfield.getText());
+            try {file.save("back_up_path", bpathfield.getText() + "\\backup.txt", bpathfield.getText() + "\\backup.txt", true);} catch (GeneralSecurityException | IOException e) {throw new RuntimeException(e);}
         }
     }
 }

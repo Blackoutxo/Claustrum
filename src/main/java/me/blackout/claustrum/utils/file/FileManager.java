@@ -11,42 +11,46 @@ import java.security.*;
 import java.util.*;
 
 public class FileManager {
-    public String KEY_PATH = "";
-    public String SALT_PATH = "";
-
-    public String CLAUSTRUM_CONFIG = "C:\\Claustrum\\config.txt";
-
-    public String KEY_FILE = KEY_PATH + "clstDat.txt";
-    public String SALT_FILE =  SALT_PATH + "clst.txt";
-
     public List<String> favourite = new ArrayList<>();
+    public SecureRandom secRandom = new SecureRandom();
     public Key key;
 
-    public SecureRandom secRandom = new SecureRandom();
+    public static String CLAUSTRUM_CONFIG = "C:\\Claustrum\\config.txt";
+    public static String BACKUP_PATH = "";
+    public static String KEY_PATH = "";
+    public static String SALT_PATH = "";
+    public static String KEY_FILE = "clstDat.txt";
+    public static String SALT_FILE = "clst.txt";
 
     /**
      * Create File
      * */
     public void create() throws IOException{
-        File file = new File(KEY_FILE);
-        File saltyFile = new File(SALT_FILE);
-        File concifg = new File(CLAUSTRUM_CONFIG);
-
-        createDirectory();
         nullPath();
 
+        File file = new File(KEY_FILE);
+        File saltyFile = new File(SALT_FILE);
+        File config = new File(CLAUSTRUM_CONFIG);
+
+        createDirectory();
+
         // Check for existing file
-        if (file.exists() && saltyFile.exists() && concifg.exists()) return;
+        if (file.exists() && saltyFile.exists() && config.exists()) return;
 
         // Create file
-        concifg.createNewFile();
-        file.createNewFile();
-        saltyFile.createNewFile();
+        config.createNewFile(); // Config file
+        file.createNewFile(); // Key file
+        saltyFile.createNewFile(); // Salt file
     }
 
-    public void nullPath() {
+    public static void nullPath() {
         KEY_PATH = KEY_PATH.isEmpty() ? "C:\\Claustrum" + File.separator : KEY_PATH;
         SALT_PATH = SALT_PATH.isEmpty() ? "C:\\Claustrum" + File.separator : SALT_PATH;
+        BACKUP_PATH = BACKUP_PATH.isEmpty() ? "C:\\Claustrum" + File.separator : BACKUP_PATH;
+
+        // Guard against double-prepending if nullPath() ever runs twice
+        if (!KEY_FILE.contains(File.separator)) KEY_FILE = KEY_PATH + KEY_FILE;
+        if (!SALT_FILE.contains(File.separator)) SALT_FILE = SALT_PATH + SALT_FILE;
     }
 
     public void createDirectory() {
@@ -106,6 +110,22 @@ public class FileManager {
 
         // Write the input into the save file
         try (FileWriter writer = new FileWriter(KEY_FILE, append)) { // Made ts to append (I kept overwriting the files as it wasn't append)......Bravo!
+            writer.write(line);
+            writer.write(System.lineSeparator());
+        }
+    }
+
+    public void save(String title, String desc, String path, boolean append) throws GeneralSecurityException, IOException {
+        key = Utils.generateKey(Claustrum.masterKey);
+
+        // String into bytes
+        String encryptedTitle = encryptField(title, key);
+        String encryptedPassword = encryptField(desc, key);
+
+        String line = encryptedTitle + "|" + encryptedPassword;
+
+        // Write the input into the save file
+        try (FileWriter writer = new FileWriter(path, append)) {
             writer.write(line);
             writer.write(System.lineSeparator());
         }
