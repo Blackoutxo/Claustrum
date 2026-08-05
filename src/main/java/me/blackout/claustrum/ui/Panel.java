@@ -13,6 +13,8 @@ import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.awt.geom.RoundRectangle2D;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
@@ -70,7 +72,7 @@ public class Panel extends JFrame {
         add(sideBar(), BorderLayout.WEST);
         add(panelContainer, BorderLayout.CENTER);
 
-        cardLayout.show(panelContainer, "settings");
+        cardLayout.show(panelContainer, "home");
     }
 
     // ---------------------------------------------------------------
@@ -152,6 +154,13 @@ public class Panel extends JFrame {
 
         home.setIcon(new ImageIcon(icon("light/home_light.png")));
 
+        home.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                cardLayout.show(panelContainer, "home");
+            }
+        });
+
         // Favourite
         JLabel favourite = new JLabel("Favourite");
         favourite.setBorder(new EmptyBorder(10, 20, 10, 0));
@@ -168,6 +177,13 @@ public class Panel extends JFrame {
         settings.setForeground(TEXT);
         settings.setFont(Utils.spaceGrotesk.deriveFont(20f));
         settings.setIcon(new ImageIcon(icon("light/settings_light.png")));
+
+        settings.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                cardLayout.show(panelContainer, "settings");
+            }
+        });
 
         //sideBar.add(header);
         sideBar.add(logoLabel);
