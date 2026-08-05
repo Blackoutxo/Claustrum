@@ -23,6 +23,7 @@ import java.util.Optional;
 
 public class Utils {
     public static List<Entry> allEntries = new ArrayList<>();
+    public static List<String> config = new ArrayList<>();
 
     private static FileManager file = new FileManager();
     public static Font spaceGrotesk;
