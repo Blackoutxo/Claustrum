@@ -23,15 +23,25 @@ import java.util.Optional;
 
 public class Utils {
     public static List<Entry> allEntries = new ArrayList<>();
-    public static List<String> config = new ArrayList<>();
+    public static List<Config> config = new ArrayList<>();
 
-    private static FileManager file = new FileManager();
+    private static final FileManager file = new FileManager();
     public static Font spaceGrotesk;
 
     // Register font
     public static void registerFont() throws IOException, FontFormatException {
         InputStream is = Utils.class.getResourceAsStream("/fonts/SpaceGrotesk/static/SpaceGrotesk-Regular.ttf");
         spaceGrotesk = Font.createFont(Font.TRUETYPE_FONT, is);
+    }
+
+    // Save config
+    public static void saveConfig() {
+        for (Config cfg : config) {
+            System.out.println(cfg);
+            try {
+                file.save(cfg.setting, cfg.state, FileManager.CLAUSTRUM_CONFIG, false, false);   } catch (GeneralSecurityException | IOException e) {throw new RuntimeException(e);
+            }
+        }
     }
 
     // Icon
@@ -54,6 +64,12 @@ public class Utils {
     public static Optional<Entry> findByTitle(String title) {
         return allEntries.stream()
                 .filter(entry -> entry.title().equalsIgnoreCase(title))
+                .findFirst();
+    }
+
+    public static Optional<Config> findTitleConfig(String title) {
+        return config.stream()
+                .filter(config -> config.setting().equalsIgnoreCase(title))
                 .findFirst();
     }
 
@@ -81,5 +97,8 @@ public class Utils {
 
     // Record
     public record Entry(String title, String password) {
+    }
+
+    public record Config(String setting, String state) {
     }
 }
