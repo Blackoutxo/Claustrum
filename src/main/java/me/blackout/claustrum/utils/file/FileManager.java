@@ -95,6 +95,10 @@ public class FileManager {
         }
     }
 
+    public void loadConfig() {
+
+    }
+
     /**
      *  Writing  & Saving
      */
@@ -115,14 +119,20 @@ public class FileManager {
         }
     }
 
-    public void save(String title, String desc, String path, boolean append) throws GeneralSecurityException, IOException {
-        key = Utils.generateKey(Claustrum.masterKey);
+    public void save(String title, String state, String path, boolean append, boolean encrypt) throws GeneralSecurityException, IOException {
+        String line = "";
 
-        // String into bytes
-        String encryptedTitle = encryptField(title, key);
-        String encryptedPassword = encryptField(desc, key);
+        if (encrypt) {
+            key = Utils.generateKey(Claustrum.masterKey);
 
-        String line = encryptedTitle + "|" + encryptedPassword;
+            // String into bytes
+            String encryptedTitle = encryptField(title, key);
+            String encryptedPassword = encryptField(state, key);
+
+            line = encryptedTitle + "|" + encryptedPassword;
+        } else {
+            line = title + "|" + state;
+        }
 
         // Write the input into the save file
         try (FileWriter writer = new FileWriter(path, append)) {
