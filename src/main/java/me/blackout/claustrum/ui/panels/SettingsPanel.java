@@ -11,11 +11,12 @@ import javax.swing.plaf.FileChooserUI;
 import java.awt.*;
 import java.io.IOException;
 import java.security.GeneralSecurityException;
+import java.util.Optional;
 import java.util.function.Consumer;
 
 public class SettingsPanel extends JPanel {
-    private JTextField bpathfield = new JTextField();
-    private JRadioButton txs = new JRadioButton();
+    private final JTextField bpathfield = new JTextField();
+    private final JTextField KpathField = new JTextField();
 
     public JPanel settings() {
         JPanel panel = new JPanel(new BorderLayout());
@@ -32,11 +33,11 @@ public class SettingsPanel extends JPanel {
         // Settings list
         JPanel settings = new JPanel();
         settings.setLayout(new BoxLayout(settings, BoxLayout.Y_AXIS));
+        settings.add(fieldSetting("File Path Location", KpathField, this::browse));
         settings.add(radioSettingItem("Auto-Backup", // AUTO BACK UP
                 new String[]{"Off", "On unlock", "Daily"},
                 selected -> {
                     System.out.println("Auto-backup mode changed to: " + selected);
-                    //saveAutoBackupMode(selected);
         }));
         settings.add(fieldSetting("Backup Location", bpathfield, this::browse)); // BACKUP LOCATION
 
@@ -77,7 +78,16 @@ public class SettingsPanel extends JPanel {
 
         // Button
         RoundedButton btn = new RoundedButton("Browse", Panel.BUTTON_TEXT, Panel.BUTTON, Panel.BUTTON_TEXT);
-        btn.addActionListener(e -> onBrowse.run());
+        btn.addActionListener(e -> {
+            onBrowse.run();
+
+            Optional<Utils.Config> option = Utils.findTitleConfig(title);
+
+            if (option.isPresent()) Utils.config.remove(new Utils.Config(title, pathField.getText()));
+
+            Utils.config.add(new Utils.Config(title, pathField.getText()));
+            Utils.saveConfig();
+        });
 
         JPanel row = new JPanel(new BorderLayout(8, 0));
         row.setOpaque(false);
@@ -115,7 +125,16 @@ public class SettingsPanel extends JPanel {
             radio.setOpaque(false);
             radio.setForeground(Panel.TEXT);
             radio.setFont(Utils.spaceGrotesk.deriveFont(13f));
-            radio.addActionListener(e -> onSelectionChanged.accept(option));
+            radio.addActionListener(e -> {
+                onSelectionChanged.accept(option);
+
+                Optional<Utils.Config> titlePresent = Utils.findTitleConfig(title);
+
+                if (titlePresent.isPresent()) Utils.config.remove(new Utils.Config(title, option));
+
+                Utils.config.add(new Utils.Config(title, option));
+                Utils.saveConfig();
+            });
             group.add(radio);
             optionsRow.add(radio);
 
@@ -133,8 +152,6 @@ public class SettingsPanel extends JPanel {
     }
 
     private void browse() {
-        FileManager file = new FileManager();
-
         JFileChooser chooser = new JFileChooser();
         chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
         chooser.setDialogTitle("Choose backup location");
@@ -143,8 +160,7 @@ public class SettingsPanel extends JPanel {
         if (result == JFileChooser.APPROVE_OPTION) {
             String path = chooser.getSelectedFile().getAbsolutePath();
             bpathfield.setText(path);
-            System.out.println(bpathfield.getText());
-            try {file.save("back_up_path", bpathfield.getText() + "/backup.txt", "C:\\Claustrum\\config.txt", true, false);} catch (GeneralSecurityException | IOException e) {throw new RuntimeException(e);}
+            /**TODO: SAVE BACKUP PATH CONFIG TO CONFIG FILE*/
         }
     }
 }
