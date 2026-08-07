@@ -54,7 +54,7 @@ public class Panel extends JFrame {
     private final JPanel panelContainer = new JPanel(cardLayout);
 
     private static final FileManager file = new FileManager();
-    private final CardRenderer cardRenderer = new CardRenderer(TEXT, PANEL_BG, CARD_BG, CARD_HOVER, CARD_BORDER, false, entry -> openDetailDialog());
+    private final CardRenderer cardRenderer = new CardRenderer(TEXT, PANEL_BG, CARD_BG, CARD_HOVER, CARD_BORDER, entry -> openDetailDialog());
 
     // Panel
     public Panel() throws IOException, FontFormatException {
@@ -101,6 +101,7 @@ public class Panel extends JFrame {
         // Entry card & Scroll Panel
         JScrollPane scroll = new JScrollPane(CardRenderer.listContainer);
         scroll.setBorder(null);
+        cardRenderer.refresh();
         scroll.getViewport().setBackground(PANEL_BG);
         scroll.setOpaque(false);
 

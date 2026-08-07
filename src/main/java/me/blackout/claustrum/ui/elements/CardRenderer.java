@@ -126,13 +126,8 @@ public class CardRenderer extends JPanel {
             public void mouseClicked(MouseEvent e) {
                 boolean favourite = !Utils.favourites.contains(entry.title());
 
-                if (favourite) {
-                    Utils.favourites.add(entry.title());
-                    System.out.println("Add to favourite");
-                } else {
-                     Utils.favourites.remove(entry.title());
-                     System.out.println("Remove from favourite");
-                 }
+                if (favourite) Utils.favourites.add(entry.title());
+                  else Utils.favourites.remove(entry.title());
 
                 loadIcon(icon, favourite);
                 try {      file.saveEntries();      } catch (IOException | GeneralSecurityException ex) {throw new RuntimeException(ex);}

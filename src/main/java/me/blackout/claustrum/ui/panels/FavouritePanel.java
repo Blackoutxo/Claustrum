@@ -11,21 +11,13 @@ import java.awt.*;
 import java.util.function.Consumer;
 
 public class FavouritePanel extends JPanel {
-    private CardRenderer cardRenderer;
+    //private final CardRenderer cardRenderer;
 
-    public FavouritePanel(Consumer<Utils.Entry> consume) {
-        setLayout(new BorderLayout());
-        setBackground(me.blackout.claustrum.ui.Panel.PANEL_BG);
+    public FavouritePanel(Consumer<Utils.Entry> onEntrySelected) {
+        /*setLayout(new BorderLayout());
+        setBackground(Panel.PANEL_BG);
         setBorder(new EmptyBorder(24, 24, 24, 24));
 
-        JLabel header = new JLabel("Favourites");
-        header.setHorizontalAlignment(SwingConstants.CENTER);
-        header.setFont(Utils.spaceGrotesk.deriveFont(Font.BOLD, 30f));
-        header.setForeground(me.blackout.claustrum.ui.Panel.TEXT);
-        header.setBorder(new EmptyBorder(0, 0, 20, 0));
-        add(header, BorderLayout.NORTH);
-
-        // Init card renderer
         this.cardRenderer = new CardRenderer(
                 Panel.TEXT,
                 Panel.PANEL_BG,
@@ -33,13 +25,20 @@ public class FavouritePanel extends JPanel {
                 Panel.CARD_HOVER,
                 Panel.CARD_BORDER,
                 true,
-                consume
+                onEntrySelected
         );
 
         this.cardRenderer.refresh();
 
-        // Set custom scroll UI
-        JScrollPane scroll = new JScrollPane(cardRenderer.getContainer());
+        JLabel header = new JLabel("Favourites");
+        header.setHorizontalAlignment(SwingConstants.CENTER);
+        header.setFont(Utils.spaceGrotesk.deriveFont(Font.BOLD, 30f));
+        header.setForeground(Panel.TEXT);
+        header.setBorder(new EmptyBorder(0, 0, 20, 0));
+        add(header, BorderLayout.NORTH);
+
+        // Scroll pane
+        JScrollPane scroll = new JScrollPane(CardRenderer.favouriteListContainer);
         scroll.setBorder(null);
         scroll.getViewport().setBackground(Panel.PANEL_BG);
         scroll.setOpaque(false);
@@ -51,6 +50,6 @@ public class FavouritePanel extends JPanel {
         scroll.getVerticalScrollBar().setUnitIncrement(16);
         scroll.getVerticalScrollBar().setOpaque(false);
 
-        add(scroll, BorderLayout.CENTER);
+        add(scroll, BorderLayout.CENTER);*/
     }
 }
