@@ -13,6 +13,7 @@ import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.net.URL;
+import java.security.GeneralSecurityException;
 import java.util.function.Consumer;
 
 import static me.blackout.claustrum.utils.Utils.allEntries;
@@ -21,6 +22,7 @@ public class CardRenderer extends JPanel {
     public final Color background, hover, textColor, border;
     private final Consumer<Utils.Entry> consumer;
 
+    private final FileManager file = new FileManager();
     public static JPanel listContainer = new JPanel();
     public static Utils.Entry selectedEntry = null;
     private String currentFilter = "";
@@ -114,23 +116,26 @@ public class CardRenderer extends JPanel {
     // Icon
     private JLabel setFavouriteIcon(Utils.Entry entry) {
         JLabel icon = new JLabel();
-        FileManager file = new FileManager();
-
         icon.setCursor(new Cursor(Cursor.HAND_CURSOR));
 
-        boolean isFavourite = file.favourite.contains(entry.title());
+        boolean isFavourite = Utils.favourites.contains(entry.title());
         loadIcon(icon, isFavourite);
 
         icon.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                boolean favourite = !file.favourite.contains(entry.title());
+                boolean favourite = !Utils.favourites.contains(entry.title());
 
-                if (favourite) file.favourite.add(entry.title());
-                 else file.favourite.remove(entry.title());
+                if (favourite) {
+                    Utils.favourites.add(entry.title());
+                    System.out.println("Add to favourite");
+                } else {
+                     Utils.favourites.remove(entry.title());
+                     System.out.println("Remove from favourite");
+                 }
 
                 loadIcon(icon, favourite);
-
+                try {      file.saveEntries();      } catch (IOException | GeneralSecurityException ex) {throw new RuntimeException(ex);}
                 e.consume();
             }
         });
