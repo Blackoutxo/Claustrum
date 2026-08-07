@@ -10,6 +10,7 @@ import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
@@ -36,12 +37,17 @@ public class Utils {
 
     // Save config
     public static void saveConfig() {
+        StringBuilder sb = new StringBuilder();
+
         for (Config cfg : config) {
-            System.out.println(cfg);
-            try {
-                file.save(cfg.setting, cfg.state, FileManager.CLAUSTRUM_CONFIG, false, false);   } catch (GeneralSecurityException | IOException e) {throw new RuntimeException(e);
-            }
+            String encryptedSetting = cfg.setting;
+            String encryptedState = cfg.state;
+            sb.append(encryptedSetting).append("|").append(encryptedState).append(System.lineSeparator());
         }
+
+        try (FileWriter writer = new FileWriter(FileManager.CLAUSTRUM_CONFIG, false)) {
+            writer.write(sb.toString());
+        } catch (IOException ignored) {}
     }
 
     // Icon

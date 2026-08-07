@@ -73,7 +73,7 @@ public class FileManager {
     }
 
     /**
-     * Load the file
+     * Load the Config & File
      */
     public void load(String file) throws IOException, GeneralSecurityException {
         key = Utils.generateKey(Claustrum.masterKey);
@@ -95,8 +95,26 @@ public class FileManager {
         }
     }
 
+    // Config
     public void loadConfig() {
+        try (BufferedReader reader = new BufferedReader(new FileReader(CLAUSTRUM_CONFIG))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                if (line.isBlank()) continue;
 
+                String[] parts = line.split("\\|", 2);
+                if (parts.length != 2) continue; // Skip malformed parts
+
+                // Decrypt title & password
+                String setting = parts[0];
+                String state = parts[1];
+
+                // Add to entry
+                Utils.config.add(new Utils.Config(setting, state));
+            }
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     /**

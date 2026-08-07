@@ -15,10 +15,17 @@ import java.util.Optional;
 import java.util.function.Consumer;
 
 public class SettingsPanel extends JPanel {
-    private final JTextField bpathfield = new JTextField();
-    private final JTextField KpathField = new JTextField();
+    public static final JTextField bpathfield = new JTextField();
+    public static final JTextField KpathField = new JTextField();
+
+    private final FileManager file = new FileManager();
+
+    public static String autoBackupState;
 
     public JPanel settings() {
+        // Load config
+        file.loadConfig();
+
         JPanel panel = new JPanel(new BorderLayout());
         panel.setBackground(Panel.PANEL_BG);
         panel.setBorder(new EmptyBorder(24, 24, 24, 24));
@@ -33,13 +40,14 @@ public class SettingsPanel extends JPanel {
         // Settings list
         JPanel settings = new JPanel();
         settings.setLayout(new BoxLayout(settings, BoxLayout.Y_AXIS));
-        settings.add(fieldSetting("File Path Location", KpathField, this::browse));
+        settings.add(fieldSetting("File Path Location", KpathField, () -> browse(KpathField)));
         settings.add(radioSettingItem("Auto-Backup", // AUTO BACK UP
                 new String[]{"Off", "On unlock", "Daily"},
                 selected -> {
-                    System.out.println("Auto-backup mode changed to: " + selected);
+                        autoBackupState = selected;
+                        System.out.println("Auto-backup mode changed to: " + selected);
         }));
-        settings.add(fieldSetting("Backup Location", bpathfield, this::browse)); // BACKUP LOCATION
+        settings.add(fieldSetting("Backup Location", bpathfield, () -> browse(bpathfield))); // BACKUP LOCATION
 
         settings.setOpaque(false);
 
@@ -59,7 +67,11 @@ public class SettingsPanel extends JPanel {
 
     // Settings Item
     private JPanel fieldSetting(String title, JTextField pathField, Runnable onBrowse) {
-        RoundedPanel item = new RoundedPanel(0); // Panel
+        // Load from config
+        Utils.findTitleConfig(title).ifPresent(cfg -> pathField.setText(cfg.state()));
+
+        // Panel
+        RoundedPanel item = new RoundedPanel(0);
         item.setLayout(new BorderLayout(0, 8));
         item.setBackground(Panel.PANEL_BG);
         item.setBorder(new EmptyBorder(14, 16, 14, 16));
@@ -83,7 +95,7 @@ public class SettingsPanel extends JPanel {
 
             Optional<Utils.Config> option = Utils.findTitleConfig(title);
 
-            if (option.isPresent()) Utils.config.remove(new Utils.Config(title, pathField.getText()));
+            option.ifPresent(Utils.config::remove);
 
             Utils.config.add(new Utils.Config(title, pathField.getText()));
             Utils.saveConfig();
@@ -106,6 +118,11 @@ public class SettingsPanel extends JPanel {
     }
 
     private JPanel radioSettingItem(String title, String[] options, Consumer<String> onSelectionChanged) {
+        // Load from config
+        String savedValue = Utils.findTitleConfig(title)
+                .map(Utils.Config::state)
+                .orElse(options[0]);
+
         RoundedPanel item = new RoundedPanel(16);
         item.setLayout(new BorderLayout(0, 8));
         item.setBackground(Panel.PANEL_BG);
@@ -125,20 +142,20 @@ public class SettingsPanel extends JPanel {
             radio.setOpaque(false);
             radio.setForeground(Panel.TEXT);
             radio.setFont(Utils.spaceGrotesk.deriveFont(13f));
+            if (option.equalsIgnoreCase(savedValue)) radio.setSelected(true);
+
             radio.addActionListener(e -> {
                 onSelectionChanged.accept(option);
 
                 Optional<Utils.Config> titlePresent = Utils.findTitleConfig(title);
-
-                if (titlePresent.isPresent()) Utils.config.remove(new Utils.Config(title, option));
+                titlePresent.ifPresent(Utils.config::remove);
 
                 Utils.config.add(new Utils.Config(title, option));
                 Utils.saveConfig();
             });
+
             group.add(radio);
             optionsRow.add(radio);
-
-            if (option.equals(options[0])) radio.setSelected(true);
         }
         item.add(optionsRow, BorderLayout.CENTER);
 
@@ -151,7 +168,7 @@ public class SettingsPanel extends JPanel {
         return outer;
     }
 
-    private void browse() {
+    private void browse(JTextField text) {
         JFileChooser chooser = new JFileChooser();
         chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
         chooser.setDialogTitle("Choose backup location");
@@ -159,8 +176,7 @@ public class SettingsPanel extends JPanel {
         int result = chooser.showOpenDialog(this);
         if (result == JFileChooser.APPROVE_OPTION) {
             String path = chooser.getSelectedFile().getAbsolutePath();
-            bpathfield.setText(path);
-            /**TODO: SAVE BACKUP PATH CONFIG TO CONFIG FILE*/
+            text.setText(path);
         }
     }
 }
