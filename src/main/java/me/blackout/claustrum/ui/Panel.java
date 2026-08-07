@@ -185,7 +185,6 @@ public class Panel extends JFrame {
             }
         });
 
-        //sideBar.add(header);
         sideBar.add(logoLabel);
 
         sideBar.add(home);
