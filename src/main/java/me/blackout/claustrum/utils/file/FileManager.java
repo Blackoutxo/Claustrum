@@ -99,18 +99,30 @@ public class FileManager {
         key = Utils.generateKey(Claustrum.masterKey);
         try (BufferedReader reader = new BufferedReader(new FileReader(KEY_FILE))) {
             String line;
+            boolean inFavourites = false;
             while ((line = reader.readLine()) != null) {
                 if (line.isBlank()) continue;
 
                 String[] parts = line.split("\\|", 2);
                 if (parts.length == 2) continue; // Skip malformed parts
 
-                // Decrypt title & password
-                String decrypted = decryptField(line, key);
+                // Decrypt line
+                String decrypted = decryptField(line, key).trim();
 
-                System.out.println(decrypted);
-                // Add to entry
+                if (decrypted.startsWith("Favourite:[")) {
+                    inFavourites = !decrypted.contains("]");
+                    continue;
+                }
 
+                if (inFavourites) {
+                    if (decrypted.startsWith("]")) {
+                        inFavourites = false;
+                        continue;
+                    }
+
+                    // Add favourite
+                    Utils.favourites.add(decrypted);
+                }
             }
         }
     }
@@ -174,6 +186,7 @@ public class FileManager {
 
         // Favourite entries
         line.append(encryptField("Favourite:[", key));
+        line.append(System.lineSeparator());
         for (String favourite : Utils.favourites) {
             String encryptedTitle = encryptField(favourite, key);
             line.append(encryptedTitle).append(System.lineSeparator());
