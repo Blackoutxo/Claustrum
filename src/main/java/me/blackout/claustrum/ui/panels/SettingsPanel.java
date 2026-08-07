@@ -24,7 +24,7 @@ public class SettingsPanel extends JPanel {
 
     public JPanel settings() {
         // Load config
-        file.loadConfig();
+        Utils.loadConfig();
 
         JPanel panel = new JPanel(new BorderLayout());
         panel.setBackground(Panel.PANEL_BG);
