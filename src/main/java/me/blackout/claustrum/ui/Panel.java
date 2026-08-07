@@ -5,6 +5,7 @@ import me.blackout.claustrum.ui.elements.CardRenderer;
 import me.blackout.claustrum.ui.elements.PasswordField;
 import me.blackout.claustrum.ui.elements.ScrollBar;
 import me.blackout.claustrum.ui.elements.TextFieldUI;
+import me.blackout.claustrum.ui.panels.FavouritePanel;
 import me.blackout.claustrum.ui.panels.SettingsPanel;
 import me.blackout.claustrum.utils.file.FileManager;
 import me.blackout.claustrum.utils.Utils;
@@ -53,7 +54,7 @@ public class Panel extends JFrame {
     private final JPanel panelContainer = new JPanel(cardLayout);
 
     private static final FileManager file = new FileManager();
-    private final CardRenderer cardRenderer = new CardRenderer(TEXT, PANEL_BG, CARD_BG, CARD_HOVER, CARD_BORDER, entry -> openDetailDialog());
+    private final CardRenderer cardRenderer = new CardRenderer(TEXT, PANEL_BG, CARD_BG, CARD_HOVER, CARD_BORDER, false, entry -> openDetailDialog());
 
     // Panel
     public Panel() throws IOException, FontFormatException {
@@ -67,6 +68,7 @@ public class Panel extends JFrame {
         getContentPane().setBackground(PANEL_BG);
 
         panelContainer.add(mainPanel(), "home");
+        panelContainer.add(new FavouritePanel(entry -> openDetailDialog()), "favourite");
         panelContainer.add(new SettingsPanel().settings(), "settings");
 
         add(sideBar(), BorderLayout.WEST);
@@ -169,6 +171,13 @@ public class Panel extends JFrame {
         favourite.setFont(Utils.spaceGrotesk.deriveFont(20f));
 
         favourite.setIcon(new ImageIcon(icon("light/favourite_light.png")));
+
+        favourite.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                cardLayout.show(panelContainer, "favourite");
+            }
+        });
 
         // Settings
         JLabel settings = new JLabel("Settings");
