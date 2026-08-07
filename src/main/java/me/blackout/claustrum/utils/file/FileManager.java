@@ -11,7 +11,6 @@ import java.security.*;
 import java.util.*;
 
 public class FileManager {
-    public List<String> favourite = new ArrayList<>();
     public SecureRandom secRandom = new SecureRandom();
     public Key key;
 
@@ -91,29 +90,28 @@ public class FileManager {
 
                 // Add to entry
                 Utils.allEntries.add(new Utils.Entry(title, password));
+                loadFavourite();
             }
         }
     }
 
-    // Config
-    public void loadConfig() {
-        try (BufferedReader reader = new BufferedReader(new FileReader(CLAUSTRUM_CONFIG))) {
+    private void loadFavourite() throws GeneralSecurityException, IOException {
+        key = Utils.generateKey(Claustrum.masterKey);
+        try (BufferedReader reader = new BufferedReader(new FileReader(KEY_FILE))) {
             String line;
             while ((line = reader.readLine()) != null) {
                 if (line.isBlank()) continue;
 
                 String[] parts = line.split("\\|", 2);
-                if (parts.length != 2) continue; // Skip malformed parts
+                if (parts.length == 2) continue; // Skip malformed parts
 
                 // Decrypt title & password
-                String setting = parts[0];
-                String state = parts[1];
+                String decrypted = decryptField(line, key);
 
+                System.out.println(decrypted);
                 // Add to entry
-                Utils.config.add(new Utils.Config(setting, state));
+
             }
-        } catch (IOException e) {
-            throw new RuntimeException(e);
         }
     }
 
@@ -176,9 +174,8 @@ public class FileManager {
 
         // Favourite entries
         line.append(encryptField("Favourite:[", key));
-        for (String title : favourite) {
-            String encryptedTitle = encryptField(title, key);
-
+        for (String favourite : Utils.favourites) {
+            String encryptedTitle = encryptField(favourite, key);
             line.append(encryptedTitle).append(System.lineSeparator());
         }
         line.append(encryptField("]", key));

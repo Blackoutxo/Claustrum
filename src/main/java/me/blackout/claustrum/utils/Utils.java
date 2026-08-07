@@ -10,9 +10,7 @@ import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -24,6 +22,7 @@ import java.util.Optional;
 
 public class Utils {
     public static List<Entry> allEntries = new ArrayList<>();
+    public static List<String> favourites = new ArrayList<>();
     public static List<Config> config = new ArrayList<>();
 
     private static final FileManager file = new FileManager();
@@ -31,8 +30,8 @@ public class Utils {
 
     // Register font
     public static void registerFont() throws IOException, FontFormatException {
-        InputStream is = Utils.class.getResourceAsStream("/fonts/SpaceGrotesk/static/SpaceGrotesk-Regular.ttf");
-        spaceGrotesk = Font.createFont(Font.TRUETYPE_FONT, is);
+        InputStream inputStream = Utils.class.getResourceAsStream("/fonts/SpaceGrotesk/static/SpaceGrotesk-Regular.ttf");
+        spaceGrotesk = Font.createFont(Font.TRUETYPE_FONT, inputStream);
     }
 
     // Save config
@@ -48,6 +47,28 @@ public class Utils {
         try (FileWriter writer = new FileWriter(FileManager.CLAUSTRUM_CONFIG, false)) {
             writer.write(sb.toString());
         } catch (IOException ignored) {}
+    }
+
+    // Config
+    public static void loadConfig() {
+        try (BufferedReader reader = new BufferedReader(new FileReader(FileManager.CLAUSTRUM_CONFIG))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                if (line.isBlank()) continue;
+
+                String[] parts = line.split("\\|", 2);
+                if (parts.length != 2) continue; // Skip malformed parts
+
+                // Decrypt title & password
+                String setting = parts[0];
+                String state = parts[1];
+
+                // Add to entry
+                Utils.config.add(new Utils.Config(setting, state));
+            }
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     // Icon
