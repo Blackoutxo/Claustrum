@@ -59,7 +59,7 @@ public class Panel extends JFrame {
 
     // Panels
     private final SettingsPanel settingsPanel = new SettingsPanel();
-    private final FavouritePanel favouritePanel = new FavouritePanel(favouriteCardRenderer, entry -> openDetailDialog());
+    private final FavouritePanel favouritePanel = new FavouritePanel(favouriteCardRenderer);
 
     // Panel
     public Panel() throws IOException, FontFormatException {
