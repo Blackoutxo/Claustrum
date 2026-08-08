@@ -7,11 +7,9 @@ import me.blackout.claustrum.utils.file.FileManager;
 
 import javax.swing.*;
 import java.awt.*;
-import java.io.File;
 import java.io.IOException;
 import java.security.GeneralSecurityException;
 
-import static me.blackout.claustrum.ui.panels.SettingsPanel.autoBackup;
 
 public class Claustrum {
     public static String input, masterKey;
