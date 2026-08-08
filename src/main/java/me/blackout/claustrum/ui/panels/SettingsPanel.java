@@ -21,6 +21,7 @@ public class SettingsPanel extends JPanel {
     private final FileManager file = new FileManager();
 
     public static String autoBackupState;
+    public static String backupClean;
 
     public SettingsPanel() {
         // Load config
@@ -41,11 +42,15 @@ public class SettingsPanel extends JPanel {
         JPanel settings = new JPanel();
         settings.setLayout(new BoxLayout(settings, BoxLayout.Y_AXIS));
         settings.add(fieldSetting("File Path Location", KpathField, () -> browse(KpathField)));
-        settings.add(radioSettingItem("Auto-Backup", // AUTO BACK UP
+        settings.add(radioSettingItem("Auto Backup", // AUTO BACK UP
                 new String[]{"Off", "On unlock", "Daily"},
                 selected -> {
                         autoBackupState = selected;
-                        System.out.println("Auto-backup mode changed to: " + selected);
+        }));
+        settings.add(radioSettingItem("Backup Cleanup",
+                new String[]{"Off", "On"},
+                selected -> {
+                        backupClean = selected;
         }));
         settings.add(fieldSetting("Backup Location", bpathfield, () -> browse(bpathfield))); // BACKUP LOCATION
 
