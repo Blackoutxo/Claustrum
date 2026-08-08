@@ -2,6 +2,7 @@ package me.blackout.claustrum;
 
 import me.blackout.claustrum.ui.Panel;
 import me.blackout.claustrum.ui.elements.PasswordField;
+import me.blackout.claustrum.ui.panels.SettingsPanel;
 import me.blackout.claustrum.utils.Utils;
 import me.blackout.claustrum.utils.file.FileManager;
 
@@ -56,6 +57,12 @@ public class Claustrum {
 
         // Load file
         file.load(FileManager.KEY_FILE);
+
+        // Load config
+        Utils.loadConfig();
+
+        // Backup On unlock
+        if (SettingsPanel.autoBackUp == 1) file.backup();
 
         // Init panel here
         Panel panel = new Panel();

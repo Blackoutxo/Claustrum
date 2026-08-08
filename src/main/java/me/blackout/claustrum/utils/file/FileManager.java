@@ -15,8 +15,6 @@ import java.time.LocalDate;
 import java.util.*;
 
 public class FileManager {
-    public static LocalDate lastBackUpDate;
-
     public SecureRandom secRandom = new SecureRandom();
     public Key key;
 

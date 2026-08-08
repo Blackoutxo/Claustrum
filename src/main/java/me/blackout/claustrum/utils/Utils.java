@@ -25,7 +25,7 @@ public class Utils {
     public static List<String> favourites = new ArrayList<>();
     public static List<Config> config = new ArrayList<>();
 
-    private static final FileManager file = new FileManager();
+    //private static final FileManager file = new FileManager();
     public static Font spaceGrotesk;
 
     // Register font
@@ -54,7 +54,7 @@ public class Utils {
         try (BufferedReader reader = new BufferedReader(new FileReader(FileManager.CLAUSTRUM_CONFIG))) {
             String line;
             while ((line = reader.readLine()) != null) {
-                if (line.isBlank()) continue;
+                if (line.isBlank() && !Utils.config.isEmpty()) continue;
 
                 String[] parts = line.split("\\|", 2);
                 if (parts.length != 2) continue; // Skip malformed parts
@@ -69,6 +69,10 @@ public class Utils {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public static String getConfigValue(String setting, String defaultValue) {
+        return findTitleConfig(setting).map(Config::state).orElse(defaultValue);
     }
 
     // Icon

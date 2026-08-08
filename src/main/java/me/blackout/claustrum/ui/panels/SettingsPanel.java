@@ -18,15 +18,11 @@ public class SettingsPanel extends JPanel {
     public static final JTextField bpathfield = new JTextField();
     public static final JTextField KpathField = new JTextField();
 
-    private final FileManager file = new FileManager();
-
-    public static String autoBackupState;
-    public static String backupClean;
+    public static int autoBackUp = 0;
+    public static boolean backupClean = false;
+    public static String previousBP = "";
 
     public SettingsPanel() {
-        // Load config
-        Utils.loadConfig();
-
         setLayout(new BorderLayout());
         setBackground(Panel.PANEL_BG);
         setBorder(new EmptyBorder(24, 24, 24, 24));
@@ -45,16 +41,18 @@ public class SettingsPanel extends JPanel {
         settings.add(radioSettingItem("Auto Backup", // AUTO BACK UP
                 new String[]{"Off", "On unlock", "Daily"},
                 selected -> {
-                        autoBackupState = selected;
         }));
         settings.add(radioSettingItem("Backup Cleanup",
                 new String[]{"Off", "On"},
                 selected -> {
-                        backupClean = selected;
         }));
         settings.add(fieldSetting("Backup Location", bpathfield, () -> browse(bpathfield))); // BACKUP LOCATION
-
         settings.setOpaque(false);
+
+        // Impl variables
+        autoBackUp = Utils.getConfigValue("Auto Backup", "Off").equals("Off") ? 0 : Utils.getConfigValue("Auto Backup", "Off").equals("Daily") ? 2 : 1;
+        backupClean = !Utils.getConfigValue("Backup Cleanup", "Off").equals("Off");
+        previousBP = Utils.getConfigValue("Backup Location", "C:\\Claustrum");
 
         // Set custom scroll UI
         JScrollPane scroll = new JScrollPane(settings);
@@ -148,10 +146,7 @@ public class SettingsPanel extends JPanel {
             radio.setOpaque(false);
             radio.setForeground(Panel.TEXT);
             radio.setFont(Utils.spaceGrotesk.deriveFont(13f));
-            if (option.equalsIgnoreCase(savedValue)) {
-                autoBackupState = savedValue;
-                radio.setSelected(true);
-            }
+            if (option.equalsIgnoreCase(savedValue)) radio.setSelected(true);
 
             radio.addActionListener(e -> {
                 onSelectionChanged.accept(option);

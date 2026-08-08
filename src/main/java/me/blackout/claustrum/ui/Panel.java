@@ -57,8 +57,6 @@ public class Panel extends JFrame {
     private final CardRenderer cardRenderer = new CardRenderer(TEXT, PANEL_BG, CARD_BG, CARD_HOVER, CARD_BORDER, entry -> openDetailDialog());
     private final CardRenderer favouriteCardRenderer = new CardRenderer(TEXT, PANEL_BG, CARD_BG, CARD_HOVER, CARD_BORDER, entry -> openDetailDialog());
 
-    // Panels
-    private final SettingsPanel settingsPanel = new SettingsPanel();
     private final FavouritePanel favouritePanel = new FavouritePanel(favouriteCardRenderer);
 
     // Panel
@@ -74,6 +72,8 @@ public class Panel extends JFrame {
 
         panelContainer.add(mainPanel(), "home");
         panelContainer.add(favouritePanel, "favourite");
+        // Panels
+        SettingsPanel settingsPanel = new SettingsPanel();
         panelContainer.add(settingsPanel, "settings");
 
         add(sideBar(), BorderLayout.WEST);
