@@ -11,15 +11,17 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.security.*;
+import java.time.LocalDate;
 import java.util.*;
 
 public class FileManager {
-    public static int autoBackup = SettingsPanel.autoBackupState.equals("Off") ? 0 : (SettingsPanel.autoBackupState.equals("Daily") ? 2 : 1);
+    public static LocalDate lastBackUpDate;
+
     public SecureRandom secRandom = new SecureRandom();
     public Key key;
 
     public static String CLAUSTRUM_CONFIG = "C:\\Claustrum\\config.txt";
-    public static String BACKUP_PATH = SettingsPanel.bpathfield.getText() + "CLSTBackup";
+    public static String BACKUP_PATH = SettingsPanel.bpathfield.getText() + File.separator + "CLSTBackup";
     public static String KEY_PATH = SettingsPanel.KpathField.getText();
     public static String SALT_PATH = SettingsPanel.KpathField.getText();
     public static String KEY_FILE = "ClaustrumKey.txt";
@@ -203,9 +205,14 @@ public class FileManager {
     }
 
     public void backup() throws IOException {
+        File backupDir = new File(BACKUP_PATH);
+        if (!backupDir.exists()) backupDir.mkdir();
+
         Files.copy(Path.of(KEY_FILE), Path.of(BACKUP_PATH + KEY_FILE));
         Files.copy(Path.of(SALT_FILE), Path.of(BACKUP_PATH + SALT_FILE));
         Files.copy(Path.of(CLAUSTRUM_CONFIG), Path.of(BACKUP_PATH + CLAUSTRUM_CONFIG));
+
+        System.out.println(LocalDate.now());
     }
 
     public void write(byte[] input, String file) throws IOException {

@@ -61,10 +61,13 @@ public class SettingsPanel extends JPanel {
         scroll.setBorder(null);
         scroll.getViewport().setBackground(Panel.PANEL_BG);
         scroll.setOpaque(false);
-        scroll.getVerticalScrollBar().setUI(new ScrollBar(Panel.ScrollThumb, Panel.ScrollThumb.darker()));
-        scroll.getVerticalScrollBar().setPreferredSize(new Dimension(12, 0));
-        scroll.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 
+        scroll.getVerticalScrollBar().setUI(new ScrollBar(Panel.ScrollThumb, Panel.ThumbHover));
+        scroll.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+
+        scroll.setPreferredSize(new Dimension(12, 0));
+        scroll.getVerticalScrollBar().setUnitIncrement(16);
+        scroll.getVerticalScrollBar().setOpaque(false);
         add(scroll, BorderLayout.CENTER);
     }
 
@@ -145,7 +148,10 @@ public class SettingsPanel extends JPanel {
             radio.setOpaque(false);
             radio.setForeground(Panel.TEXT);
             radio.setFont(Utils.spaceGrotesk.deriveFont(13f));
-            if (option.equalsIgnoreCase(savedValue)) radio.setSelected(true);
+            if (option.equalsIgnoreCase(savedValue)) {
+                autoBackupState = savedValue;
+                radio.setSelected(true);
+            }
 
             radio.addActionListener(e -> {
                 onSelectionChanged.accept(option);

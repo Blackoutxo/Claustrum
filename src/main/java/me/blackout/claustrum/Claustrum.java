@@ -7,8 +7,11 @@ import me.blackout.claustrum.utils.file.FileManager;
 
 import javax.swing.*;
 import java.awt.*;
+import java.io.File;
 import java.io.IOException;
 import java.security.GeneralSecurityException;
+
+import static me.blackout.claustrum.ui.panels.SettingsPanel.autoBackup;
 
 public class Claustrum {
     public static String input, masterKey;
@@ -55,9 +58,6 @@ public class Claustrum {
 
         // Load file
         file.load(FileManager.KEY_FILE);
-
-        // Backup if its on daily
-        if (FileManager.autoBackup == 1) file.backup();
 
         // Init panel here
         Panel panel = new Panel();

@@ -9,7 +9,6 @@ import me.blackout.claustrum.utils.Utils;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
-import java.util.function.Consumer;
 
 public class FavouritePanel extends JPanel {
     private CardRenderer cardRenderer;
