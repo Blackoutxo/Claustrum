@@ -22,20 +22,20 @@ public class SettingsPanel extends JPanel {
 
     public static String autoBackupState;
 
-    public JPanel settings() {
+    public SettingsPanel() {
         // Load config
         Utils.loadConfig();
 
-        JPanel panel = new JPanel(new BorderLayout());
-        panel.setBackground(Panel.PANEL_BG);
-        panel.setBorder(new EmptyBorder(24, 24, 24, 24));
+        setLayout(new BorderLayout());
+        setBackground(Panel.PANEL_BG);
+        setBorder(new EmptyBorder(24, 24, 24, 24));
 
         JLabel header = new JLabel("Settings");
         header.setHorizontalAlignment(SwingConstants.CENTER);
         header.setFont(Utils.spaceGrotesk.deriveFont(Font.BOLD, 30f));
         header.setForeground(Panel.TEXT);
         header.setBorder(new EmptyBorder(0, 0, 20, 0));
-        panel.add(header, BorderLayout.NORTH);
+        add(header, BorderLayout.NORTH);
 
         // Settings list
         JPanel settings = new JPanel();
@@ -60,9 +60,7 @@ public class SettingsPanel extends JPanel {
         scroll.getVerticalScrollBar().setPreferredSize(new Dimension(12, 0));
         scroll.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 
-        panel.add(scroll, BorderLayout.CENTER);
-
-        return panel;
+        add(scroll, BorderLayout.CENTER);
     }
 
     // Settings Item

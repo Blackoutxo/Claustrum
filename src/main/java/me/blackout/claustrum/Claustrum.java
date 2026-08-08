@@ -14,12 +14,12 @@ public class Claustrum {
     public static String input, masterKey;
     public static byte[] salt;
 
-    private Color TEXT = new Color(56, 30, 114);
-    private Color FIELD = new Color(202, 196, 208);
+    private final FileManager file = new FileManager();
+
+    private final Color TEXT = new Color(56, 30, 114);
+    private final Color FIELD = new Color(202, 196, 208);
 
     public void run() throws IOException, GeneralSecurityException, FontFormatException {
-        // Open file manager
-        FileManager file = new FileManager();
 
         // Register font
         Utils.registerFont();
@@ -31,7 +31,7 @@ public class Claustrum {
         file.create();
 
         // Input Box
-        String message = file.read(file.KEY_FILE).isEmpty() ? "Set master key" : "Enter master key";
+        String message = file.read(FileManager.KEY_FILE).isEmpty() ? "Set master key" : "Enter master key";
 
         int result = JOptionPane.showConfirmDialog(
                 null, passwordField, message,

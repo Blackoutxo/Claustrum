@@ -55,6 +55,11 @@ public class Panel extends JFrame {
 
     private static final FileManager file = new FileManager();
     private final CardRenderer cardRenderer = new CardRenderer(TEXT, PANEL_BG, CARD_BG, CARD_HOVER, CARD_BORDER, entry -> openDetailDialog());
+    private final CardRenderer favouriteCardRenderer = new CardRenderer(TEXT, PANEL_BG, CARD_BG, CARD_HOVER, CARD_BORDER, entry -> openDetailDialog());
+
+    // Panels
+    private final SettingsPanel settingsPanel = new SettingsPanel();
+    private final FavouritePanel favouritePanel = new FavouritePanel(favouriteCardRenderer, entry -> openDetailDialog());
 
     // Panel
     public Panel() throws IOException, FontFormatException {
@@ -68,8 +73,8 @@ public class Panel extends JFrame {
         getContentPane().setBackground(PANEL_BG);
 
         panelContainer.add(mainPanel(), "home");
-        panelContainer.add(new FavouritePanel(entry -> openDetailDialog()), "favourite");
-        panelContainer.add(new SettingsPanel().settings(), "settings");
+        panelContainer.add(favouritePanel, "favourite");
+        panelContainer.add(settingsPanel, "settings");
 
         add(sideBar(), BorderLayout.WEST);
         add(panelContainer, BorderLayout.CENTER);
@@ -127,7 +132,7 @@ public class Panel extends JFrame {
         bottomBar.add(addButton);
 
         center.add(bottomBar, BorderLayout.SOUTH);
-        cardRenderer.refresh("");
+        cardRenderer.refresh("", false);
         return center;
     }
 
@@ -160,6 +165,7 @@ public class Panel extends JFrame {
         home.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
+                cardRenderer.refresh("", false);
                 cardLayout.show(panelContainer, "home");
             }
         });
@@ -176,6 +182,7 @@ public class Panel extends JFrame {
         favourite.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
+                favouriteCardRenderer.refresh();
                 cardLayout.show(panelContainer, "favourite");
             }
         });

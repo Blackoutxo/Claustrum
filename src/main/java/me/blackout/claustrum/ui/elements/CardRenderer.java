@@ -21,6 +21,7 @@ import static me.blackout.claustrum.utils.Utils.allEntries;
 public class CardRenderer extends JPanel {
     public final Color background, hover, textColor, border;
     private final Consumer<Utils.Entry> consumer;
+    private boolean favouritesOnly = false;
 
     private final FileManager file = new FileManager();
     public static JPanel listContainer = new JPanel();
@@ -80,7 +81,7 @@ public class CardRenderer extends JPanel {
             @Override
             public void mouseClicked(MouseEvent e) {
                 selectedEntry = entry;
-                refresh(currentFilter);
+                refresh(currentFilter, favouritesOnly);
                 if (consumer != null) consumer.accept(entry);
             }
         });
@@ -95,14 +96,17 @@ public class CardRenderer extends JPanel {
     }
 
     // Refresh list container
-    public void refresh(String filter) {
+    public void refresh(String filter, boolean favouritesOnly) {
         currentFilter = filter == null ? "" : filter;
+        this.favouritesOnly = favouritesOnly;
         listContainer.removeAll();
 
         String t = currentFilter.trim().toLowerCase();
         for (Utils.Entry entry : allEntries) {
-            if (t.isEmpty() || entry.title().toLowerCase().equals(t))
-                listContainer.add(buildCard(entry));
+            boolean matchesFilter = t.isEmpty() || entry.title().toLowerCase().equals(t);
+            boolean favourite = !favouritesOnly || Utils.favourites.contains(entry.title());
+
+            if (matchesFilter && favourite) listContainer.add(buildCard(entry));
         }
 
         listContainer.revalidate();
@@ -110,7 +114,7 @@ public class CardRenderer extends JPanel {
     }
 
     public void refresh() {
-        refresh(currentFilter);
+        refresh(currentFilter, this.favouritesOnly);
     }
 
     // Icon
