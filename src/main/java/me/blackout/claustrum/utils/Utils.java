@@ -103,7 +103,7 @@ public class Utils {
     // Key generation
     public static Key generateKey(String masterKey) throws GeneralSecurityException, IOException {
         // Read file
-        byte[] salt = Files.readAllBytes(Path.of(file.SALT_FILE));
+        byte[] salt = Files.readAllBytes(Path.of(FileManager.SALT_FILE));
 
         // Set-up key
         SecretKeyFactory factory = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA256");
