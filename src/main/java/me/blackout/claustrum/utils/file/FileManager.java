@@ -1,25 +1,29 @@
 package me.blackout.claustrum.utils.file;
 
 import me.blackout.claustrum.Claustrum;
+import me.blackout.claustrum.ui.panels.SettingsPanel;
 import me.blackout.claustrum.utils.Utils;
 
 import javax.crypto.*;
 import javax.crypto.spec.GCMParameterSpec;
 import java.io.*;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.security.*;
 import java.util.*;
 
 public class FileManager {
+    public static int autoBackup = SettingsPanel.autoBackupState.equals("Off") ? 0 : (SettingsPanel.autoBackupState.equals("Daily") ? 2 : 1);
     public SecureRandom secRandom = new SecureRandom();
     public Key key;
 
     public static String CLAUSTRUM_CONFIG = "C:\\Claustrum\\config.txt";
-    public static String BACKUP_PATH = "";
-    public static String KEY_PATH = "";
-    public static String SALT_PATH = "";
-    public static String KEY_FILE = "clstDat.txt";
-    public static String SALT_FILE = "clst.txt";
+    public static String BACKUP_PATH = SettingsPanel.bpathfield.getText() + "CLSTBackup";
+    public static String KEY_PATH = SettingsPanel.KpathField.getText();
+    public static String SALT_PATH = SettingsPanel.KpathField.getText();
+    public static String KEY_FILE = "ClaustrumKey.txt";
+    public static String SALT_FILE = "ClaustrumSalt.txt";
 
     /**
      * Create File
@@ -45,7 +49,7 @@ public class FileManager {
     public static void nullPath() {
         KEY_PATH = KEY_PATH.isEmpty() ? "C:\\Claustrum" + File.separator : KEY_PATH;
         SALT_PATH = SALT_PATH.isEmpty() ? "C:\\Claustrum" + File.separator : SALT_PATH;
-        BACKUP_PATH = BACKUP_PATH.isEmpty() ? "C:\\Claustrum" + File.separator : BACKUP_PATH;
+        BACKUP_PATH = BACKUP_PATH.isEmpty() ? "C:\\Claustrum\\CLSTBackup" + File.separator : BACKUP_PATH;
 
         // Guard against double-prepending if nullPath() ever runs twice
         if (!KEY_FILE.contains(File.separator)) KEY_FILE = KEY_PATH + KEY_FILE;
@@ -196,6 +200,12 @@ public class FileManager {
         try (FileWriter writer = new FileWriter(KEY_FILE, false)) {
             writer.write(line.toString());
         }
+    }
+
+    public void backup() throws IOException {
+        Files.copy(Path.of(KEY_FILE), Path.of(BACKUP_PATH + KEY_FILE));
+        Files.copy(Path.of(SALT_FILE), Path.of(BACKUP_PATH + SALT_FILE));
+        Files.copy(Path.of(CLAUSTRUM_CONFIG), Path.of(BACKUP_PATH + CLAUSTRUM_CONFIG));
     }
 
     public void write(byte[] input, String file) throws IOException {

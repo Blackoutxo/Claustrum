@@ -43,18 +43,21 @@ public class Claustrum {
         input = new String(passwordField.getPassword());
 
         // Generate salt once
-        if (file.read(file.SALT_FILE).isEmpty()) {
+        if (file.read(FileManager.SALT_FILE).isEmpty()) {
             salt = Utils.generateSalt();
 
             // Save the seasoning
-            file.write(salt, file.SALT_FILE);
+            file.write(salt, FileManager.SALT_FILE);
         }
 
         // Set the master key
         masterKey = input;
 
         // Load file
-        file.load(file.KEY_FILE);
+        file.load(FileManager.KEY_FILE);
+
+        // Backup if its on daily
+        if (FileManager.autoBackup == 1) file.backup();
 
         // Init panel here
         Panel panel = new Panel();
