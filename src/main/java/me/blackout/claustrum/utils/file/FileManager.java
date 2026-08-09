@@ -40,6 +40,7 @@ public class FileManager {
 
         // Check for existing file
         if (file.exists() && saltyFile.exists() && config.exists()) return;
+        Log.writeLogs("Creating missing files");
 
         // Create file
         config.createNewFile(); // Config file
@@ -51,6 +52,8 @@ public class FileManager {
         KEY_PATH = Utils.getConfigValue("File Path Location", "C:\\Claustrum");
         SALT_PATH = Utils.getConfigValue("File Path Location", "C:\\Claustrum");
         BACKUP_PATH = Utils.getConfigValue("Backup Location", "C:\\Claustrum\\CLSTBackup");
+
+        Log.writeLogs("Path check");
 
         // Guard against double-prepending if nullPath() ever runs twice
         if (!KEY_FILE.contains(File.separator)) KEY_FILE = KEY_PATH + File.separator + KEY_FILE;
@@ -66,11 +69,12 @@ public class FileManager {
      * Read file
      */
     public String read(String file) {
+        Log.writeLogs("Reading for " + file + " called");
         try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
             String line = reader.readLine();
             if (line != null) return line;
         } catch (IOException e) {
-            e.printStackTrace();
+            Log.writeLogs("Reader failed, trace " + e);
         }
 
         return "";
@@ -95,6 +99,7 @@ public class FileManager {
 
                 // Add to entry
                 Utils.allEntries.add(new Utils.Entry(title, password));
+                Log.writeLogs("Populating entries");
                 loadFavourite();
             }
         }
@@ -127,6 +132,7 @@ public class FileManager {
 
                     // Add favourite
                     Utils.favourites.add(decrypted);
+                    Log.writeLogs("Populating favourites");
                 }
             }
         }
@@ -147,6 +153,7 @@ public class FileManager {
 
         // Write the input into the save file
         try (FileWriter writer = new FileWriter(KEY_FILE, append)) { // Made ts to append (I kept overwriting the files as it wasn't append)......Bravo!
+
             writer.write(line);
             writer.write(System.lineSeparator());
         }

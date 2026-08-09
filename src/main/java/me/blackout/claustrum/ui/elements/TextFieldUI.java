@@ -31,10 +31,6 @@ public class TextFieldUI extends JTextField {
         g2.setColor(background);
         g2.fill(new RoundRectangle2D.Float(0, 0, getWidth() - 1, getHeight() - 1, 30, 30));
 
-        // Box border
-        //g2.setColor(CARD_BORDER);
-        //g2.draw(new RoundRectangle2D.Float(0, 0, getWidth() - 2, getHeight() - 2, 12, 12));
-
         g2.dispose();
         super.paintComponent(g);
 

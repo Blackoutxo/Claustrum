@@ -1,6 +1,7 @@
 package me.blackout.claustrum.ui.elements;
 
 import me.blackout.claustrum.utils.Utils;
+import me.blackout.claustrum.utils.file.Log;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -37,9 +38,11 @@ public class RoundedButton extends JButton {
         g2.fill(new RoundRectangle2D.Float(0, 0, getWidth() - 1, getHeight() - 1, arc, arc));
 
         if (getModel().isPressed()) {
+            Log.writeLogs(getName() + " pressed");
             g2.setColor(withAlpha(hs, 32));
             g2.fill(new RoundRectangle2D.Float(0, 0, getWidth() - 1, getHeight() - 1, arc, arc));
         } else if (getModel().isRollover()) {
+            Log.writeLogs("Hovering " + getName());
             g2.setColor(withAlpha(hs, 20));
             g2.fill(new RoundRectangle2D.Float(0, 0, getWidth() - 1, getHeight() - 1, arc, arc));
         }

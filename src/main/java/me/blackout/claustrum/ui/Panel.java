@@ -9,6 +9,7 @@ import me.blackout.claustrum.ui.panels.FavouritePanel;
 import me.blackout.claustrum.ui.panels.SettingsPanel;
 import me.blackout.claustrum.utils.file.FileManager;
 import me.blackout.claustrum.utils.Utils;
+import me.blackout.claustrum.utils.file.Log;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -16,6 +17,8 @@ import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.awt.geom.RoundRectangle2D;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
@@ -64,7 +67,7 @@ public class Panel extends JFrame {
     // Panel
     public Panel() throws IOException, FontFormatException {
         super("Claustrum");
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
         setSize(980, 600);
         setMinimumSize(new Dimension(980, 600));
         setPreferredSize(new Dimension(980, 600));
@@ -81,6 +84,15 @@ public class Panel extends JFrame {
         add(panelContainer, BorderLayout.CENTER);
 
         cardLayout.show(panelContainer, "home");
+
+        // Save logs in exit
+        addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+                Log log = new Log();
+                log.saveLogs();
+            }
+        });
     }
 
     // ---------------------------------------------------------------
