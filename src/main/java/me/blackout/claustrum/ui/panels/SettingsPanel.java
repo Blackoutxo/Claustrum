@@ -16,13 +16,11 @@ public class SettingsPanel extends JPanel {
 
     public static int autoBackUp = 0;
     public static boolean backupClean = false;
-    public static int saveLogs = 0;
 
     public static void loadState() {
         autoBackUp = Utils.getConfigValue("Auto Backup", "Off").equals("Off") ? 0
                 : Utils.getConfigValue("Auto Backup", "Off").equals("Daily") ? 2 : 1;
         backupClean = !Utils.getConfigValue("Backup Cleanup", "Off").equals("Off");
-        saveLogs = Utils.getConfigValue("Save Logs", "Off").equals("Off") ? 0 : 1;
     }
 
     public SettingsPanel() {
@@ -40,10 +38,6 @@ public class SettingsPanel extends JPanel {
         // Settings list
         JPanel settings = new JPanel();
         settings.setLayout(new BoxLayout(settings, BoxLayout.Y_AXIS));
-        settings.add(radioSettingItem("Save logs",
-                new String[]{"Off", "On"},
-                selected -> {
-        }));
         settings.add(fieldSetting("File Path Location", KpathField, () -> browse(KpathField)));
         settings.add(radioSettingItem("Auto Backup", // AUTO BACK UP
                 new String[]{"Off", "On unlock", "Daily"},
