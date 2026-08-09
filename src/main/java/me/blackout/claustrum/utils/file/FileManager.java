@@ -19,6 +19,7 @@ public class FileManager {
     public Key key;
 
     public static String CLAUSTRUM_CONFIG = "C:\\Claustrum\\config.txt";
+    public static String CLAUSTRUM_LOG = "C:\\Claustrum\\logs";
     public static String BACKUP_PATH = "";
     public static String KEY_PATH = "";
     public static String SALT_PATH = "";
@@ -54,8 +55,6 @@ public class FileManager {
         // Guard against double-prepending if nullPath() ever runs twice
         if (!KEY_FILE.contains(File.separator)) KEY_FILE = KEY_PATH + File.separator + KEY_FILE;
         if (!SALT_FILE.contains(File.separator)) SALT_FILE = SALT_PATH + File.separator + SALT_FILE;
-
-        System.out.println(KEY_PATH + " " + SALT_PATH);
     }
 
     public void createDirectory() {
@@ -206,7 +205,6 @@ public class FileManager {
 
     public void backup() throws IOException {
         String backupPath = Utils.getConfigValue("Backup Location", "C:\\Claustrum") + File.separator + "CLSTBackup" + File.separator;
-        System.out.println(backupPath);
 
         File backupDir = new File(backupPath);
         if (!backupDir.exists()) backupDir.mkdirs();
@@ -219,8 +217,12 @@ public class FileManager {
         Files.copy(saltSource, Path.of(backupPath, saltSource.getFileName().toString()), StandardCopyOption.REPLACE_EXISTING);
         Files.copy(configSource, Path.of(backupPath, configSource.getFileName().toString()), StandardCopyOption.REPLACE_EXISTING);
 
-        Utils.config.add(new Utils.Config("Last Backup", LocalDate.now().toString()));
-        Utils.saveConfig();
+        Optional<Utils.Config> option = Utils.findTitleConfig("Last Backup");
+        if (option.isPresent()) {
+            Utils.config.remove(option.get());
+            Utils.config.add(new Utils.Config("Last Backup", LocalDate.now().toString()));
+            Utils.saveConfig();
+        }
     }
 
     public void write(byte[] input, String file) throws IOException {
