@@ -10,6 +10,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.io.IOException;
 import java.security.GeneralSecurityException;
+import java.time.LocalDate;
 
 
 public class Claustrum {
@@ -22,6 +23,9 @@ public class Claustrum {
     private final Color FIELD = new Color(202, 196, 208);
 
     public void run() throws IOException, GeneralSecurityException, FontFormatException {
+
+        // Load config
+        Utils.loadConfig();
 
         // Register font
         Utils.registerFont();
@@ -58,8 +62,14 @@ public class Claustrum {
         // Load file
         file.load(FileManager.KEY_FILE);
 
-        // Load config
-        Utils.loadConfig();
+        // Load settings state
+        SettingsPanel.loadState();
+
+        // Backup Daily
+        if (SettingsPanel.autoBackUp == 2) {
+            if (!Utils.getConfigValue("Last Backup", LocalDate.now().toString()).equals(LocalDate.now().toString()))
+                file.backup();
+        }
 
         // Backup On unlock
         if (SettingsPanel.autoBackUp == 1) file.backup();

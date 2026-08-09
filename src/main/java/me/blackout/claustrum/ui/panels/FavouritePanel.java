@@ -3,7 +3,6 @@ package me.blackout.claustrum.ui.panels;
 import me.blackout.claustrum.ui.Panel;
 import me.blackout.claustrum.ui.elements.CardRenderer;
 import me.blackout.claustrum.ui.elements.ScrollBar;
-import me.blackout.claustrum.ui.elements.TextFieldUI;
 import me.blackout.claustrum.utils.Utils;
 
 import javax.swing.*;

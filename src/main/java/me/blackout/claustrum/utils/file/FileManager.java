@@ -1,7 +1,6 @@
 package me.blackout.claustrum.utils.file;
 
 import me.blackout.claustrum.Claustrum;
-import me.blackout.claustrum.ui.panels.SettingsPanel;
 import me.blackout.claustrum.utils.Utils;
 
 import javax.crypto.*;
@@ -10,6 +9,7 @@ import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
 import java.security.*;
 import java.time.LocalDate;
 import java.util.*;
@@ -19,11 +19,11 @@ public class FileManager {
     public Key key;
 
     public static String CLAUSTRUM_CONFIG = "C:\\Claustrum\\config.txt";
-    public static String BACKUP_PATH = SettingsPanel.bpathfield.getText() + File.separator + "CLSTBackup";
-    public static String KEY_PATH = SettingsPanel.KpathField.getText();
-    public static String SALT_PATH = SettingsPanel.KpathField.getText();
-    public static String KEY_FILE = "ClaustrumKey.txt";
-    public static String SALT_FILE = "ClaustrumSalt.txt";
+    public static String BACKUP_PATH = "";
+    public static String KEY_PATH = "";
+    public static String SALT_PATH = "";
+    public static String KEY_FILE = KEY_PATH + "ClaustrumKey.txt";
+    public static String SALT_FILE = SALT_PATH + "ClaustrumSalt.txt";
 
     /**
      * Create File
@@ -47,13 +47,15 @@ public class FileManager {
     }
 
     public static void nullPath() {
-        KEY_PATH = KEY_PATH.isEmpty() ? "C:\\Claustrum" + File.separator : KEY_PATH;
-        SALT_PATH = SALT_PATH.isEmpty() ? "C:\\Claustrum" + File.separator : SALT_PATH;
-        BACKUP_PATH = BACKUP_PATH.isEmpty() ? "C:\\Claustrum\\CLSTBackup" + File.separator : BACKUP_PATH;
+        KEY_PATH = Utils.getConfigValue("File Path Location", "C:\\Claustrum");
+        SALT_PATH = Utils.getConfigValue("File Path Location", "C:\\Claustrum");
+        BACKUP_PATH = Utils.getConfigValue("Backup Location", "C:\\Claustrum\\CLSTBackup");
 
         // Guard against double-prepending if nullPath() ever runs twice
-        if (!KEY_FILE.contains(File.separator)) KEY_FILE = KEY_PATH + KEY_FILE;
-        if (!SALT_FILE.contains(File.separator)) SALT_FILE = SALT_PATH + SALT_FILE;
+        if (!KEY_FILE.contains(File.separator)) KEY_FILE = KEY_PATH + File.separator + KEY_FILE;
+        if (!SALT_FILE.contains(File.separator)) SALT_FILE = SALT_PATH + File.separator + SALT_FILE;
+
+        System.out.println(KEY_PATH + " " + SALT_PATH);
     }
 
     public void createDirectory() {
@@ -203,14 +205,22 @@ public class FileManager {
     }
 
     public void backup() throws IOException {
-        File backupDir = new File(BACKUP_PATH);
-        if (!backupDir.exists()) backupDir.mkdir();
+        String backupPath = Utils.getConfigValue("Backup Location", "C:\\Claustrum") + File.separator + "CLSTBackup" + File.separator;
+        System.out.println(backupPath);
 
-        Files.copy(Path.of(KEY_FILE), Path.of(BACKUP_PATH + KEY_FILE));
-        Files.copy(Path.of(SALT_FILE), Path.of(BACKUP_PATH + SALT_FILE));
-        Files.copy(Path.of(CLAUSTRUM_CONFIG), Path.of(BACKUP_PATH + CLAUSTRUM_CONFIG));
+        File backupDir = new File(backupPath);
+        if (!backupDir.exists()) backupDir.mkdirs();
 
-        System.out.println(LocalDate.now());
+        Path keySource = Path.of(KEY_FILE);
+        Path saltSource = Path.of(SALT_FILE);
+        Path configSource = Path.of(CLAUSTRUM_CONFIG);
+
+        Files.copy(keySource, Path.of(backupPath, keySource.getFileName().toString()), StandardCopyOption.REPLACE_EXISTING);
+        Files.copy(saltSource, Path.of(backupPath, saltSource.getFileName().toString()), StandardCopyOption.REPLACE_EXISTING);
+        Files.copy(configSource, Path.of(backupPath, configSource.getFileName().toString()), StandardCopyOption.REPLACE_EXISTING);
+
+        Utils.config.add(new Utils.Config("Last Backup", LocalDate.now().toString()));
+        Utils.saveConfig();
     }
 
     public void write(byte[] input, String file) throws IOException {

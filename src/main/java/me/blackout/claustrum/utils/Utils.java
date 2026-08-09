@@ -25,7 +25,6 @@ public class Utils {
     public static List<String> favourites = new ArrayList<>();
     public static List<Config> config = new ArrayList<>();
 
-    //private static final FileManager file = new FileManager();
     public static Font spaceGrotesk;
 
     // Register font

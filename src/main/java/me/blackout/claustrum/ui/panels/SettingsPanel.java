@@ -3,14 +3,10 @@ package me.blackout.claustrum.ui.panels;
 import me.blackout.claustrum.ui.Panel;
 import me.blackout.claustrum.ui.elements.*;
 import me.blackout.claustrum.utils.Utils;
-import me.blackout.claustrum.utils.file.FileManager;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
-import javax.swing.plaf.FileChooserUI;
 import java.awt.*;
-import java.io.IOException;
-import java.security.GeneralSecurityException;
 import java.util.Optional;
 import java.util.function.Consumer;
 
@@ -20,7 +16,12 @@ public class SettingsPanel extends JPanel {
 
     public static int autoBackUp = 0;
     public static boolean backupClean = false;
-    public static String previousBP = "";
+
+    public static void loadState() {
+        autoBackUp = Utils.getConfigValue("Auto Backup", "Off").equals("Off") ? 0
+                : Utils.getConfigValue("Auto Backup", "Off").equals("Daily") ? 2 : 1;
+        backupClean = !Utils.getConfigValue("Backup Cleanup", "Off").equals("Off");
+    }
 
     public SettingsPanel() {
         setLayout(new BorderLayout());
@@ -42,17 +43,11 @@ public class SettingsPanel extends JPanel {
                 new String[]{"Off", "On unlock", "Daily"},
                 selected -> {
         }));
-        settings.add(radioSettingItem("Backup Cleanup",
-                new String[]{"Off", "On"},
-                selected -> {
-        }));
         settings.add(fieldSetting("Backup Location", bpathfield, () -> browse(bpathfield))); // BACKUP LOCATION
         settings.setOpaque(false);
 
         // Impl variables
-        autoBackUp = Utils.getConfigValue("Auto Backup", "Off").equals("Off") ? 0 : Utils.getConfigValue("Auto Backup", "Off").equals("Daily") ? 2 : 1;
-        backupClean = !Utils.getConfigValue("Backup Cleanup", "Off").equals("Off");
-        previousBP = Utils.getConfigValue("Backup Location", "C:\\Claustrum");
+        loadState();
 
         // Set custom scroll UI
         JScrollPane scroll = new JScrollPane(settings);
