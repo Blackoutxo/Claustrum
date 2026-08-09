@@ -19,7 +19,6 @@ public class FileManager {
     public Key key;
 
     public static String CLAUSTRUM_CONFIG = "C:\\Claustrum\\config.txt";
-    public static String CLAUSTRUM_LOG = "C:\\Claustrum\\logs";
     public static String BACKUP_PATH = "";
     public static String KEY_PATH = "";
     public static String SALT_PATH = "";
@@ -40,7 +39,6 @@ public class FileManager {
 
         // Check for existing file
         if (file.exists() && saltyFile.exists() && config.exists()) return;
-        Log.writeLogs("Creating missing files");
 
         // Create file
         config.createNewFile(); // Config file
@@ -52,8 +50,6 @@ public class FileManager {
         KEY_PATH = Utils.getConfigValue("File Path Location", "C:\\Claustrum");
         SALT_PATH = Utils.getConfigValue("File Path Location", "C:\\Claustrum");
         BACKUP_PATH = Utils.getConfigValue("Backup Location", "C:\\Claustrum\\CLSTBackup");
-
-        Log.writeLogs("Path check");
 
         // Guard against double-prepending if nullPath() ever runs twice
         if (!KEY_FILE.contains(File.separator)) KEY_FILE = KEY_PATH + File.separator + KEY_FILE;
@@ -69,13 +65,10 @@ public class FileManager {
      * Read file
      */
     public String read(String file) {
-        Log.writeLogs("Reading for " + file + " called");
         try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
             String line = reader.readLine();
             if (line != null) return line;
-        } catch (IOException e) {
-            Log.writeLogs("Reader failed, trace " + e);
-        }
+        } catch (IOException e) {}
 
         return "";
     }
@@ -99,7 +92,6 @@ public class FileManager {
 
                 // Add to entry
                 Utils.allEntries.add(new Utils.Entry(title, password));
-                Log.writeLogs("Populating entries");
                 loadFavourite();
             }
         }
@@ -132,7 +124,6 @@ public class FileManager {
 
                     // Add favourite
                     Utils.favourites.add(decrypted);
-                    Log.writeLogs("Populating favourites");
                 }
             }
         }

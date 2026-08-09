@@ -4,7 +4,6 @@ import me.blackout.claustrum.ui.Panel;
 import me.blackout.claustrum.ui.elements.CardRenderer;
 import me.blackout.claustrum.ui.elements.ScrollBar;
 import me.blackout.claustrum.utils.Utils;
-import me.blackout.claustrum.utils.file.Log;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;

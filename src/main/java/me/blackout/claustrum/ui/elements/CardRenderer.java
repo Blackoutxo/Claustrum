@@ -3,7 +3,6 @@ package me.blackout.claustrum.ui.elements;
 import me.blackout.claustrum.Main;
 import me.blackout.claustrum.utils.Utils;
 import me.blackout.claustrum.utils.file.FileManager;
-import me.blackout.claustrum.utils.file.Log;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -82,7 +81,6 @@ public class CardRenderer extends JPanel {
             @Override
             public void mouseClicked(MouseEvent e) {
                 selectedEntry = entry;
-                Log.writeLogs("Selected " + selectedEntry.title());
                 refresh(currentFilter, favouritesOnly);
                 if (consumer != null) consumer.accept(entry);
             }
@@ -111,7 +109,6 @@ public class CardRenderer extends JPanel {
             if (matchesFilter && favourite) listContainer.add(buildCard(entry));
         }
 
-        Log.writeLogs("Revalidating and repainting listContainer");
         listContainer.revalidate();
         listContainer.repaint();
     }

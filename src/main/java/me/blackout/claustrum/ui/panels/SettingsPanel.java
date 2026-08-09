@@ -3,7 +3,6 @@ package me.blackout.claustrum.ui.panels;
 import me.blackout.claustrum.ui.Panel;
 import me.blackout.claustrum.ui.elements.*;
 import me.blackout.claustrum.utils.Utils;
-import me.blackout.claustrum.utils.file.Log;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -178,7 +177,6 @@ public class SettingsPanel extends JPanel {
         JFileChooser chooser = new JFileChooser();
         chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
         chooser.setDialogTitle("Choose backup location");
-        Log.writeLogs("Now browsing for file path selection");
 
         int result = chooser.showOpenDialog(this);
         if (result == JFileChooser.APPROVE_OPTION) {

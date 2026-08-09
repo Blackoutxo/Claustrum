@@ -2,7 +2,6 @@ package me.blackout.claustrum.utils;
 
 import me.blackout.claustrum.Main;
 import me.blackout.claustrum.utils.file.FileManager;
-import me.blackout.claustrum.utils.file.Log;
 
 import javax.crypto.*;
 import javax.crypto.spec.PBEKeySpec;
@@ -45,16 +44,12 @@ public class Utils {
         }
 
         try (FileWriter writer = new FileWriter(FileManager.CLAUSTRUM_CONFIG, false)) {
-            Log.writeLogs("Writing Config to file");
             writer.write(sb.toString());
-        } catch (IOException ignored) {
-            Log.writeLogs("Writing config to file failed " + ignored);
-        }
+        } catch (IOException ignored) {}
     }
 
     // Config
     public static void loadConfig() {
-        Log.writeLogs("Loading Config.....");
         try (BufferedReader reader = new BufferedReader(new FileReader(FileManager.CLAUSTRUM_CONFIG))) {
             String line;
             while ((line = reader.readLine()) != null) {
@@ -69,7 +64,6 @@ public class Utils {
 
                 // Add to entry
                 Utils.config.add(new Utils.Config(setting, state));
-                Log.writeLogs("Populating config");
             }
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -77,7 +71,6 @@ public class Utils {
     }
 
     public static String getConfigValue(String setting, String defaultValue) {
-        Log.writeLogs("Config value called for " + setting);
         return findTitleConfig(setting).map(Config::state).orElse(defaultValue);
     }
 
@@ -94,20 +87,17 @@ public class Utils {
             icons.add(original.getScaledInstance(size, size, Image.SCALE_SMOOTH));
         }
 
-        Log.writeLogs("Set panel icon");
         frame.setIconImages(icons);
     }
 
     // Find by title
     public static Optional<Entry> findByTitle(String title) {
-        Log.writeLogs("Finding by title data called for " + title);
         return allEntries.stream()
                 .filter(entry -> entry.title().equalsIgnoreCase(title))
                 .findFirst();
     }
 
     public static Optional<Config> findTitleConfig(String title) {
-        Log.writeLogs("Finding by title config called for " + title);
         return config.stream()
                 .filter(config -> config.setting().equalsIgnoreCase(title))
                 .findFirst();
@@ -123,7 +113,6 @@ public class Utils {
         KeySpec spec = new PBEKeySpec(masterKey.toCharArray(), salt, 65536, 256);
         SecretKey tmp = factory.generateSecret(spec);
 
-        Log.writeLogs("Key generated and now returning");
         return new SecretKeySpec(tmp.getEncoded(), "AES");
     }
 

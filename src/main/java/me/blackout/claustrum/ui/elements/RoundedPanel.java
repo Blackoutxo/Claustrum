@@ -1,7 +1,5 @@
 package me.blackout.claustrum.ui.elements;
 
-import me.blackout.claustrum.utils.file.Log;
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.geom.RoundRectangle2D;
@@ -12,8 +10,6 @@ public class RoundedPanel extends JPanel {
     public RoundedPanel(int radius) {
         this.radius = radius;
         setOpaque(false); // we paint the fill ourselves, so Swing shouldn't also paint a rectangle
-
-        Log.writeLogs("called Rounded Panel");
     }
 
     @Override
