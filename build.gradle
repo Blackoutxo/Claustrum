@@ -1,5 +1,14 @@
 plugins {
     id 'java'
+    id 'application'
+    id 'edu.sc.seis.launch4j' version '4.0.0'
+}
+
+launch4j {
+    mainClassName = 'me.blackout.claustrum.Main'
+    headerType = 'gui'
+    outfile = 'Claustrum.exe'
+    icon = "${projectDir}/src/main/resources/Claustrum.ico"
 }
 
 group 'blackout'
