@@ -18,7 +18,8 @@ public class FileManager {
     public SecureRandom secRandom = new SecureRandom();
     public Key key;
 
-    public static String CLAUSTRUM_CONFIG = "C:\\Claustrum\\config.txt";
+    private static String userPath = System.getProperty("user.home") + File.separator;
+    public static String CLAUSTRUM_CONFIG = userPath + "Claustrum\\config.txt";
     public static String BACKUP_PATH = "";
     public static String KEY_PATH = "";
     public static String SALT_PATH = "";
@@ -47,9 +48,9 @@ public class FileManager {
     }
 
     public static void nullPath() {
-        KEY_PATH = Utils.getConfigValue("File Path Location", "C:\\Claustrum");
-        SALT_PATH = Utils.getConfigValue("File Path Location", "C:\\Claustrum");
-        BACKUP_PATH = Utils.getConfigValue("Backup Location", "C:\\Claustrum\\CLSTBackup");
+        KEY_PATH = Utils.getConfigValue("File Path Location", userPath + "Claustrum");
+        SALT_PATH = Utils.getConfigValue("File Path Location", userPath + "Claustrum");
+        BACKUP_PATH = Utils.getConfigValue("Backup Location", userPath + "Claustrum\\CLSTBackup");
 
         // Guard against double-prepending if nullPath() ever runs twice
         if (!KEY_FILE.contains(File.separator)) KEY_FILE = KEY_PATH + File.separator + KEY_FILE;
@@ -57,7 +58,7 @@ public class FileManager {
     }
 
     public void createDirectory() {
-        File file = new File("C:\\" + File.separator + "Claustrum");
+        File file = new File(userPath + File.separator + "Claustrum");
         if (!file.exists()) file.mkdir();
     }
 
@@ -68,7 +69,7 @@ public class FileManager {
         try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
             String line = reader.readLine();
             if (line != null) return line;
-        } catch (IOException e) {}
+        } catch (IOException ignored) {}
 
         return "";
     }
@@ -151,7 +152,7 @@ public class FileManager {
     }
 
     public void save(String title, String state, String path, boolean append, boolean encrypt) throws GeneralSecurityException, IOException {
-        String line = "";
+        String line;
 
         if (encrypt) {
             key = Utils.generateKey(Claustrum.masterKey);
@@ -202,7 +203,7 @@ public class FileManager {
     }
 
     public void backup() throws IOException {
-        String backupPath = Utils.getConfigValue("Backup Location", "C:\\Claustrum") + File.separator + "CLSTBackup" + File.separator;
+        String backupPath = Utils.getConfigValue("Backup Location", userPath +  "Claustrum") + File.separator + "CLSTBackup" + File.separator;
 
         File backupDir = new File(backupPath);
         if (!backupDir.exists()) backupDir.mkdirs();
