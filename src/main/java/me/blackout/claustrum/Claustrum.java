@@ -24,9 +24,6 @@ public class Claustrum {
 
     public void run() throws IOException, GeneralSecurityException, FontFormatException {
 
-        // Load config
-        Utils.loadConfig();
-
         // Register font
         Utils.registerFont();
 
@@ -35,6 +32,9 @@ public class Claustrum {
 
         // Create file
         file.create();
+
+        // Load config
+        Utils.loadConfig();
 
         // Input Box
         String message = file.read(FileManager.KEY_FILE).isEmpty() ? "Set master key" : "Enter master key";
