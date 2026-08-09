@@ -24,7 +24,7 @@ public class CardRenderer extends JPanel {
     private boolean favouritesOnly = false;
 
     private final FileManager file = new FileManager();
-    public static JPanel listContainer = new JPanel();
+    public final JPanel listContainer = new JPanel();
     public static Utils.Entry selectedEntry = null;
     private String currentFilter = "";
 
@@ -101,16 +101,22 @@ public class CardRenderer extends JPanel {
         this.favouritesOnly = favouritesOnly;
         listContainer.removeAll();
 
+        System.out.println("refresh called — favouritesOnly=" + favouritesOnly + ", favourites list=" + Utils.favourites);
+
         String t = currentFilter.trim().toLowerCase();
         for (Utils.Entry entry : allEntries) {
-            boolean matchesFilter = t.isEmpty() || entry.title().toLowerCase().equals(t);
+            boolean matchesFilter = t.isEmpty() || entry.title().toLowerCase().contains(t);
             boolean favourite = !favouritesOnly || Utils.favourites.contains(entry.title());
+
+            System.out.println("Entry: [" + entry.title() + "] matchesFilter=" + matchesFilter
+                    + " favourite=" + favourite + " (checking against: " + Utils.favourites + ")");
 
             if (matchesFilter && favourite) listContainer.add(buildCard(entry));
         }
 
         listContainer.revalidate();
         listContainer.repaint();
+        System.out.println("Cards added: " + listContainer.getComponentCount());
     }
 
     public void refresh() {

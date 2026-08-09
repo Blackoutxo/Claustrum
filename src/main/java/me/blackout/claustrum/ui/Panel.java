@@ -105,7 +105,7 @@ public class Panel extends JFrame {
         center.add(top, BorderLayout.NORTH);
 
         // Entry card & Scroll Panel
-        JScrollPane scroll = new JScrollPane(CardRenderer.listContainer);
+        JScrollPane scroll = new JScrollPane(cardRenderer.getContainer());
         scroll.setBorder(null);
         cardRenderer.refresh();
         scroll.getViewport().setBackground(PANEL_BG);
@@ -183,8 +183,10 @@ public class Panel extends JFrame {
         favourite.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                favouriteCardRenderer.refresh();
+                favouriteCardRenderer.refresh("", true);
                 cardLayout.show(panelContainer, "favourite");
+                panelContainer.revalidate();
+                panelContainer.repaint();
             }
         });
 
@@ -303,14 +305,14 @@ public class Panel extends JFrame {
                 // Remove former entry
                 allEntries.remove(option.get());
 
-                CardRenderer.listContainer.remove(cardRenderer.buildCard(option.get())); // Remove from list container
+                cardRenderer.getContainer().remove(cardRenderer.buildCard(option.get())); // Remove from list container
                 cardRenderer.refresh();
             }
 
             try {
                 allEntries.add(new Utils.Entry(strTitle, passKey)); // Add to entries
 
-                CardRenderer.listContainer.add(cardRenderer.buildCard(new Utils.Entry(strTitle, passKey))); // Add to list container
+                cardRenderer.getContainer().add(cardRenderer.buildCard(new Utils.Entry(strTitle, passKey))); // Add to list container
                 cardRenderer.refresh();
 
                 file.saveEntries(); // Save file

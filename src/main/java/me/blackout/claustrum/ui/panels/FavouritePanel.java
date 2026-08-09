@@ -8,6 +8,8 @@ import me.blackout.claustrum.utils.Utils;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
 
 public class FavouritePanel extends JPanel {
     private CardRenderer cardRenderer;
@@ -18,15 +20,22 @@ public class FavouritePanel extends JPanel {
         setBorder(new EmptyBorder(24, 24, 24, 16));
 
         this.cardRenderer = renderer;
-        JPanel panel = new JPanel(new BorderLayout());
-        panel.setBackground(Panel.PANEL_BG);
-        panel.setBorder(new EmptyBorder(24, 24, 24, 16));
+        cardRenderer.refresh("", true);
 
         JLabel header = new JLabel("Favourites");
         header.setFont(Utils.spaceGrotesk.deriveFont(Font.BOLD, 32f));
         header.setForeground(Panel.TEXT);
-        header.setBorder(new EmptyBorder(0, 0, 16, 0));
-        panel.add(header, BorderLayout.NORTH);
+        header.setBackground(Panel.PANEL_BG);
+        header.setAlignmentX(CENTER_ALIGNMENT);
+        header.setBorder(new EmptyBorder(0, 0, 0, 0));
+        add(header, BorderLayout.NORTH);
+
+        addComponentListener(new ComponentAdapter() {
+            @Override
+            public void componentShown(ComponentEvent e) {
+                cardRenderer.refresh("", true);
+            }
+        });
 
         JScrollPane scroll = new JScrollPane(cardRenderer.getContainer());
         scroll.setBorder(null);
@@ -34,7 +43,6 @@ public class FavouritePanel extends JPanel {
         scroll.getVerticalScrollBar().setUI(new ScrollBar(Panel.ScrollThumb, Panel.ThumbHover));
         scroll.getVerticalScrollBar().setPreferredSize(new Dimension(12, 0));
         scroll.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-        panel.add(scroll, BorderLayout.CENTER);
-        add(panel);
+        add(scroll, BorderLayout.CENTER);
     }
 }
