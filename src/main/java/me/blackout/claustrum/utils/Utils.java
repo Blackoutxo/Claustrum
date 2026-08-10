@@ -9,6 +9,8 @@ import javax.crypto.spec.SecretKeySpec;
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
+import java.awt.datatransfer.Clipboard;
+import java.awt.datatransfer.StringSelection;
 import java.awt.image.BufferedImage;
 import java.io.*;
 import java.net.URL;
@@ -25,7 +27,18 @@ public class Utils {
     public static List<String> favourites = new ArrayList<>();
     public static List<Config> config = new ArrayList<>();
 
+    private static Timer timer;
+    private static Runnable onLock;
+    private static int timeoutMillis = 5 * 60 * 1000;
+
     public static Font spaceGrotesk;
+
+    // Systemic utils
+    public static void clearClipBoard() {
+        Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
+        StringSelection emptySelection = new StringSelection("");
+        clipboard.setContents(emptySelection, null);
+    }
 
     // Register font
     public static void registerFont() throws IOException, FontFormatException {

@@ -16,11 +16,15 @@ public class SettingsPanel extends JPanel {
 
     public static int autoBackUp = 0;
     public static boolean backupClean = false;
+    public static boolean duress = false;
+    public static int clipboardCT = 0;
 
     public static void loadState() {
         autoBackUp = Utils.getConfigValue("Auto Backup", "Off").equals("Off") ? 0
                 : Utils.getConfigValue("Auto Backup", "Off").equals("Daily") ? 2 : 1;
-        backupClean = !Utils.getConfigValue("Backup Cleanup", "Off").equals("Off");
+        backupClean = Utils.getConfigValue("Backup Cleanup", "Off").equals("On");
+        duress = Utils.getConfigValue("Enable Duress", "On").equals("On");
+        clipboardCT = Integer.parseInt(Utils.getConfigValue("Clipboard clear time", "2"));
     }
 
     public SettingsPanel() {
@@ -38,12 +42,13 @@ public class SettingsPanel extends JPanel {
         // Settings list
         JPanel settings = new JPanel();
         settings.setLayout(new BoxLayout(settings, BoxLayout.Y_AXIS));
-        settings.add(fieldSetting("File Path Location", KpathField, () -> browse(KpathField)));
+        settings.add(pathFieldSetting("File Path Location", KpathField, () -> browse(KpathField)));
+        settings.add(fieldSetting("Clipboard clear time"));
+        /**TODO: POSSIBLE ADDITION OF DURESS MODE BUT SEEMS TO GO IN VAIN*/
         settings.add(radioSettingItem("Auto Backup", // AUTO BACK UP
                 new String[]{"Off", "On unlock", "Daily"},
-                selected -> {
-        }));
-        settings.add(fieldSetting("Backup Location", bpathfield, () -> browse(bpathfield))); // BACKUP LOCATION
+                selected -> {}));
+        settings.add(pathFieldSetting("Backup Location", bpathfield, () -> browse(bpathfield))); // BACKUP LOCATION
         settings.setOpaque(false);
 
         // Impl variables
@@ -65,7 +70,7 @@ public class SettingsPanel extends JPanel {
     }
 
     // Settings Item
-    private JPanel fieldSetting(String title, JTextField pathField, Runnable onBrowse) {
+    private JPanel pathFieldSetting(String title, JTextField pathField, Runnable onBrowse) {
         // Load from config
         Utils.findTitleConfig(title).ifPresent(cfg -> pathField.setText(cfg.state()));
 
@@ -93,9 +98,7 @@ public class SettingsPanel extends JPanel {
             onBrowse.run();
 
             Optional<Utils.Config> option = Utils.findTitleConfig(title);
-
             option.ifPresent(Utils.config::remove);
-
             Utils.config.add(new Utils.Config(title, pathField.getText()));
             Utils.saveConfig();
         });
@@ -104,6 +107,51 @@ public class SettingsPanel extends JPanel {
         row.setOpaque(false);
         row.add(pathField, BorderLayout.CENTER);
         row.add(btn, BorderLayout.EAST);
+        item.add(row, BorderLayout.CENTER);
+
+        JPanel outer = new JPanel(new BorderLayout());
+        outer.setOpaque(false);
+        outer.setBorder(new EmptyBorder(0, 0, 10, 0));
+        outer.add(item, BorderLayout.CENTER);
+        outer.setAlignmentX(Component.LEFT_ALIGNMENT);
+        outer.setMaximumSize(new Dimension(Integer.MAX_VALUE, outer.getPreferredSize().height));
+
+        return outer;
+    }
+
+    private JPanel fieldSetting(String title) {
+        JTextField textField = new JTextField();
+        Utils.findTitleConfig(title).ifPresent(cfg -> textField.setText(cfg.state()));
+
+        // Panel
+        RoundedPanel item = new RoundedPanel(0);
+        item.setLayout(new BorderLayout(0, 8));
+        item.setBackground(Panel.PANEL_BG);
+        item.setBorder(new EmptyBorder(14, 16, 14, 16));
+
+        // Set title
+        JLabel label = new JLabel(title);
+        label.setFont(Utils.spaceGrotesk.deriveFont(15f));
+        label.setForeground(Panel.TEXT);
+        item.add(label, BorderLayout.NORTH);
+
+        textField.addActionListener(e -> {
+            // Add config
+            Optional<Utils.Config> repeat = Utils.findTitleConfig(title);
+            repeat.ifPresent(config -> Utils.config.remove(config));
+            Utils.config.add(new Utils.Config(title, textField.getText()));
+            Utils.saveConfig();
+        });
+
+        // Config text field
+        textField.setEditable(true);
+        textField.setForeground(Panel.FIELDTEXT);
+        textField.setBackground(Panel.FIELD);
+        textField.setBorder(new EmptyBorder(6, 10, 6, 10));
+
+        JPanel row = new JPanel(new BorderLayout(8, 0));
+        row.setOpaque(false);
+        row.add(textField, BorderLayout.CENTER);
         item.add(row, BorderLayout.CENTER);
 
         JPanel outer = new JPanel(new BorderLayout());

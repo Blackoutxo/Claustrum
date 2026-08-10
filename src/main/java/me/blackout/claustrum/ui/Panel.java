@@ -13,6 +13,8 @@ import me.blackout.claustrum.utils.Utils;
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -95,6 +97,13 @@ public class Panel extends JFrame {
         TextFieldUI search = new TextFieldUI("Search for items.....", FIELD, ON_PRIMARY);
         search.setPreferredSize(new Dimension(0, 38));
         search.setEditable(true);
+        search.setFocusable(true);
+
+        search.getDocument().addDocumentListener(new DocumentListener() {
+            @Override public void insertUpdate(DocumentEvent e)  { cardRenderer.refresh(search.getText(), false); }
+            @Override public void removeUpdate(DocumentEvent e)  { cardRenderer.refresh(search.getText(), false); }
+            @Override public void changedUpdate(DocumentEvent e) { cardRenderer.refresh(search.getText(), false); }
+        });
 
         // Top panel
         JPanel top = new JPanel(new BorderLayout());
