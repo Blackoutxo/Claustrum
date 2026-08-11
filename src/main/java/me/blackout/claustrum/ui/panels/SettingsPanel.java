@@ -14,16 +14,16 @@ public class SettingsPanel extends JPanel {
     public static final JTextField bpathfield = new JTextField();
     public static final JTextField KpathField = new JTextField();
 
-    public static int autoBackUp = 0;
-    public static boolean backupClean = false;
-    public static boolean duress = false;
-    public static int clipboardCT = 0;
+    public int autoBackUp = 0;
+    public boolean backupClean = false;
+    public final boolean duress = false;
+    public int clipboardCT = 0;
 
-    public static void loadState() {
+    public void loadState() {
         autoBackUp = Utils.getConfigValue("Auto Backup", "Off").equals("Off") ? 0
                 : Utils.getConfigValue("Auto Backup", "Off").equals("Daily") ? 2 : 1;
         backupClean = Utils.getConfigValue("Backup Cleanup", "Off").equals("On");
-        duress = Utils.getConfigValue("Enable Duress", "On").equals("On");
+        //duress = Utils.getConfigValue("Enable Duress", "On").equals("On");
         clipboardCT = Integer.parseInt(Utils.getConfigValue("Clipboard clear time", "2"));
     }
 
@@ -43,7 +43,7 @@ public class SettingsPanel extends JPanel {
         JPanel settings = new JPanel();
         settings.setLayout(new BoxLayout(settings, BoxLayout.Y_AXIS));
         settings.add(pathFieldSetting("File Path Location", KpathField, () -> browse(KpathField)));
-        settings.add(fieldSetting("Clipboard clear time"));
+        settings.add(fieldSetting("Clipboard clear time", String.valueOf(clipboardCT)));
         /**TODO: POSSIBLE ADDITION OF DURESS MODE BUT SEEMS TO GO IN VAIN*/
         settings.add(radioSettingItem("Auto Backup", // AUTO BACK UP
                 new String[]{"Off", "On unlock", "Daily"},
@@ -119,9 +119,10 @@ public class SettingsPanel extends JPanel {
         return outer;
     }
 
-    private JPanel fieldSetting(String title) {
-        JTextField textField = new JTextField();
+    private JPanel fieldSetting(String title, String value) {
+        JTextField textField = new JTextField(value);
         Utils.findTitleConfig(title).ifPresent(cfg -> textField.setText(cfg.state()));
+        clipboardCT = Integer.parseInt(textField.getText());
 
         // Panel
         RoundedPanel item = new RoundedPanel(0);
