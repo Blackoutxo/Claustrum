@@ -62,17 +62,23 @@ public class Claustrum {
         // Load file
         file.load(FileManager.KEY_FILE);
 
+        // Create a settings instance
+        SettingsPanel settings = new SettingsPanel();
+
         // Load settings state
-        SettingsPanel.loadState();
+        settings.loadState();
+
+        // Start to clean clipboard
+        new Utils().clear();
 
         // Backup Daily
-        if (SettingsPanel.autoBackUp == 2) {
+        if (settings.autoBackUp == 2) {
             if (!Utils.getConfigValue("Last Backup", LocalDate.now().toString()).equals(LocalDate.now().toString()))
                 file.backup();
         }
 
         // Backup On unlock
-        if (SettingsPanel.autoBackUp == 1) file.backup();
+        if (settings.autoBackUp == 1) file.backup();
 
         // Init panel here
         Panel panel = new Panel();

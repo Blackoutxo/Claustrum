@@ -26,7 +26,6 @@ public class FavouritePanel extends JPanel {
         header.setFont(Utils.spaceGrotesk.deriveFont(Font.BOLD, 32f));
         header.setForeground(Panel.TEXT);
         header.setBackground(Panel.PANEL_BG);
-        header.setAlignmentX(CENTER_ALIGNMENT);
         header.setBorder(new EmptyBorder(0, 0, 0, 0));
         add(header, BorderLayout.NORTH);
 

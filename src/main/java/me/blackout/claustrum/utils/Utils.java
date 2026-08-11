@@ -1,6 +1,7 @@
 package me.blackout.claustrum.utils;
 
 import me.blackout.claustrum.Main;
+import me.blackout.claustrum.ui.panels.SettingsPanel;
 import me.blackout.claustrum.utils.file.FileManager;
 
 import javax.crypto.*;
@@ -26,14 +27,19 @@ public class Utils {
     public static List<Entry> allEntries = new ArrayList<>();
     public static List<String> favourites = new ArrayList<>();
     public static List<Config> config = new ArrayList<>();
+    public static List<String> passkeys = new ArrayList<>();
 
-    private static Timer timer;
-    private static Runnable onLock;
-    private static int timeoutMillis = 5 * 60 * 1000;
+    private final SettingsPanel settings = new SettingsPanel();
+    private final int timeoutMillis = settings.clipboardCT * 60 * 1000;
 
     public static Font spaceGrotesk;
 
     // Systemic utils
+    public void clear() {
+        Timer timer = new Timer(timeoutMillis, e -> clearClipBoard());
+        timer.start();
+    }
+
     public static void clearClipBoard() {
         Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
         StringSelection emptySelection = new StringSelection("");

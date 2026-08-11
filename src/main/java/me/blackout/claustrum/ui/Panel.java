@@ -5,6 +5,7 @@ import me.blackout.claustrum.ui.elements.CardRenderer;
 import me.blackout.claustrum.ui.elements.PasswordField;
 import me.blackout.claustrum.ui.elements.ScrollBar;
 import me.blackout.claustrum.ui.elements.TextFieldUI;
+import me.blackout.claustrum.ui.panels.EvaluationPanel;
 import me.blackout.claustrum.ui.panels.FavouritePanel;
 import me.blackout.claustrum.ui.panels.SettingsPanel;
 import me.blackout.claustrum.utils.file.FileManager;
@@ -62,6 +63,7 @@ public class Panel extends JFrame {
     // Panels
     private final SettingsPanel settingsPanel = new SettingsPanel();
     private final FavouritePanel favouritePanel = new FavouritePanel(favouriteCardRenderer);
+    private final EvaluationPanel evalPanel = new EvaluationPanel();
 
     // Panel
     public Panel() throws IOException, FontFormatException {
@@ -77,6 +79,7 @@ public class Panel extends JFrame {
 
         panelContainer.add(mainPanel(), "home");
         panelContainer.add(favouritePanel, "favourite");
+        panelContainer.add(evalPanel, "evaluation");
         panelContainer.add(settingsPanel, "settings");
 
         add(sideBar(), BorderLayout.WEST);
@@ -199,6 +202,20 @@ public class Panel extends JFrame {
             }
         });
 
+        // Evaluation
+        JLabel eval = new JLabel("Evaluation");
+        eval.setBorder(new EmptyBorder(10, 20, 10, 0));
+
+        eval.setForeground(TEXT);
+        eval.setFont(Utils.spaceGrotesk.deriveFont(20f));
+
+        eval.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                cardLayout.show(panelContainer, "evaluation");
+            }
+        });
+
         // Settings
         JLabel settings = new JLabel("Settings");
         settings.setBorder(new EmptyBorder(10, 20, 10, 0));
@@ -218,6 +235,7 @@ public class Panel extends JFrame {
 
         sideBar.add(home);
         sideBar.add(favourite);
+        sideBar.add(eval);
         sideBar.add(settings);
         sideBar.add(Box.createVerticalStrut(24));
 
