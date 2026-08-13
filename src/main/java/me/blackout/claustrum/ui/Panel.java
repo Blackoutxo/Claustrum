@@ -208,10 +208,12 @@ public class Panel extends JFrame {
 
         eval.setForeground(TEXT);
         eval.setFont(Utils.spaceGrotesk.deriveFont(20f));
+        eval.setIcon(new ImageIcon(icon("light/eval_board.png")));
 
         eval.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
+                evalPanel.init();
                 cardLayout.show(panelContainer, "evaluation");
             }
         });
