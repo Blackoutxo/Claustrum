@@ -145,9 +145,11 @@ public class Utils {
     }
 
     // Record
-    public record Entry(String title, String password) {
+    public record Entry(String title, String password, List<String> tag) {
+        public Entry(String title, String password) {
+            this(title, password, new ArrayList<>());
+        }
     }
 
-    public record Config(String setting, String state) {
-    }
+    public record Config(String setting, String state) { }
 }

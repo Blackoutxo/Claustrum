@@ -6,6 +6,7 @@ import me.blackout.claustrum.utils.Utils;
 import javax.crypto.*;
 import javax.crypto.spec.GCMParameterSpec;
 import java.io.*;
+import java.lang.reflect.Array;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -85,14 +86,23 @@ public class FileManager {
                 if (line.isBlank()) continue;
 
                 String[] parts = line.split("\\|", 2);
-                if (parts.length != 2) continue; // Skip malformed parts
+                if (parts.length < 2) continue; // Skip malformed parts
 
                 // Decrypt title & password
                 String title = decryptField(parts[0], key);
                 String password = decryptField(parts[1], key);
 
+                // Check for tags
+                List<String> tag = new ArrayList<>();
+                if (parts.length == 3) {
+                    String tagsJoined = decryptField(parts[2], key);
+                    if (!tagsJoined.isBlank()) {
+                        tag = new ArrayList<>(Arrays.asList(tagsJoined.split(",")));
+                    }
+                }
+
                 // Add to entry
-                Utils.allEntries.add(new Utils.Entry(title, password));
+                Utils.allEntries.add(new Utils.Entry(title, password, tag));
                 loadFavourite();
             }
         }
@@ -107,7 +117,7 @@ public class FileManager {
                 if (line.isBlank()) continue;
 
                 String[] parts = line.split("\\|", 2);
-                if (parts.length == 2) continue; // Skip malformed parts
+                if (parts.length == 2 || parts.length == 3) continue; // Skip malformed parts
 
                 // Decrypt line
                 String decrypted = decryptField(line, key).trim();
@@ -182,10 +192,12 @@ public class FileManager {
         // Normal entries
         for (Utils.Entry entry : Utils.allEntries) {
 
-            String encryptedTitle = encryptField(entry.title(), key);
-            String encryptedPassword = encryptField(entry.password(), key);
+            String title = encryptField(entry.title(), key);
+            String password = encryptField(entry.password(), key);
+            String joinTags = String.join(",", entry.tag());
+            String tags = encryptField(joinTags, key);
 
-            line.append(encryptedTitle).append("|").append(encryptedPassword).append(System.lineSeparator());
+            line.append(title).append("|").append(password).append("|").append(tags).append(System.lineSeparator());
         }
 
         // Favourite entries

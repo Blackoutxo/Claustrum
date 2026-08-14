@@ -24,7 +24,10 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.net.URL;
 import java.security.GeneralSecurityException;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import static me.blackout.claustrum.utils.Utils.allEntries;
 
@@ -298,6 +301,20 @@ public class Panel extends JFrame {
 
         dialog.add(form, BorderLayout.CENTER);
 
+        // Tag
+        JLabel tagsLabel = new JLabel("Tags");
+        JTextField tagsField = new TextFieldUI("", FIELD, ON_PRIMARY);
+
+        gbc.gridx = 0; gbc.gridy = 2; gbc.weightx = 0;
+        tagsLabel.setFont(Utils.spaceGrotesk.deriveFont(14f));
+        tagsLabel.setForeground(TEXT);
+        form.add(tagsLabel, gbc);
+
+        gbc.gridx = 1; gbc.gridy = 2; gbc.weightx = 1;
+        form.add(tagsField, gbc);
+
+        dialog.add(form, BorderLayout.CENTER);
+
         // Button
         JPanel buttonBar = new JPanel(new FlowLayout(FlowLayout.CENTER, 8, 8));
         buttonBar.setBackground(PANEL_BG);
@@ -316,6 +333,11 @@ public class Panel extends JFrame {
         save.addActionListener(e -> {
             String strTitle = title.getText().trim();
             String passKey = new String(password.getPassword());
+            List<String> tags = Arrays.stream(tagsField.getText().split(","))
+                    .map(String::trim)
+                    .filter(t -> !t.isEmpty())
+                    .distinct()
+                    .toList();
 
             if (strTitle.isEmpty() || passKey.isEmpty()) return;
 
@@ -339,9 +361,9 @@ public class Panel extends JFrame {
             }
 
             try {
-                allEntries.add(new Utils.Entry(strTitle, passKey)); // Add to entries
+                allEntries.add(new Utils.Entry(strTitle, passKey, tags)); // Add to entries
 
-                cardRenderer.getContainer().add(cardRenderer.buildCard(new Utils.Entry(strTitle, passKey))); // Add to list container
+                cardRenderer.getContainer().add(cardRenderer.buildCard(new Utils.Entry(strTitle, passKey, tags))); // Add to list container
                 cardRenderer.refresh();
 
                 file.saveEntries(); // Save file
@@ -404,6 +426,20 @@ public class Panel extends JFrame {
         gbc.gridx = 1; gbc.gridy = 1; gbc.weightx = 1; // For passkey text field
         password.setText(entry.password());
         form.add(password, gbc);
+
+        dialog.add(form, BorderLayout.CENTER);
+
+        // Tag
+        JLabel tagsLabel = new JLabel("Tags");
+        JTextField tagsField = new TextFieldUI("", FIELD, ON_PRIMARY);
+
+        gbc.gridx = 0; gbc.gridy = 2; gbc.weightx = 0;
+        tagsLabel.setFont(Utils.spaceGrotesk.deriveFont(14f));
+        tagsLabel.setForeground(TEXT);
+        form.add(tagsLabel, gbc);
+
+        gbc.gridx = 1; gbc.gridy = 2; gbc.weightx = 1;
+        form.add(tagsField, gbc);
 
         dialog.add(form, BorderLayout.CENTER);
 
