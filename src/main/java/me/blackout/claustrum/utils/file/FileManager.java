@@ -85,7 +85,7 @@ public class FileManager {
             while ((line = reader.readLine()) != null) {
                 if (line.isBlank()) continue;
 
-                String[] parts = line.split("\\|", 2);
+                String[] parts = line.split("\\|");
                 if (parts.length < 2) continue; // Skip malformed parts
 
                 // Decrypt title & password
