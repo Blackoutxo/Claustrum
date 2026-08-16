@@ -10,11 +10,11 @@ import java.awt.geom.RoundRectangle2D;
 public class RoundedButton extends JButton {
     public final Color textColor, button, hs;
 
-    public RoundedButton(String text, Color textColor, Color button, Color hs) {
+    public RoundedButton(String text, Color textColor, Color button, Color hover) {
         super(text);
         this.textColor = textColor;
         this.button = button;
-        this.hs = hs;
+        this.hs = hover;
 
         setForeground(textColor);
         setFont(Utils.spaceGrotesk.deriveFont(Font.BOLD, 13f));
