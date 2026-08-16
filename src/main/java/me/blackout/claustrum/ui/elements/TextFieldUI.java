@@ -34,7 +34,7 @@ public class TextFieldUI extends JTextField {
         g2.dispose();
         super.paintComponent(g);
 
-        if (getText().isEmpty() && !isFocusOwner()) {
+        if (getText().isEmpty() && !placeholder.isEmpty()) {
             Graphics2D pg = (Graphics2D) g.create();
             pg.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
