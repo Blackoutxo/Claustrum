@@ -20,7 +20,7 @@ public class FavouritePanel extends JPanel {
         setBorder(new EmptyBorder(24, 24, 24, 16));
 
         this.cardRenderer = renderer;
-        cardRenderer.refresh("", true);
+        cardRenderer.refresh("", true, "All");
 
         JLabel header = new JLabel("Favourites");
         header.setFont(Utils.spaceGrotesk.deriveFont(Font.BOLD, 32f));
@@ -32,7 +32,7 @@ public class FavouritePanel extends JPanel {
         addComponentListener(new ComponentAdapter() {
             @Override
             public void componentShown(ComponentEvent e) {
-                cardRenderer.refresh("", true);
+                cardRenderer.refresh("", true, "All");
             }
         });
 

@@ -106,9 +106,9 @@ public class Panel extends JFrame {
         search.setFocusable(true);
 
         search.getDocument().addDocumentListener(new DocumentListener() {
-            @Override public void insertUpdate(DocumentEvent e)  { cardRenderer.refresh(search.getText(), false); }
-            @Override public void removeUpdate(DocumentEvent e)  { cardRenderer.refresh(search.getText(), false); }
-            @Override public void changedUpdate(DocumentEvent e) { cardRenderer.refresh(search.getText(), false); }
+            @Override public void insertUpdate(DocumentEvent e)  { cardRenderer.refresh(search.getText(), false, search.getText()); }
+            @Override public void removeUpdate(DocumentEvent e)  { cardRenderer.refresh(search.getText(), false, search.getText()); }
+            @Override public void changedUpdate(DocumentEvent e) { cardRenderer.refresh(search.getText(), false, search.getText()); }
         });
 
         // Top panel
@@ -148,7 +148,7 @@ public class Panel extends JFrame {
         bottomBar.add(addButton);
 
         center.add(bottomBar, BorderLayout.SOUTH);
-        cardRenderer.refresh("", false);
+        cardRenderer.refresh("", false, "All");
         return center;
     }
 
@@ -181,7 +181,7 @@ public class Panel extends JFrame {
         home.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                cardRenderer.refresh("", false);
+                cardRenderer.refresh("", false, "All");
                 cardLayout.show(panelContainer, "home");
             }
         });
@@ -198,7 +198,7 @@ public class Panel extends JFrame {
         favourite.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                favouriteCardRenderer.refresh("", true);
+                favouriteCardRenderer.refresh("", true, "All");
                 cardLayout.show(panelContainer, "favourite");
                 panelContainer.revalidate();
                 panelContainer.repaint();

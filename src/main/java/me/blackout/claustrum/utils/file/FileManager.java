@@ -6,7 +6,6 @@ import me.blackout.claustrum.utils.Utils;
 import javax.crypto.*;
 import javax.crypto.spec.GCMParameterSpec;
 import java.io.*;
-import java.lang.reflect.Array;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -51,7 +50,7 @@ public class FileManager {
     public static void nullPath() {
         KEY_PATH = Utils.getConfigValue("File Path Location", userPath + "Claustrum");
         SALT_PATH = Utils.getConfigValue("File Path Location", userPath + "Claustrum");
-        BACKUP_PATH = Utils.getConfigValue("Backup Location", userPath + "Claustrum\\CLSTBackup");
+        BACKUP_PATH = Utils.getConfigValue("Backup Location", userPath + "CLSTBackup");
 
         // Guard against double-prepending if nullPath() ever runs twice
         if (!KEY_FILE.contains(File.separator)) KEY_FILE = KEY_PATH + File.separator + KEY_FILE;

@@ -27,6 +27,7 @@ public class CardRenderer extends JPanel {
     public final JPanel listContainer = new JPanel();
     public static Utils.Entry selectedEntry = null;
     private String currentFilter = "";
+    private String tagFilter = "All";
 
     public CardRenderer(Color textColor, Color panelBg, Color background, Color hover, Color border, Consumer<Utils.Entry> consumer) {
         this.background = background;
@@ -81,7 +82,7 @@ public class CardRenderer extends JPanel {
             @Override
             public void mouseClicked(MouseEvent e) {
                 selectedEntry = entry;
-                refresh(currentFilter, favouritesOnly);
+                refresh(currentFilter, favouritesOnly, "All");
                 if (consumer != null) consumer.accept(entry);
             }
         });
@@ -96,8 +97,9 @@ public class CardRenderer extends JPanel {
     }
 
     // Refresh list container
-    public void refresh(String filter, boolean favouritesOnly) {
+    public void refresh(String filter, boolean favouritesOnly, String tagFilter) {
         currentFilter = filter == null ? "" : filter;
+        this.tagFilter = tagFilter;
         this.favouritesOnly = favouritesOnly;
         listContainer.removeAll();
 
@@ -105,8 +107,9 @@ public class CardRenderer extends JPanel {
         for (Utils.Entry entry : allEntries) {
             boolean matchesFilter = t.isEmpty() || entry.title().toLowerCase().contains(t);
             boolean favourite = !favouritesOnly || Utils.favourites.contains(entry.title());
+            boolean matchesTag = tagFilter.equals("All") || entry.tag().contains(tagFilter);
 
-            if (matchesFilter && favourite) listContainer.add(buildCard(entry));
+            if (matchesFilter && favourite && matchesTag) listContainer.add(buildCard(entry));
         }
 
         listContainer.revalidate();
@@ -114,7 +117,7 @@ public class CardRenderer extends JPanel {
     }
 
     public void refresh() {
-        refresh(currentFilter, this.favouritesOnly);
+        refresh(currentFilter, this.favouritesOnly, "All");
     }
 
     // Icon
