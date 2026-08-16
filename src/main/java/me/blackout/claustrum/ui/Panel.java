@@ -1,10 +1,7 @@
 package me.blackout.claustrum.ui;
 
 import me.blackout.claustrum.Main;
-import me.blackout.claustrum.ui.elements.CardRenderer;
-import me.blackout.claustrum.ui.elements.PasswordField;
-import me.blackout.claustrum.ui.elements.ScrollBar;
-import me.blackout.claustrum.ui.elements.TextFieldUI;
+import me.blackout.claustrum.ui.elements.*;
 import me.blackout.claustrum.ui.panels.EvaluationPanel;
 import me.blackout.claustrum.ui.panels.FavouritePanel;
 import me.blackout.claustrum.ui.panels.SettingsPanel;
@@ -17,6 +14,8 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import java.awt.*;
+import java.awt.datatransfer.Clipboard;
+import java.awt.datatransfer.StringSelection;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.geom.RoundRectangle2D;
@@ -106,9 +105,9 @@ public class Panel extends JFrame {
         search.setFocusable(true);
 
         search.getDocument().addDocumentListener(new DocumentListener() {
-            @Override public void insertUpdate(DocumentEvent e)  { cardRenderer.refresh(search.getText(), false, search.getText()); }
-            @Override public void removeUpdate(DocumentEvent e)  { cardRenderer.refresh(search.getText(), false, search.getText()); }
-            @Override public void changedUpdate(DocumentEvent e) { cardRenderer.refresh(search.getText(), false, search.getText()); }
+            @Override public void insertUpdate(DocumentEvent e)  { cardRenderer.refresh(search.getText(), false, "All"); }
+            @Override public void removeUpdate(DocumentEvent e)  { cardRenderer.refresh(search.getText(), false, "All"); }
+            @Override public void changedUpdate(DocumentEvent e) { cardRenderer.refresh(search.getText(), false, "All"); }
         });
 
         // Top panel
@@ -176,7 +175,7 @@ public class Panel extends JFrame {
         home.setForeground(TEXT);
         home.setFont(Utils.spaceGrotesk.deriveFont(20f));
 
-        home.setIcon(new ImageIcon(icon("light/home_light.png")));
+        home.setIcon(new ImageIcon(icon("light/home_light.png", 25, 25)));
 
         home.addMouseListener(new MouseAdapter() {
             @Override
@@ -193,7 +192,7 @@ public class Panel extends JFrame {
         favourite.setForeground(TEXT);
         favourite.setFont(Utils.spaceGrotesk.deriveFont(20f));
 
-        favourite.setIcon(new ImageIcon(icon("light/favourite_light.png")));
+        favourite.setIcon(new ImageIcon(icon("light/favourite_light.png", 25, 25)));
 
         favourite.addMouseListener(new MouseAdapter() {
             @Override
@@ -211,7 +210,7 @@ public class Panel extends JFrame {
 
         eval.setForeground(TEXT);
         eval.setFont(Utils.spaceGrotesk.deriveFont(20f));
-        eval.setIcon(new ImageIcon(icon("light/eval_board.png")));
+        eval.setIcon(new ImageIcon(icon("light/eval_board.png", 25, 25)));
 
         eval.addMouseListener(new MouseAdapter() {
             @Override
@@ -227,7 +226,7 @@ public class Panel extends JFrame {
 
         settings.setForeground(TEXT);
         settings.setFont(Utils.spaceGrotesk.deriveFont(20f));
-        settings.setIcon(new ImageIcon(icon("light/settings_light.png")));
+        settings.setIcon(new ImageIcon(icon("light/settings_light.png", 25, 25)));
 
         settings.addMouseListener(new MouseAdapter() {
             @Override
@@ -247,7 +246,7 @@ public class Panel extends JFrame {
         return sideBar;
     }
 
-    private Image icon(String path) {
+    private Image icon(String path, int w, int h) {
         URL icon = Main.class.getResource("/icons/" + path);
         if (icon != null) {
             BufferedImage original = null;
@@ -256,7 +255,7 @@ public class Panel extends JFrame {
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
-            return original.getScaledInstance(25, 25, Image.SCALE_SMOOTH);
+            return original.getScaledInstance(w, h, Image.SCALE_SMOOTH);
         }
 
         return null;
@@ -402,7 +401,7 @@ public class Panel extends JFrame {
         gbc.fill = GridBagConstraints.HORIZONTAL;
 
         // Title
-        JLabel titleL = new JLabel("TITLE");
+        JLabel titleL = new JLabel("Title");
         JTextField title = new TextFieldUI(entry.title(), FIELD, ON_PRIMARY);
 
         gbc.gridx = 0; gbc.gridy = 0; gbc.weightx = 0; // For title label
@@ -415,8 +414,9 @@ public class Panel extends JFrame {
         form.add(title, gbc);
 
         // Passkey
-        JLabel passL = new JLabel("PASSWORD");
+        JLabel passL = new JLabel("Password");
         JPasswordField password = new PasswordField(ON_PRIMARY, FIELD, ON_PRIMARY);
+        RoundedButton copyButton = new RoundedButton("", BUTTON_TEXT, BUTTON, ON_PRIMARY);
 
         gbc.gridx = 0; gbc.gridy = 1; gbc.weightx = 0; // For passkey label
         passL.setFont(Utils.spaceGrotesk.deriveFont(14f));
@@ -427,11 +427,22 @@ public class Panel extends JFrame {
         password.setText(entry.password());
         form.add(password, gbc);
 
+        gbc.gridx = 2; gbc.gridy = 1; gbc.weightx = 0;
+        copyButton.setIcon(new ImageIcon(icon("dark/copy_dark.png", 15, 15)));
+        form.add(copyButton, gbc);
+
+        // Copy Button action
+        copyButton.addActionListener(e -> {
+            Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
+            StringSelection selection = new StringSelection(entry.password());
+            clipboard.setContents(selection, selection);
+        });
+
         dialog.add(form, BorderLayout.CENTER);
 
         // Tag
         JLabel tagsLabel = new JLabel("Tags");
-        JTextField tagsField = new TextFieldUI("", FIELD, ON_PRIMARY);
+        JTextField tagsField = new TextFieldUI(entry.tag().toString(), FIELD, ON_PRIMARY);
 
         gbc.gridx = 0; gbc.gridy = 2; gbc.weightx = 0;
         tagsLabel.setFont(Utils.spaceGrotesk.deriveFont(14f));
