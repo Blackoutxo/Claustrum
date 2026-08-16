@@ -9,6 +9,8 @@ import me.blackout.claustrum.utils.file.FileManager;
 import javax.swing.*;
 import java.awt.*;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.security.GeneralSecurityException;
 import java.time.LocalDate;
 
@@ -78,7 +80,10 @@ public class Claustrum {
         }
 
         // Backup On unlock
-        if (settings.autoBackUp == 1) file.backup();
+        if (settings.autoBackUp == 1) {
+            //if (Files.size(Path.of(FileManager.BACKUP_PATH)) > Files.size(Path.of(FileManager.KEY_FILE))) return;
+            file.backup();
+        }
 
         // Init panel here
         Panel panel = new Panel();
