@@ -50,8 +50,6 @@ public class SettingsPanel extends JPanel {
                 selected -> {
                 if (selected.equals("Light")) Panel.applyLightTheme();
                  else Panel.applyDarkTheme();
-                 repaint();
-                 revalidate();
         }));
         settings.add(pathFieldSetting("File Path Location", KpathField, () -> browse(KpathField))); // File Path location
         settings.add(fieldSetting("Clipboard clear time", String.valueOf(clipboardCT))); // Clip board clear time
