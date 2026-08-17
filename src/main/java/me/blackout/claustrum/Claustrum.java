@@ -9,8 +9,6 @@ import me.blackout.claustrum.utils.file.FileManager;
 import javax.swing.*;
 import java.awt.*;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.security.GeneralSecurityException;
 import java.time.LocalDate;
 
@@ -85,7 +83,7 @@ public class Claustrum {
             file.backup();
         }
 
-        // Init panel here
+        // Init panel
         Panel panel = new Panel();
         panel.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 

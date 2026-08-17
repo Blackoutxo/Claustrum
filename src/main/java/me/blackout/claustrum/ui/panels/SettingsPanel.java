@@ -16,10 +16,13 @@ public class SettingsPanel extends JPanel {
 
     public int autoBackUp = 0;
     public boolean backupClean = false;
+    public boolean darkTheme = false;
+
     public final boolean duress = false;
     public int clipboardCT = 0;
 
     public void loadState() {
+        darkTheme = Utils.getConfigValue("Theme", "Dark").equals("Dark");
         autoBackUp = Utils.getConfigValue("Auto Backup", "Off").equals("Off") ? 0
                 : Utils.getConfigValue("Auto Backup", "Off").equals("Daily") ? 2 : 1;
         backupClean = Utils.getConfigValue("Backup Cleanup", "Off").equals("On");
@@ -42,8 +45,16 @@ public class SettingsPanel extends JPanel {
         // Settings list
         JPanel settings = new JPanel();
         settings.setLayout(new BoxLayout(settings, BoxLayout.Y_AXIS));
-        settings.add(pathFieldSetting("File Path Location", KpathField, () -> browse(KpathField)));
-        settings.add(fieldSetting("Clipboard clear time", String.valueOf(clipboardCT)));
+        settings.add(radioSettingItem("Theme", // Theme selector
+                new String[]{"Light", "Dark"},
+                selected -> {
+                if (selected.equals("Light")) Panel.applyLightTheme();
+                 else Panel.applyDarkTheme();
+                 repaint();
+                 revalidate();
+        }));
+        settings.add(pathFieldSetting("File Path Location", KpathField, () -> browse(KpathField))); // File Path location
+        settings.add(fieldSetting("Clipboard clear time", String.valueOf(clipboardCT))); // Clip board clear time
         /**TODO: POSSIBLE ADDITION OF DURESS MODE BUT SEEMS TO GO IN VAIN*/
         settings.add(radioSettingItem("Auto Backup", // AUTO BACK UP
                 new String[]{"Off", "On unlock", "Daily"},
@@ -225,6 +236,14 @@ public class SettingsPanel extends JPanel {
         if (result == JFileChooser.APPROVE_OPTION) {
             String path = chooser.getSelectedFile().getAbsolutePath();
             text.setText(path);
+        }
+    }
+
+    private void triggerFrameRefresh() {
+        Window topWindow = SwingUtilities.getWindowAncestor(this);
+        if (topWindow instanceof Panel mainFrame) {
+            mainFrame.repaint();
+            mainFrame.revalidate();
         }
     }
 }

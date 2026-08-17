@@ -1,5 +1,6 @@
 package me.blackout.claustrum.ui;
 
+import me.blackout.claustrum.Claustrum;
 import me.blackout.claustrum.Main;
 import me.blackout.claustrum.ui.elements.*;
 import me.blackout.claustrum.ui.panels.EvaluationPanel;
@@ -34,25 +35,25 @@ public class Panel extends JFrame {
     // ---------------------------------------------------------------
     //                          Color palette
     // ---------------------------------------------------------------
-    public static final Color PRIMARY = new Color(208, 188, 255);
-    public static final Color ON_PRIMARY = new Color(56, 30, 114);
+    public static Color PRIMARY = new Color(208, 188, 255);
+    public static Color ON_PRIMARY = new Color(56, 30, 114);
 
-    public static final Color BUTTON = PRIMARY;
-    public static final Color BUTTON_TEXT = ON_PRIMARY;
+    public static Color BUTTON = PRIMARY;
+    public static Color BUTTON_TEXT = ON_PRIMARY;
 
-    public static final Color TEXT = new Color(230, 225, 229);
-    public static final Color FIELD = new Color(202, 196, 208);
-    public static final Color FIELDTEXT = ON_PRIMARY;
+    public static Color TEXT = new Color(230, 225, 229);
+    public static Color FIELD = new Color(202, 196, 208);
+    public static Color FIELDTEXT = ON_PRIMARY;
 
-    public static final Color PANEL_BG = new Color(28, 27, 31);
-    public static final Color SIDEBAR_BG = new Color(35, 33, 39);
+    public static Color PANEL_BG = new Color(28, 27, 31);
+    public static Color SIDEBAR_BG = new Color(35, 33, 39);
 
-    public static final Color CARD_BG = new Color(35, 33, 39);
-    public static final Color CARD_HOVER = new Color(48, 46, 54);
-    public static final Color CARD_BORDER = new Color(255, 255, 255);
+    public static Color CARD_BG = new Color(35, 33, 39);
+    public static Color CARD_HOVER = new Color(48, 46, 54);
+    public static Color CARD_BORDER = new Color(255, 255, 255);
 
-    public static final Color ScrollThumb = PRIMARY;
-    public static final Color ThumbHover = PRIMARY.darker();
+    public static Color ScrollThumb = PRIMARY;
+    public static Color ThumbHover = PRIMARY.darker();
 
     // Field vars
     private final CardLayout cardLayout = new CardLayout();
@@ -88,6 +89,13 @@ public class Panel extends JFrame {
         add(panelContainer, BorderLayout.CENTER);
 
         cardLayout.show(panelContainer, "home");
+
+        refresh();
+    }
+
+    private void refresh() {
+        this.revalidate();
+        this.repaint();
     }
 
     // ---------------------------------------------------------------
@@ -261,6 +269,50 @@ public class Panel extends JFrame {
         return null;
     }
 
+    public static void applyDarkTheme() {
+        PRIMARY = new Color(208, 188, 255);
+        ON_PRIMARY = new Color(56, 30, 114);
+
+        BUTTON = PRIMARY;
+        BUTTON_TEXT = ON_PRIMARY;
+
+        TEXT = new Color(230, 225, 229);
+        FIELD = new Color(202, 196, 208);
+        FIELDTEXT = ON_PRIMARY;
+
+        PANEL_BG = new Color(28, 27, 31);
+        SIDEBAR_BG = new Color(35, 33, 39);
+
+        CARD_BG = new Color(35, 33, 39);
+        CARD_HOVER = new Color(48, 46, 54);
+        CARD_BORDER = new Color(255, 255, 255);
+
+        ScrollThumb = PRIMARY;
+        ThumbHover = PRIMARY.darker();
+    }
+
+    public static void applyLightTheme() {
+        PRIMARY = new Color(103, 80, 164);
+        ON_PRIMARY = new Color(255, 255, 255);
+
+        BUTTON = PRIMARY;
+        BUTTON_TEXT = ON_PRIMARY;
+
+        TEXT = new Color(29, 27, 32);
+        FIELD = new Color(231, 224, 236);
+        FIELDTEXT = TEXT;
+
+        PANEL_BG = new Color(254, 247, 255);
+        SIDEBAR_BG = new Color(243, 237, 247);
+
+        CARD_BG = new Color(243, 237, 247);
+        CARD_HOVER = new Color(230, 224, 233);
+        CARD_BORDER = new Color(121, 116, 126);
+
+        ScrollThumb = PRIMARY;
+        ThumbHover = PRIMARY.darker();
+    }
+
     // Dialog panel
     public void openAddDialog() {
         JDialog dialog = new JDialog(this, "Add new key", true);
@@ -276,7 +328,7 @@ public class Panel extends JFrame {
 
         // Title
         JLabel titleL = new JLabel("TITLE");
-        JTextField title = new TextFieldUI("", FIELD, ON_PRIMARY);
+        JTextField title = new TextFieldUI("", FIELD, FIELDTEXT);
 
         gbc.gridx = 0; gbc.gridy = 0; gbc.weightx = 0; // For title label
         titleL.setFont(Utils.spaceGrotesk.deriveFont(14f));
@@ -288,7 +340,7 @@ public class Panel extends JFrame {
 
         // Passkey
         JLabel passL = new JLabel("PASSWORD");
-        JPasswordField password = new PasswordField(ON_PRIMARY, FIELD, ON_PRIMARY);
+        JPasswordField password = new PasswordField(ON_PRIMARY, FIELD, FIELDTEXT);
 
         gbc.gridx = 0; gbc.gridy = 1; gbc.weightx = 0;
         passL.setFont(Utils.spaceGrotesk.deriveFont(14f));
@@ -302,7 +354,7 @@ public class Panel extends JFrame {
 
         // Tag
         JLabel tagsLabel = new JLabel("Tags");
-        JTextField tagsField = new TextFieldUI("", FIELD, ON_PRIMARY);
+        JTextField tagsField = new TextFieldUI("", FIELD, FIELDTEXT);
 
         gbc.gridx = 0; gbc.gridy = 2; gbc.weightx = 0;
         tagsLabel.setFont(Utils.spaceGrotesk.deriveFont(14f));
@@ -402,7 +454,7 @@ public class Panel extends JFrame {
 
         // Title
         JLabel titleL = new JLabel("Title");
-        JTextField title = new TextFieldUI(entry.title(), FIELD, ON_PRIMARY);
+        JTextField title = new TextFieldUI(entry.title(), FIELD, FIELDTEXT);
 
         gbc.gridx = 0; gbc.gridy = 0; gbc.weightx = 0; // For title label
         titleL.setFont(Utils.spaceGrotesk.deriveFont(14f));
@@ -415,8 +467,8 @@ public class Panel extends JFrame {
 
         // Passkey
         JLabel passL = new JLabel("Password");
-        JPasswordField password = new PasswordField(ON_PRIMARY, FIELD, ON_PRIMARY);
-        RoundedButton copyButton = new RoundedButton("", BUTTON_TEXT, BUTTON, ON_PRIMARY);
+        JPasswordField password = new PasswordField(FIELDTEXT, FIELD, FIELDTEXT);
+        RoundedButton copyButton = new RoundedButton("", BUTTON_TEXT, BUTTON, FIELDTEXT);
 
         gbc.gridx = 0; gbc.gridy = 1; gbc.weightx = 0; // For passkey label
         passL.setFont(Utils.spaceGrotesk.deriveFont(14f));
@@ -442,7 +494,7 @@ public class Panel extends JFrame {
 
         // Tag
         JLabel tagsLabel = new JLabel("Tags");
-        JTextField tagsField = new TextFieldUI(entry.tag().toString(), FIELD, ON_PRIMARY);
+        JTextField tagsField = new TextFieldUI(entry.tag().toString(), FIELD, FIELDTEXT);
 
         gbc.gridx = 0; gbc.gridy = 2; gbc.weightx = 0;
         tagsLabel.setFont(Utils.spaceGrotesk.deriveFont(14f));
