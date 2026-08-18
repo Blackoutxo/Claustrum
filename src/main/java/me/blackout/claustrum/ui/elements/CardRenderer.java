@@ -1,6 +1,7 @@
 package me.blackout.claustrum.ui.elements;
 
 import me.blackout.claustrum.Main;
+import me.blackout.claustrum.ui.panels.SettingsPanel;
 import me.blackout.claustrum.utils.Utils;
 import me.blackout.claustrum.utils.file.FileManager;
 
@@ -22,7 +23,9 @@ public class CardRenderer extends JPanel {
     public final Color background, hover, textColor, border;
     private final Consumer<Utils.Entry> consumer;
     private boolean favouritesOnly = false;
+    private boolean dark;
 
+    private final SettingsPanel settingsPanel = new SettingsPanel();
     private final FileManager file = new FileManager();
     public final JPanel listContainer = new JPanel();
     public static Utils.Entry selectedEntry = null;
@@ -34,6 +37,7 @@ public class CardRenderer extends JPanel {
         this.hover = hover;
         this.textColor = textColor;
         this.border = border;
+        this.dark = settingsPanel.darkTheme;
 
         this.consumer = consumer;
 
@@ -146,7 +150,7 @@ public class CardRenderer extends JPanel {
     }
 
     private void loadIcon(JLabel label, boolean filled) {
-        String path = filled ? "/icons/light/filled/favourite_light.png" : "/icons/light/favourite_light.png";
+        String path = filled ? "/icons/" + (dark ? "light" : "dark") + "/filled/favourite.png" : "/icons/" + (dark ? "light" : "dark") + "/favourite.png";
 
         URL url = Main.class.getResource(path);
         if (url == null) return;
