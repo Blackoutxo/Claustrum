@@ -17,6 +17,7 @@ public class Claustrum {
     public static String input, masterKey;
     public static byte[] salt;
 
+    private static Panel panel;
     private final FileManager file = new FileManager();
 
     private final Color TEXT = new Color(56, 30, 114);
@@ -83,12 +84,19 @@ public class Claustrum {
             file.backup();
         }
 
+        // Build the initial panel
+        build();
+    }
+
+    public static void build() {
+        if (panel != null) panel.dispose();
+
         // Init panel
-        Panel panel = new Panel();
+        try { panel = new Panel(); } catch (IOException | FontFormatException ignored) {}
         panel.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         // Set Icon for application
-        Utils.setIcon(panel);
+        try { Utils.setIcon(panel);  } catch (IOException ignored) {}
 
         // Assemble components and display window
         panel.pack();
