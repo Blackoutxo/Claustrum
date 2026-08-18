@@ -48,8 +48,8 @@ public class SettingsPanel extends JPanel {
         settings.add(radioSettingItem("Theme", // Theme selector
                 new String[]{"Light", "Dark"},
                 selected -> {
-                if (selected.equals("Light")) Panel.applyLightTheme();
-                 else Panel.applyDarkTheme();
+                    darkTheme = selected.equals("Dark");
+                    Utils.switchTheme(darkTheme);
         }));
         settings.add(pathFieldSetting("File Path Location", KpathField, () -> browse(KpathField))); // File Path location
         settings.add(fieldSetting("Clipboard clear time", String.valueOf(clipboardCT))); // Clip board clear time
@@ -234,14 +234,6 @@ public class SettingsPanel extends JPanel {
         if (result == JFileChooser.APPROVE_OPTION) {
             String path = chooser.getSelectedFile().getAbsolutePath();
             text.setText(path);
-        }
-    }
-
-    private void triggerFrameRefresh() {
-        Window topWindow = SwingUtilities.getWindowAncestor(this);
-        if (topWindow instanceof Panel mainFrame) {
-            mainFrame.repaint();
-            mainFrame.revalidate();
         }
     }
 }

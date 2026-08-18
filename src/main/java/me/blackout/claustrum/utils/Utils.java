@@ -1,6 +1,8 @@
 package me.blackout.claustrum.utils;
 
+import me.blackout.claustrum.Claustrum;
 import me.blackout.claustrum.Main;
+import me.blackout.claustrum.ui.Panel;
 import me.blackout.claustrum.ui.panels.SettingsPanel;
 import me.blackout.claustrum.utils.file.FileManager;
 
@@ -44,6 +46,11 @@ public class Utils {
         Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
         StringSelection emptySelection = new StringSelection("");
         clipboard.setContents(emptySelection, null);
+    }
+
+    public static void switchTheme(boolean darkTheme) {
+        if (!darkTheme) Panel.applyLightTheme(); else Panel.applyDarkTheme();
+        Claustrum.build();
     }
 
     // Register font
