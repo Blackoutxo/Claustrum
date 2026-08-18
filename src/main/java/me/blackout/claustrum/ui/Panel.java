@@ -60,7 +60,7 @@ public class Panel extends JFrame {
     private final JPanel panelContainer = new JPanel(cardLayout);
 
     private static final FileManager file = new FileManager();
-    private final CardRenderer cardRenderer = new CardRenderer(TEXT, PANEL_BG, CARD_BG, CARD_HOVER, CARD_BORDER, entry -> openDetailDialog());
+    private final CardRenderer cardRenderer = new CardRenderer(TEXT, PANEL_BG, CARD_BG, CARD_HOVER, CARD_BORDER , entry -> openDetailDialog());
     private final CardRenderer favouriteCardRenderer = new CardRenderer(TEXT, PANEL_BG, CARD_BG, CARD_HOVER, CARD_BORDER, entry -> openDetailDialog());
 
     // Panels
@@ -90,12 +90,8 @@ public class Panel extends JFrame {
 
         cardLayout.show(panelContainer, "home");
 
-        refresh();
-    }
-
-    private void refresh() {
-        this.revalidate();
-        this.repaint();
+        revalidate();
+        repaint();
     }
 
     // ---------------------------------------------------------------
@@ -107,7 +103,7 @@ public class Panel extends JFrame {
         center.setBorder(new EmptyBorder(24, 24, 24, 16));
 
         // Search bar
-        TextFieldUI search = new TextFieldUI("Search for items.....", FIELD, ON_PRIMARY);
+        TextFieldUI search = new TextFieldUI("Search for items.....", FIELD, FIELDTEXT);
         search.setPreferredSize(new Dimension(0, 38));
         search.setEditable(true);
         search.setFocusable(true);
@@ -177,14 +173,7 @@ public class Panel extends JFrame {
         logoLabel.setFont(Utils.spaceGrotesk.deriveFont(Font.BOLD, 30f));
 
         // Home
-        JLabel home = new JLabel("Home");
-        home.setBorder(new EmptyBorder(10, 20, 10, 0));
-
-        home.setForeground(TEXT);
-        home.setFont(Utils.spaceGrotesk.deriveFont(20f));
-
-        home.setIcon(new ImageIcon(icon("light/home_light.png", 25, 25)));
-
+        JLabel home = navItem("Home", "home.png", settingsPanel.darkTheme);
         home.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
@@ -194,14 +183,7 @@ public class Panel extends JFrame {
         });
 
         // Favourite
-        JLabel favourite = new JLabel("Favourite");
-        favourite.setBorder(new EmptyBorder(10, 20, 10, 0));
-
-        favourite.setForeground(TEXT);
-        favourite.setFont(Utils.spaceGrotesk.deriveFont(20f));
-
-        favourite.setIcon(new ImageIcon(icon("light/favourite_light.png", 25, 25)));
-
+        JLabel favourite = navItem("Favourite", "favourite.png", settingsPanel.darkTheme);
         favourite.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
@@ -213,13 +195,7 @@ public class Panel extends JFrame {
         });
 
         // Evaluation
-        JLabel eval = new JLabel("Evaluation");
-        eval.setBorder(new EmptyBorder(10, 20, 10, 0));
-
-        eval.setForeground(TEXT);
-        eval.setFont(Utils.spaceGrotesk.deriveFont(20f));
-        eval.setIcon(new ImageIcon(icon("light/eval_board.png", 25, 25)));
-
+        JLabel eval = navItem("Evaluation", "eval_board.png", settingsPanel.darkTheme);
         eval.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
@@ -229,13 +205,7 @@ public class Panel extends JFrame {
         });
 
         // Settings
-        JLabel settings = new JLabel("Settings");
-        settings.setBorder(new EmptyBorder(10, 20, 10, 0));
-
-        settings.setForeground(TEXT);
-        settings.setFont(Utils.spaceGrotesk.deriveFont(20f));
-        settings.setIcon(new ImageIcon(icon("light/settings_light.png", 25, 25)));
-
+        JLabel settings = navItem("Settings", "settings.png", settingsPanel.darkTheme);
         settings.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
@@ -244,14 +214,23 @@ public class Panel extends JFrame {
         });
 
         sideBar.add(logoLabel);
-
         sideBar.add(home);
         sideBar.add(favourite);
         sideBar.add(eval);
         sideBar.add(settings);
         sideBar.add(Box.createVerticalStrut(24));
-
         return sideBar;
+    }
+
+    private JLabel navItem(String title, String path, boolean dark) {
+        JLabel nav = new JLabel(title);
+        nav.setBorder(new EmptyBorder(10, 20, 10, 0));
+
+        nav.setForeground(TEXT);
+        nav.setFont(Utils.spaceGrotesk.deriveFont(20f));
+        nav.setIcon(new ImageIcon(icon((dark ? "light" : "dark") + "/" + path, 25, 25)));
+
+        return nav;
     }
 
     private Image icon(String path, int w, int h) {
@@ -480,7 +459,7 @@ public class Panel extends JFrame {
         form.add(password, gbc);
 
         gbc.gridx = 2; gbc.gridy = 1; gbc.weightx = 0;
-        copyButton.setIcon(new ImageIcon(icon("dark/copy_dark.png", 15, 15)));
+        copyButton.setIcon(new ImageIcon(icon("dark/copy.png", 15, 15)));
         form.add(copyButton, gbc);
 
         // Copy Button action
