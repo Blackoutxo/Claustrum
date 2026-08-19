@@ -87,9 +87,6 @@ public class Panel extends JFrame {
         add(panelContainer, BorderLayout.CENTER);
 
         cardLayout.show(panelContainer, "home");
-
-        revalidate();
-        repaint();
     }
 
     // ---------------------------------------------------------------
@@ -170,8 +167,10 @@ public class Panel extends JFrame {
         logoLabel.setForeground(TEXT);
         logoLabel.setFont(Utils.spaceGrotesk.deriveFont(Font.BOLD, 30f));
 
+        System.out.println("In Panel: " + SettingsPanel.darkTheme);
+
         // Home
-        JLabel home = navItem("Home", "home.png", settingsPanel.darkTheme);
+        JLabel home = navItem("Home", "home.png", SettingsPanel.darkTheme);
         home.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
@@ -181,7 +180,7 @@ public class Panel extends JFrame {
         });
 
         // Favourite
-        JLabel favourite = navItem("Favourite", "favourite.png", settingsPanel.darkTheme);
+        JLabel favourite = navItem("Favourite", "favourite.png", SettingsPanel.darkTheme);
         favourite.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
@@ -191,7 +190,7 @@ public class Panel extends JFrame {
         });
 
         // Evaluation
-        JLabel eval = navItem("Evaluation", "eval_board.png", settingsPanel.darkTheme);
+        JLabel eval = navItem("Evaluation", "eval_board.png", SettingsPanel.darkTheme);
         eval.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
@@ -201,7 +200,7 @@ public class Panel extends JFrame {
         });
 
         // Settings
-        JLabel settings = navItem("Settings", "settings.png", settingsPanel.darkTheme);
+        JLabel settings = navItem("Settings", "settings.png", SettingsPanel.darkTheme);
         settings.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
