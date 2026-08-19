@@ -7,6 +7,7 @@ import me.blackout.claustrum.utils.Utils;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
+import java.io.IOException;
 import java.util.Optional;
 import java.util.function.Consumer;
 
@@ -16,7 +17,7 @@ public class SettingsPanel extends JPanel {
 
     public int autoBackUp = 0;
     public boolean backupClean = false;
-    public boolean darkTheme = false;
+    public static boolean darkTheme = true;
 
     public final boolean duress = false;
     public int clipboardCT = 0;
@@ -34,6 +35,7 @@ public class SettingsPanel extends JPanel {
         setLayout(new BorderLayout());
         setBackground(Panel.PANEL_BG);
         setBorder(new EmptyBorder(24, 24, 24, 24));
+        try { Utils.registerFont(); } catch (IOException | FontFormatException ignored) {}
 
         JLabel header = new JLabel("Settings");
         header.setHorizontalAlignment(SwingConstants.CENTER);
@@ -206,6 +208,8 @@ public class SettingsPanel extends JPanel {
 
                 Optional<Utils.Config> titlePresent = Utils.findTitleConfig(title);
                 titlePresent.ifPresent(Utils.config::remove);
+
+                if (titlePresent.isPresent()) return;
 
                 Utils.config.add(new Utils.Config(title, option));
                 Utils.saveConfig();
