@@ -1,6 +1,5 @@
 package me.blackout.claustrum.ui;
 
-import me.blackout.claustrum.Claustrum;
 import me.blackout.claustrum.Main;
 import me.blackout.claustrum.ui.elements.*;
 import me.blackout.claustrum.ui.panels.EvaluationPanel;
@@ -27,7 +26,6 @@ import java.security.GeneralSecurityException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import static me.blackout.claustrum.utils.Utils.allEntries;
 
@@ -189,8 +187,6 @@ public class Panel extends JFrame {
             public void mouseClicked(MouseEvent e) {
                 favouriteCardRenderer.refresh("", true, "All");
                 cardLayout.show(panelContainer, "favourite");
-                panelContainer.revalidate();
-                panelContainer.repaint();
             }
         });
 
@@ -239,9 +235,7 @@ public class Panel extends JFrame {
             BufferedImage original = null;
             try {
                 original = ImageIO.read(icon);
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
+            } catch (IOException ignored) {}
             return original.getScaledInstance(w, h, Image.SCALE_SMOOTH);
         }
 
