@@ -49,7 +49,7 @@ public class Utils {
     }
 
     public static void switchTheme(boolean darkTheme) {
-        if (!darkTheme) Panel.applyLightTheme(); else Panel.applyDarkTheme();
+        if (darkTheme) Panel.applyDarkTheme(); else Panel.applyLightTheme();
         Claustrum.build();
     }
 
