@@ -52,7 +52,7 @@ public class SettingsPanel extends JPanel {
                     Utils.switchTheme(darkTheme);
         }));
         settings.add(pathFieldSetting("File Path Location", KpathField, () -> browse(KpathField))); // File Path location
-        settings.add(fieldSetting("Clipboard clear time", String.valueOf(clipboardCT))); // Clip board clear time
+        settings.add(fieldSetting("Clipboard clear time", String.valueOf(clipboardCT), clipboardCT)); // Clip board clear time
         /**TODO: POSSIBLE ADDITION OF DURESS MODE BUT SEEMS TO GO IN VAIN*/
         settings.add(radioSettingItem("Auto Backup", // AUTO BACK UP
                 new String[]{"Off", "On unlock", "Daily"},
@@ -128,10 +128,10 @@ public class SettingsPanel extends JPanel {
         return outer;
     }
 
-    private JPanel fieldSetting(String title, String value) {
+    private JPanel fieldSetting(String title, String value, int assign) {
         JTextField textField = new JTextField(value);
         Utils.findTitleConfig(title).ifPresent(cfg -> textField.setText(cfg.state()));
-        clipboardCT = Integer.parseInt(textField.getText());
+        assign = Integer.parseInt(textField.getText());
 
         // Panel
         RoundedPanel item = new RoundedPanel(0);
