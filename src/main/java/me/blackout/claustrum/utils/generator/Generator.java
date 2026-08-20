@@ -1,9 +1,12 @@
 package me.blackout.claustrum.utils.generator;
 
+import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.List;
 
 public class Generator {
+    private static SecureRandom SECURE_RANDOM = new SecureRandom();
+
     private static final String UPPER = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
     private static final String LOWER = "abcdefghijklmnopqrstuvwxyz";
     private static final String DIGITS = "1234567890";
@@ -54,7 +57,26 @@ public class Generator {
                             + " to guarantee one character from each enabled class.");
         }
 
-        return "";
+        char[] result = new char[length];
+        int index = 0;
+
+        for (String pool : reqPool) {
+            result[index++] = pool.charAt(SECURE_RANDOM.nextInt(pool.length()));
+        }
+
+        String combined = fullPool.toString();
+        while (index < length) {
+            result[index++] = combined.charAt(SECURE_RANDOM.nextInt(combined.length()));
+        }
+
+        for (int i = result.length - 1; i > 0; i--) {
+            int j = SECURE_RANDOM.nextInt(result.length);
+            char temp = result[i];
+            result[i] = result[j];
+            result[j] = temp;
+        }
+
+        return new String(result);
     }
 
     private static String strip(String pool, boolean excludeAmbiguity) {
