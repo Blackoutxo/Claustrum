@@ -14,11 +14,66 @@ public class Generator {
     public static String generate(int length, boolean includeUpper, boolean includeLower,
                                   boolean includeDigits, boolean includeSymbol, boolean excludeAmbiguity) {
 
+        // String pool
+        StringBuilder fullPool = new StringBuilder();
+        List<String> reqPool = new ArrayList<>();
+
+        if (!includeUpper && !includeLower && !includeDigits && !includeSymbol) {
+            throw new IllegalStateException("At least one character class must be set to true");
+        }
+
+        // Appending characters to big pool
+        if (includeUpper) {
+            String pool = strip(UPPER, excludeAmbiguity);
+            fullPool.append(pool);
+            reqPool.add(pool);
+        }
+
+        if (includeLower) {
+            String pool = strip(LOWER, excludeAmbiguity);
+            fullPool.append(pool);
+            reqPool.add(pool);
+        }
+
+        if (includeDigits) {
+            String pool = strip(DIGITS, excludeAmbiguity);
+            fullPool.append(pool);
+            reqPool.add(pool);
+        }
+
+        if (includeSymbol) {
+            String pool = strip(SYMBOL, excludeAmbiguity);
+            fullPool.append(pool);
+            reqPool.add(pool);
+        }
+
+        // Check required pool size
+        if (length < reqPool.size()) {
+            throw new IllegalArgumentException(
+                    "Length (" + length + ") must be at least " + reqPool.size()
+                            + " to guarantee one character from each enabled class.");
+        }
+
         return "";
     }
 
     private static String strip(String pool, boolean excludeAmbiguity) {
+        if (!excludeAmbiguity) return pool;
+        StringBuilder sb = new StringBuilder();
+        for (char c : pool.toCharArray()) {
+            if (AMBIGUOUS.indexOf(c) == -1) sb.append(c);
+        }
+        return sb.toString();
+    }
 
-        return "";
+    public static double estimateEntropy(String password, boolean hasUpper, boolean hasLower,
+                                         boolean hasDigits, boolean hasSymbols) {
+        int poolSize = 0;
+        if (hasUpper) poolSize += UPPER.length();
+        if (hasLower) poolSize += LOWER.length();
+        if (hasDigits) poolSize += DIGITS.length();
+        if (hasSymbols) poolSize += SYMBOL.length();
+
+        return password.length() * (Math.log(poolSize) / Math.log(2));
     }
 }
