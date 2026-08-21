@@ -14,6 +14,10 @@ public class Generator {
     private static final String SYMBOL = "!@#$%^&*()-_=+[]{};:,.<>?";
     private static final String AMBIGUOUS = "0O1lI|`'\"";
 
+    public static String generate() {
+        return generate(16, true, true, true, true , false);
+    }
+
     public static String generate(int length, boolean includeUpper, boolean includeLower,
                                   boolean includeDigits, boolean includeSymbol, boolean excludeAmbiguity) {
 
@@ -88,6 +92,9 @@ public class Generator {
         return sb.toString();
     }
 
+    /**
+     * A rudimentary password entropy measurement
+     * */
     public static double estimateEntropy(String password, boolean hasUpper, boolean hasLower,
                                          boolean hasDigits, boolean hasSymbols) {
         int poolSize = 0;
