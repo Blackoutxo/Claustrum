@@ -7,6 +7,7 @@ import me.blackout.claustrum.ui.panels.FavouritePanel;
 import me.blackout.claustrum.ui.panels.SettingsPanel;
 import me.blackout.claustrum.utils.file.FileManager;
 import me.blackout.claustrum.utils.Utils;
+import me.blackout.claustrum.utils.generator.Generator;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -167,8 +168,6 @@ public class Panel extends JFrame {
         logoLabel.setForeground(TEXT);
         logoLabel.setFont(Utils.spaceGrotesk.deriveFont(Font.BOLD, 30f));
 
-        System.out.println("In Panel: " + SettingsPanel.darkTheme);
-
         // Home
         JLabel home = navItem("Home", "home.png", SettingsPanel.darkTheme);
         home.addMouseListener(new MouseAdapter() {
@@ -313,14 +312,23 @@ public class Panel extends JFrame {
         // Passkey
         JLabel passL = new JLabel("PASSWORD");
         JPasswordField password = new PasswordField(ON_PRIMARY, FIELD, FIELDTEXT);
+        RoundedButton generate = new RoundedButton("", BUTTON_TEXT, BUTTON, ON_PRIMARY);
 
         gbc.gridx = 0; gbc.gridy = 1; gbc.weightx = 0;
         passL.setFont(Utils.spaceGrotesk.deriveFont(14f));
         passL.setForeground(TEXT);
         form.add(passL, gbc);
 
-        gbc.gridx = 1; gbc.gridy = 1; gbc.weightx = 1;
+        gbc.gridx = 1; gbc.gridy = 1; gbc.weightx = 0;
         form.add(password, gbc);
+
+        gbc.gridx = 2; gbc.gridy = 1; gbc.weightx = 0;
+        generate.setIcon(new ImageIcon(icon("dark/key.png", 18, 18)));
+        form.add(generate, gbc);
+
+        generate.addActionListener(e -> {
+            password.setText(Generator.generate());
+        });
 
         dialog.add(form, BorderLayout.CENTER);
 
@@ -447,7 +455,7 @@ public class Panel extends JFrame {
         passL.setForeground(TEXT);
         form.add(passL, gbc);
 
-        gbc.gridx = 1; gbc.gridy = 1; gbc.weightx = 1; // For passkey text field
+        gbc.gridx = 1; gbc.gridy = 1; gbc.weightx = 0; // For passkey text field
         password.setText(entry.password());
         form.add(password, gbc);
 
