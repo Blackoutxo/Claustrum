@@ -19,12 +19,12 @@ public class FileManager {
     public Key key;
 
     private static String userPath = System.getProperty("user.home") + File.separator;
-    public static String CLAUSTRUM_CONFIG = userPath + "Claustrum\\config.txt";
+    public static String CLAUSTRUM_CONFIG = userPath + "Claustrum\\config.dat";
     public static String BACKUP_PATH = "";
     public static String KEY_PATH = "";
     public static String SALT_PATH = "";
-    public static String KEY_FILE = KEY_PATH + "ClaustrumKey.txt";
-    public static String SALT_FILE = SALT_PATH + "ClaustrumSalt.txt";
+    public static String KEY_FILE = KEY_PATH + "ClaustrumKey.dat";
+    public static String SALT_FILE = SALT_PATH + "ClaustrumSalt.dat";
 
     /**
      * Create File
