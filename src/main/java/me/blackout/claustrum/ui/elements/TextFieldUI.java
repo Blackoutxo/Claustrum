@@ -42,7 +42,7 @@ public class TextFieldUI extends JTextField {
             pg.setFont(Utils.spaceGrotesk.deriveFont(13f));
 
             FontMetrics fm = pg.getFontMetrics();
-            pg.drawString(placeholder, getInsets().left + 10, (getHeight() + fm.getAscent() - fm.getDescent()) / 2);
+            pg.drawString(placeholder, getInsets().left + 2, (getHeight() + fm.getAscent() - fm.getDescent()) / 2);
             pg.dispose();
         }
     }
