@@ -14,6 +14,9 @@ public class Generator {
     private static final String SYMBOL = "!@#$%^&*()-_=+[]{};:,.<>?";
     private static final String AMBIGUOUS = "0O1lI|`'\"";
 
+    /**
+     * Password Generator
+     * */
     public static String generate() {
         return generate(16, true, true, true, true , false);
     }
@@ -90,6 +93,69 @@ public class Generator {
             if (AMBIGUOUS.indexOf(c) == -1) sb.append(c);
         }
         return sb.toString();
+    }
+
+    /**
+     * Password Strength check (Using a honest password checker, no check-match against entire dictionary or leaked password like zxcvbn), Maybe used in later versions but not for current
+     * */
+
+
+    // check for any pattern and penalize
+    private static double patternPenalty(String password) {
+        char[] chars = password.toCharArray();
+        double penalty = 0;
+
+        // Check for repeated letters and penalize
+        int repetition = 1;
+        for (int i = 1; i < chars.length; i++) {
+            if (chars[i] == chars[i - 1]) {
+                repetition++;
+                if (repetition >= 3) penalty += 4;
+            } else {
+                repetition = 1;
+            }
+        }
+
+        // Check for sequence like 'abcd' and '4321'
+        int seq = 1;
+        for (int i = 1; i < chars.length; i++) {
+            boolean ascending = chars[i] == chars[i - 1] + 1;
+            boolean descending = chars[i] == chars[i - 1] - 1;
+            if (ascending || descending) {
+                seq++;
+                if (seq >= 3) penalty += 4;
+            } else {
+                seq = 1;
+            }
+        }
+
+        // for common keyboard pattern, massively penalize for those
+        String lower = password.toLowerCase();
+        String[] patterns = {"qwerty", "asdf", "zxcv", "uiop", "ghjkl", "1234", "09876"};
+        for (String pattern : patterns) {
+            if (lower.contains(pattern)) penalty += 10;
+        }
+
+        return penalty;
+    }
+
+    private static double checkPoolSize(String password) {
+        boolean upper = false, lower = false, digits = false, symbols = false;
+
+        for (char c : password.toCharArray()) {
+            if (Character.isUpperCase(c)) upper = true;
+            else if (Character.isLowerCase(c)) lower = true;
+            else if (Character.isDigit(c)) digits = true;
+            else symbols = true;
+        }
+
+        int poolSize = 0;
+        if (upper) poolSize += UPPER.length();
+        if (lower) poolSize += LOWER.length();
+        if (digits) poolSize += DIGITS.length();
+        if (symbols) poolSize += SYMBOL.length();
+
+        return Math.max(poolSize, 1);
     }
 
     /**
