@@ -313,6 +313,13 @@ public class Panel extends JFrame {
         JLabel passL = new JLabel("PASSWORD");
         JPasswordField password = new PasswordField(ON_PRIMARY, FIELD, FIELDTEXT);
         RoundedButton generate = new RoundedButton("", BUTTON_TEXT, BUTTON, ON_PRIMARY);
+        StrengthMeter meter = new StrengthMeter();
+
+        password.getDocument().addDocumentListener(new DocumentListener() {
+            public void insertUpdate(DocumentEvent e)  { meter.update(new String(password.getPassword())); }
+            public void removeUpdate(DocumentEvent e)  { meter.update(new String(password.getPassword())); }
+            public void changedUpdate(DocumentEvent e) { meter.update(new String(password.getPassword())); }
+        });
 
         gbc.gridx = 0; gbc.gridy = 1; gbc.weightx = 0;
         passL.setFont(Utils.spaceGrotesk.deriveFont(14f));
@@ -326,6 +333,9 @@ public class Panel extends JFrame {
         generate.setIcon(new ImageIcon(icon("dark/key.png", 18, 18)));
         form.add(generate, gbc);
 
+        gbc.gridx = 1; gbc.gridy = 2; gbc.weightx = 1;
+        form.add(meter);
+
         generate.addActionListener(e -> {
             password.setText(Generator.generate());
         });
@@ -336,12 +346,12 @@ public class Panel extends JFrame {
         JLabel tagsLabel = new JLabel("Tags");
         JTextField tagsField = new TextFieldUI("", FIELD, FIELDTEXT);
 
-        gbc.gridx = 0; gbc.gridy = 2; gbc.weightx = 0;
+        gbc.gridx = 0; gbc.gridy = 3; gbc.weightx = 0;
         tagsLabel.setFont(Utils.spaceGrotesk.deriveFont(14f));
         tagsLabel.setForeground(TEXT);
         form.add(tagsLabel, gbc);
 
-        gbc.gridx = 1; gbc.gridy = 2; gbc.weightx = 1;
+        gbc.gridx = 1; gbc.gridy = 3; gbc.weightx = 1;
         form.add(tagsField, gbc);
 
         dialog.add(form, BorderLayout.CENTER);
@@ -474,7 +484,7 @@ public class Panel extends JFrame {
 
         // Tag
         JLabel tagsLabel = new JLabel("Tags");
-        JTextField tagsField = new TextFieldUI(entry.tag().toString(), FIELD, FIELDTEXT);
+        JTextField tagsField = new TextFieldUI("", FIELD, FIELDTEXT);
 
         gbc.gridx = 0; gbc.gridy = 2; gbc.weightx = 0;
         tagsLabel.setFont(Utils.spaceGrotesk.deriveFont(14f));
@@ -482,6 +492,7 @@ public class Panel extends JFrame {
         form.add(tagsLabel, gbc);
 
         gbc.gridx = 1; gbc.gridy = 2; gbc.weightx = 1;
+        tagsField.setText(entry.tag().get(0));
         form.add(tagsField, gbc);
 
         dialog.add(form, BorderLayout.CENTER);
