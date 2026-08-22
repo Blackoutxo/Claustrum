@@ -98,7 +98,24 @@ public class Generator {
     /**
      * Password Strength check (Using a honest password checker, no check-match against entire dictionary or leaked password like zxcvbn), Maybe used in later versions but not for current
      * */
+    public static double estimateEntropy(String password) {
+        if (password == null || password.isEmpty()) return 0;
 
+        int poolSize = checkPoolSize(password);
+        double rawBits = password.length() * (Math.log(poolSize) / Math.log(2));
+
+        double penalty = patternPenalty(password);
+        return Math.max(0, rawBits - penalty);
+    }
+
+    // Strength Label
+    public static String strengthLabel(double bits) {
+        if (bits < 28) return "Very Weak";
+        if (bits < 36) return "Weak";
+        if (bits < 60) return "Reasonable";
+        if (bits < 128) return "Strong";
+        return "Very Strong";
+    }
 
     // check for any pattern and penalize
     private static double patternPenalty(String password) {
@@ -139,7 +156,7 @@ public class Generator {
         return penalty;
     }
 
-    private static double checkPoolSize(String password) {
+    private static int checkPoolSize(String password) {
         boolean upper = false, lower = false, digits = false, symbols = false;
 
         for (char c : password.toCharArray()) {
@@ -156,19 +173,5 @@ public class Generator {
         if (symbols) poolSize += SYMBOL.length();
 
         return Math.max(poolSize, 1);
-    }
-
-    /**
-     * A rudimentary password entropy measurement
-     * */
-    public static double estimateEntropy(String password, boolean hasUpper, boolean hasLower,
-                                         boolean hasDigits, boolean hasSymbols) {
-        int poolSize = 0;
-        if (hasUpper) poolSize += UPPER.length();
-        if (hasLower) poolSize += LOWER.length();
-        if (hasDigits) poolSize += DIGITS.length();
-        if (hasSymbols) poolSize += SYMBOL.length();
-
-        return password.length() * (Math.log(poolSize) / Math.log(2));
     }
 }
