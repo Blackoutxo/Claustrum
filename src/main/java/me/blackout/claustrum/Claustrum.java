@@ -1,7 +1,7 @@
 package me.blackout.claustrum;
 
 import me.blackout.claustrum.ui.Panel;
-import me.blackout.claustrum.ui.elements.PasswordField;
+import me.blackout.claustrum.ui.elements.OptionPane;
 import me.blackout.claustrum.ui.panels.SettingsPanel;
 import me.blackout.claustrum.utils.Utils;
 import me.blackout.claustrum.utils.file.FileManager;
@@ -20,16 +20,10 @@ public class Claustrum {
     private static Panel panel;
     private final FileManager file = new FileManager();
 
-    private final Color TEXT = new Color(56, 30, 114);
-    private final Color FIELD = new Color(202, 196, 208);
-
     public void run() throws IOException, GeneralSecurityException, FontFormatException {
 
         // Register font
         Utils.registerFont();
-
-        // Password field
-        JPasswordField passwordField = new PasswordField(TEXT, FIELD, TEXT);
 
         // Create file
         file.create();
@@ -40,14 +34,7 @@ public class Claustrum {
         // Input Box
         String message = file.read(FileManager.KEY_FILE).isEmpty() ? "Set master key" : "Enter master key";
 
-        int result = JOptionPane.showConfirmDialog(
-                null, passwordField, message,
-                JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE
-        );
-
-        if (result != JOptionPane.OK_OPTION) System.exit(0); // Exit on empty
-
-        input = new String(passwordField.getPassword());
+        input = OptionPane.showPassInput(null, message, "");
 
         // Generate salt once
         if (file.read(FileManager.SALT_FILE).isEmpty()) {
