@@ -4,11 +4,13 @@ import me.blackout.claustrum.Claustrum;
 import me.blackout.claustrum.ui.Panel;
 import me.blackout.claustrum.ui.elements.*;
 import me.blackout.claustrum.utils.Utils;
+import me.blackout.claustrum.utils.file.FileManager;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.io.IOException;
+import java.security.GeneralSecurityException;
 import java.util.Optional;
 import java.util.function.Consumer;
 
@@ -20,6 +22,8 @@ public class SettingsPanel extends JPanel {
     public boolean backupClean = false;
     public static boolean darkTheme = true;
     private static String input = "";
+
+    private FileManager file = new FileManager();
 
     public final boolean duress = false;
     public int clipboardCT = 0;
@@ -78,13 +82,19 @@ public class SettingsPanel extends JPanel {
                 () -> {
                    input = OptionPane.showPassInput(null, "Enter master key", "");
 
+                   // Check current masterkey entry
                    if (!input.equals(Claustrum.masterKey)) {
                        System.exit(0);
                        return;
                    }
 
-                   Claustrum.masterKey = input;
-                }
+                   // Open new dialog to set masterkey
+                   Claustrum.masterKey = OptionPane.showPassInput(null, "Set new master key", "");
+                   OptionPane.showMessage(null, "Password Changed", "Your old master key has now been changed");
+
+                   save();
+                   Utils.saveConfig();
+               }
         ));
 
         settings.setOpaque(false);
@@ -304,5 +314,11 @@ public class SettingsPanel extends JPanel {
             String path = chooser.getSelectedFile().getAbsolutePath();
             text.setText(path);
         }
+    }
+
+    // Save for new encryption without all the catch block hassle
+    private void save() {
+        try {   file.saveEntries();
+        } catch (IOException | GeneralSecurityException ignored) {}
     }
 }
