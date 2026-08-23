@@ -228,6 +228,9 @@ public class FileManager {
         Files.copy(configSource, Path.of(backupPath, configSource.getFileName().toString()), StandardCopyOption.REPLACE_EXISTING);
 
         Optional<Utils.Config> option = Utils.findTitleConfig("Last Backup");
+
+        if (option.isEmpty()) Utils.config.add(new Utils.Config("Last Backup", LocalDate.now().toString()));
+
         if (option.isPresent()) {
             Utils.config.remove(option.get());
             Utils.config.add(new Utils.Config("Last Backup", LocalDate.now().toString()));
