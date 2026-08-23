@@ -32,6 +32,39 @@ public class OptionPane {
     }
 
     /**
+     * Confirm pane with 2 choice buttons
+     * */
+    public static boolean showConfirm(Component parent, String title, String message) {
+        JDialog dialog = buildBaseDialog(parent, title);
+        boolean[] result = {false};
+
+        JPanel contents = buildPanel();
+        contents.add(bodyLabel(message));
+
+        RoundedButton confirm = new RoundedButton("Confirm", Panel.BUTTON_TEXT, Panel.BUTTON, Panel.ON_PRIMARY);
+        confirm.addActionListener(e -> {
+            result[0] = true;
+            dialog.dispose();
+        });
+
+        RoundedButton cancel = new RoundedButton("Cancel", Panel.BUTTON_TEXT, Panel.BUTTON, Panel.ON_PRIMARY);
+        cancel.addActionListener(e -> dialog.dispose());
+
+        JPanel buttonBar = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 0));
+        buttonBar.setBackground(Panel.PANEL_BG);
+        buttonBar.add(confirm);
+        buttonBar.add(cancel);
+
+        assemble(dialog, contents, buttonBar);
+        dialog.getRootPane().setDefaultButton(confirm);
+        dialog.setVisible(true);
+
+        return result[0];
+    }
+
+
+
+    /**
      * Builds & Assemblies
      * */
     private static JLabel bodyLabel(String text) {
@@ -45,8 +78,6 @@ public class OptionPane {
     private static JDialog buildBaseDialog(Component parent, String title) {
         Window owner = SwingUtilities.getWindowAncestor(parent);
         JDialog dialog = new JDialog(owner instanceof Frame ? (Frame) owner : null, title, true);
-        dialog.getRootPane().setBorder(new EmptyBorder(10, 10, 0, 0));
-        dialog.setBackground(Panel.PANEL_BG);
         dialog.setUndecorated(true);
         dialog.setResizable(false);
         return dialog;
@@ -56,20 +87,21 @@ public class OptionPane {
         JPanel panel = new JPanel();
         panel.setOpaque(false);
         panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
-        panel.setBorder(new EmptyBorder(0, 0, 0, 0));
+        panel.setBorder(new EmptyBorder(4, 0, 16, 0));
         return panel;
     }
 
     private static void assemble(JDialog dialog, JPanel panel, JPanel buttonBar) {
         RoundedPanel card = new RoundedPanel(20);
         card.setOpaque(false);
+        card.setBackground(Panel.PANEL_BG);
         card.setLayout(new BorderLayout());
-        card.setBorder(new EmptyBorder(0, 0, 0, 0));
+        card.setBorder(new EmptyBorder(24, 24, 20, 24));
 
         // Header of the pane
         JLabel header = new JLabel(dialog.getTitle());
         header.setFont(Utils.spaceGrotesk.deriveFont(Font.BOLD, 20f));
-        header.setBorder(new EmptyBorder(0, 0, 0, 0));
+        header.setBorder(new EmptyBorder(0, 0, 16, 0));
         header.setForeground(Panel.TEXT);
 
         card.add(header, BorderLayout.NORTH);
@@ -78,7 +110,7 @@ public class OptionPane {
 
         JPanel wrapper = new JPanel(new BorderLayout());
         wrapper.setBackground(Panel.PANEL_BG);
-        wrapper.setBorder(new EmptyBorder(0, 0, 0, 0));
+        wrapper.setBorder(new EmptyBorder(2, 2, 2, 2));
         wrapper.add(card, BorderLayout.CENTER);
 
         dialog.setContentPane(wrapper);
