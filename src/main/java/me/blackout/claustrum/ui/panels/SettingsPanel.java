@@ -47,19 +47,35 @@ public class SettingsPanel extends JPanel {
         // Settings list
         JPanel settings = new JPanel();
         settings.setLayout(new BoxLayout(settings, BoxLayout.Y_AXIS));
-        settings.add(radioSettingItem("Theme", // Theme selector
+
+        // Theme selector
+        settings.add(radioSettingItem("Theme",
                 new String[]{"Light", "Dark"},
                 selected -> {
                     darkTheme = selected.equals("Dark");
                     Utils.switchTheme(darkTheme);
         }));
-        settings.add(pathFieldSetting("File Path Location", KpathField, () -> browse(KpathField))); // File Path location
-        settings.add(fieldSetting("Clipboard clear time", String.valueOf(clipboardCT), clipboardCT)); // Clip board clear time
+
+        // File Path location
+        settings.add(pathFieldSetting("File Path Location", KpathField, () -> browse(KpathField)));
+
+        // Clip board clear time
+        settings.add(fieldSetting("Clipboard clear time", String.valueOf(clipboardCT), clipboardCT));
         /**TODO: POSSIBLE ADDITION OF DURESS MODE BUT SEEMS TO GO IN VAIN*/
-        settings.add(radioSettingItem("Auto Backup", // AUTO BACK UP
+
+        // AUTO BACK UP
+        settings.add(radioSettingItem("Auto Backup",
                 new String[]{"Off", "On unlock", "Daily"},
                 selected -> {}));
-        settings.add(pathFieldSetting("Backup Location", bpathfield, () -> browse(bpathfield))); // BACKUP LOCATION
+
+        // BACKUP LOCATION
+        settings.add(pathFieldSetting("Backup Location", bpathfield, () -> browse(bpathfield)));
+
+        // Change master key
+        settings.add(buttonSettingItem("Master Key", "Change",
+                () -> {}
+        ));
+
         settings.setOpaque(false);
 
         // Impl variables
@@ -226,6 +242,44 @@ public class SettingsPanel extends JPanel {
         outer.add(item, BorderLayout.CENTER);
         outer.setAlignmentX(Component.LEFT_ALIGNMENT);
         outer.setMaximumSize(new Dimension(Integer.MAX_VALUE, outer.getPreferredSize().height));
+        return outer;
+    }
+
+    private JPanel buttonSettingItem(String title, String buttonTitle, Runnable onClick) {
+        RoundedButton button = new RoundedButton(buttonTitle, Panel.BUTTON_TEXT, Panel.BUTTON, Panel.ON_PRIMARY);
+
+        // Panel
+        RoundedPanel item = new RoundedPanel(0);
+        item.setLayout(new BorderLayout(0, 8));
+        item.setBackground(Panel.PANEL_BG);
+        item.setBorder(new EmptyBorder(14, 16, 14, 16));
+
+        // Set title
+        JLabel label = new JLabel(title);
+        label.setFont(Utils.spaceGrotesk.deriveFont(15f));
+        label.setBorder(new EmptyBorder(0, 0, 0,10));
+        label.setForeground(Panel.TEXT);
+        item.add(label, BorderLayout.WEST);
+
+        // Add button to the row
+        JPanel row = new JPanel(new BorderLayout(8, 0));
+        row.setOpaque(false);
+       // row.setSize(new Dimension(20, getHeight()));
+        row.add(button, BorderLayout.CENTER);
+        item.add(row, BorderLayout.CENTER);
+
+        // Run the runnable ere
+        button.addActionListener(e -> {
+            onClick.run();
+        });
+
+        JPanel outer = new JPanel(new BorderLayout());
+        outer.setOpaque(false);
+        outer.setBorder(new EmptyBorder(0, 0, 10, 0));
+        outer.add(item, BorderLayout.CENTER);
+        outer.setAlignmentX(Component.LEFT_ALIGNMENT);
+        outer.setMaximumSize(new Dimension(outer.getPreferredSize().width, outer.getPreferredSize().height));
+
         return outer;
     }
 
