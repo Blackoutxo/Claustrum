@@ -1,9 +1,11 @@
 package me.blackout.claustrum.ui.panels;
 
+import me.blackout.claustrum.Claustrum;
 import me.blackout.claustrum.ui.Panel;
 import me.blackout.claustrum.ui.elements.RoundedPanel;
 import me.blackout.claustrum.ui.elements.ScrollBar;
 import me.blackout.claustrum.utils.Utils;
+import me.blackout.claustrum.utils.generator.Generator;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -25,6 +27,8 @@ public class EvaluationPanel extends JPanel {
 
     public void init() {
         checkReused();
+        evaluateMasterKey();
+
         removeAll();
 
         // Header
@@ -61,7 +65,7 @@ public class EvaluationPanel extends JPanel {
         add(Box.createVerticalStrut(10));
 
         // List card
-        if (reused.size() > 2) {
+        if (Utils.weakPass.size() > 1) {
             RoundedPanel listPanel = new RoundedPanel(10);
             listPanel.setLayout(new BoxLayout(listPanel, BoxLayout.Y_AXIS));
             listPanel.setBorder(new EmptyBorder(5, 10, 5, 10));
@@ -104,20 +108,14 @@ public class EvaluationPanel extends JPanel {
     }
 
     public void checkReused() {
-        for (Utils.Entry entry : Utils.allEntries) {
-            for (Utils.Entry entry1 : Utils.allEntries) {
-                if (entry.password().equals(entry1.password()) && !entry.title().equals(entry1.title()))
-                    if (!reused.contains(entry)) reused.add(new Utils.Entry(entry.title(), entry.password()));
-            }
-        }
-
         // Set text
-        if (Utils.allEntries.isEmpty()) warningTxt = "No pass key entries so far.";
-        else if (reused.size() > 2) warningTxt = "Critical! " + reused.size() + " entries have re-used the same passwords!";
-        else warningTxt = "Fine";
+        if (Utils.weakPass.size() > 10) warningTxt = "Warning! more than 10 password are below than reasonable threshold";
+        if (Utils.weakPass.size() > 1) warningTxt = "Some password are less than reasonable threshold, be wary!";
+        else warningTxt = "All passwords secure!";
     }
 
     private void evaluateMasterKey() {
-
+        double bits = Generator.estimateEntropy(Claustrum.masterKey);
+        if (bits < 90) warningTxt = "MASTER KEY IS EXTREMELY WEAK, CHANGE IT IMMEDIATELY!";
     }
 }
