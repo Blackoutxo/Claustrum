@@ -55,6 +55,8 @@ public class Utils {
     }
 
     public static void estimateEntries() {
+        if (!weakPass.isEmpty()) weakPass.clear(); // Clear every call to not fill up with multiple copies
+
         for (Entry entry : allEntries) {
             double bits = Generator.estimateEntropy(entry.password());
             if (bits < 60) weakPass.add(entry);
