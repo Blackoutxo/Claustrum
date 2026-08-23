@@ -109,11 +109,15 @@ public class CardRenderer extends JPanel {
 
         String t = currentFilter.trim().toLowerCase();
         for (Utils.Entry entry : allEntries) {
-            boolean matchesFilter = t.isEmpty() || entry.title().toLowerCase().contains(t);
-            boolean favourite = !favouritesOnly || Utils.favourites.contains(entry.title());
-            boolean matchesTag = tagFilter.equals("All") || entry.tag().contains(tagFilter);
+            boolean titleMatch = entry.title().toLowerCase().contains(t);
+            boolean tagMatch = entry.tag().stream()
+                    .anyMatch(tag -> tag.toLowerCase().contains(t));
 
-            if (matchesFilter && favourite && matchesTag) listContainer.add(buildCard(entry));
+            boolean matchesFilter = t.isEmpty() || titleMatch || tagMatch;
+            boolean favourite = !favouritesOnly || Utils.favourites.contains(entry.title());
+            boolean matchesTagFilter = tagFilter.equals("All") || entry.tag().contains(tagFilter);
+
+            if (matchesFilter && favourite && matchesTagFilter) listContainer.add(buildCard(entry));
         }
 
         listContainer.revalidate();
