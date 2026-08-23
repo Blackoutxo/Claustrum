@@ -5,6 +5,7 @@ import me.blackout.claustrum.Main;
 import me.blackout.claustrum.ui.Panel;
 import me.blackout.claustrum.ui.panels.SettingsPanel;
 import me.blackout.claustrum.utils.file.FileManager;
+import me.blackout.claustrum.utils.generator.Generator;
 
 import javax.crypto.*;
 import javax.crypto.spec.PBEKeySpec;
@@ -29,7 +30,7 @@ public class Utils {
     public static List<Entry> allEntries = new ArrayList<>();
     public static List<String> favourites = new ArrayList<>();
     public static List<Config> config = new ArrayList<>();
-    public static List<String> passkeys = new ArrayList<>();
+    public static List<Entry> weakPass = new ArrayList<>();
 
     private final SettingsPanel settings = new SettingsPanel();
     private final int timeoutMillis = settings.clipboardCT * 60 * 1000;
@@ -51,6 +52,13 @@ public class Utils {
     public static void switchTheme(boolean darkTheme) {
         if (darkTheme) Panel.applyDarkTheme(); else Panel.applyLightTheme();
         Claustrum.build();
+    }
+
+    public static void estimateEntries() {
+        for (Entry entry : allEntries) {
+            double bits = Generator.estimateEntropy(entry.password());
+            if (bits < 60) weakPass.add(entry);
+        }
     }
 
     // Register font
