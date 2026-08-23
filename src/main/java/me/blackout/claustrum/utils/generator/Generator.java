@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Generator {
-    private static SecureRandom SECURE_RANDOM = new SecureRandom();
+    private static final SecureRandom SECURE_RANDOM = new SecureRandom();
 
     private static final String UPPER = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
     private static final String LOWER = "abcdefghijklmnopqrstuvwxyz";
@@ -113,7 +113,7 @@ public class Generator {
         if (bits < 28) return "Very Weak";
         if (bits < 36) return "Weak";
         if (bits < 60) return "Reasonable";
-        if (bits < 128) return "Strong";
+        if (bits < 90) return "Strong";
         return "Very Strong";
     }
 
