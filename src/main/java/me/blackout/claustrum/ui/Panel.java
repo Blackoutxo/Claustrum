@@ -79,7 +79,7 @@ public class Panel extends JFrame {
 
         getContentPane().setBackground(PANEL_BG);
 
-        panelContainer.add(mainPanel(), "home");
+        panelContainer.add(mainPanel(), "dashboard");
         panelContainer.add(favouritePanel, "favourite");
         panelContainer.add(evalPanel, "evaluation");
         panelContainer.add(settingsPanel, "settings");
@@ -87,7 +87,7 @@ public class Panel extends JFrame {
         add(sideBar(), BorderLayout.WEST);
         add(panelContainer, BorderLayout.CENTER);
 
-        cardLayout.show(panelContainer, "home");
+        cardLayout.show(panelContainer, "dashboard");
     }
 
     // ---------------------------------------------------------------
@@ -169,12 +169,12 @@ public class Panel extends JFrame {
         logoLabel.setFont(Utils.spaceGrotesk.deriveFont(Font.BOLD, 30f));
 
         // Home
-        JLabel home = navItem("Home", "home.png", SettingsPanel.darkTheme);
+        JLabel home = navItem("Dashboard", "home.png", SettingsPanel.darkTheme);
         home.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
                 cardRenderer.refresh("", false, "All");
-                cardLayout.show(panelContainer, "home");
+                cardLayout.show(panelContainer, "dashboard");
             }
         });
 
@@ -194,6 +194,7 @@ public class Panel extends JFrame {
             @Override
             public void mouseClicked(MouseEvent e) {
                 evalPanel.init();
+                Utils.estimateEntries();
                 cardLayout.show(panelContainer, "evaluation");
             }
         });
@@ -386,13 +387,11 @@ public class Panel extends JFrame {
 
             // Check if title is re-used
             if (option.isPresent()) {
-                int choice = JOptionPane.showConfirmDialog(
-                        dialog, "Entry named " + strTitle + " is already in use, do you want to overwrite it?",
-                        "Duplicate Entry", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE
-                );
+                boolean confirm = OptionPane.showConfirm(this, "Duplicate Entry",
+                        "Entry named " + strTitle + " is already in use, do you want to overwrite it?");
 
                 // Check choice made
-                if (choice != JOptionPane.OK_OPTION) return;
+                if (!confirm) return;
 
                 // Remove former entry
                 allEntries.remove(option.get());
@@ -414,6 +413,8 @@ public class Panel extends JFrame {
             } catch (IOException | GeneralSecurityException ex) {
                 throw new RuntimeException(ex);
             }
+
+            Utils.estimateEntries();
         });
 
         buttonBar.add(cancel);
@@ -484,7 +485,7 @@ public class Panel extends JFrame {
 
         // Tag
         JLabel tagsLabel = new JLabel("Tags");
-        JTextField tagsField = new TextFieldUI("", FIELD, FIELDTEXT);
+        JTextField tagsField = new TextFieldUI(String.join(", ", entry.tag()), FIELD, FIELDTEXT);
 
         gbc.gridx = 0; gbc.gridy = 2; gbc.weightx = 0;
         tagsLabel.setFont(Utils.spaceGrotesk.deriveFont(14f));
@@ -492,7 +493,6 @@ public class Panel extends JFrame {
         form.add(tagsLabel, gbc);
 
         gbc.gridx = 1; gbc.gridy = 2; gbc.weightx = 1;
-        tagsField.setText(entry.tag().get(0));
         form.add(tagsField, gbc);
 
         dialog.add(form, BorderLayout.CENTER);
@@ -502,7 +502,7 @@ public class Panel extends JFrame {
         buttonBar.setBackground(PANEL_BG);
         buttonBar.setBorder(new EmptyBorder(0, 0, 16, 0));
 
-        // Cancel button
+        // Delete button
         Button delete = new Button("DELETE", ON_PRIMARY);
 
         delete.addActionListener(e -> {
@@ -547,11 +547,10 @@ public class Panel extends JFrame {
     // Delete selected
     private void deleteEntry(Utils.Entry entry) throws GeneralSecurityException, IOException {
         // Confirm dialog panel
-        int confirm = JOptionPane.showConfirmDialog(this,
-                "Delete \"" + entry.title() + "\"?", "Confirm delete",
-                JOptionPane.YES_NO_OPTION);
+        boolean confirm = OptionPane.showConfirm(this,
+                "Confirm Delete", "Delete \"" + entry.title() + "\"?");
 
-        if (confirm == JOptionPane.YES_OPTION) {
+        if (confirm) {
             allEntries.remove(entry);
             file.saveEntries();
         }
