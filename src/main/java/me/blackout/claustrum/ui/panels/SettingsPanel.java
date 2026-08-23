@@ -1,5 +1,6 @@
 package me.blackout.claustrum.ui.panels;
 
+import me.blackout.claustrum.Claustrum;
 import me.blackout.claustrum.ui.Panel;
 import me.blackout.claustrum.ui.elements.*;
 import me.blackout.claustrum.utils.Utils;
@@ -18,6 +19,7 @@ public class SettingsPanel extends JPanel {
     public int autoBackUp = 0;
     public boolean backupClean = false;
     public static boolean darkTheme = true;
+    private static String input = "";
 
     public final boolean duress = false;
     public int clipboardCT = 0;
@@ -73,7 +75,16 @@ public class SettingsPanel extends JPanel {
 
         // Change master key
         settings.add(buttonSettingItem("Master Key", "Change",
-                () -> {}
+                () -> {
+                   input = OptionPane.showPassInput(null, "Enter master key", "");
+
+                   if (!input.equals(Claustrum.masterKey)) {
+                       System.exit(0);
+                       return;
+                   }
+
+                   Claustrum.masterKey = input;
+                }
         ));
 
         settings.setOpaque(false);
