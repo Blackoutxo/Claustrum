@@ -6,6 +6,7 @@ import me.blackout.claustrum.utils.Utils;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
+import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 
 public class OptionPane {
@@ -20,6 +21,7 @@ public class OptionPane {
         JPanel contents = buildPanel();
         contents.add(bodyLabel(message));
 
+        // Button bar and buttons
         JPanel buttonBar = new JPanel(new FlowLayout(FlowLayout.RIGHT, 8, 0));
         buttonBar.setOpaque(false);
         RoundedButton ok = new RoundedButton("OK", Panel.BUTTON_TEXT, Panel.BUTTON, Panel.ON_PRIMARY);
@@ -41,6 +43,10 @@ public class OptionPane {
         JPanel contents = buildPanel();
         contents.add(bodyLabel(message));
 
+        // Button bar & Buttons
+        JPanel buttonBar = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 0));
+        buttonBar.setBackground(Panel.PANEL_BG);
+
         RoundedButton confirm = new RoundedButton("Confirm", Panel.BUTTON_TEXT, Panel.BUTTON, Panel.ON_PRIMARY);
         confirm.addActionListener(e -> {
             result[0] = true;
@@ -50,11 +56,11 @@ public class OptionPane {
         RoundedButton cancel = new RoundedButton("Cancel", Panel.BUTTON_TEXT, Panel.BUTTON, Panel.ON_PRIMARY);
         cancel.addActionListener(e -> dialog.dispose());
 
-        JPanel buttonBar = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 0));
-        buttonBar.setBackground(Panel.PANEL_BG);
+        // Add buttons
         buttonBar.add(confirm);
         buttonBar.add(cancel);
 
+        // Finishing
         assemble(dialog, contents, buttonBar);
         dialog.getRootPane().setDefaultButton(confirm);
         dialog.setVisible(true);
@@ -63,6 +69,99 @@ public class OptionPane {
     }
 
 
+    /**
+     *
+     * */
+    public static String showInput(Component parent, String title, String message, String placeholder) {
+        JDialog dialog = buildBaseDialog(parent, title);
+        String[] result = {""};
+
+        JPanel contents = buildPanel();
+        contents.add(bodyLabel(message));
+
+        TextFieldUI textField = new TextFieldUI(placeholder, Panel.FIELD, Panel.FIELDTEXT);
+        textField.setPreferredSize(new Dimension(Integer.MAX_VALUE, 38));
+        textField.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+        contents.add(Box.createVerticalStrut(10));
+        contents.add(textField);
+
+        JPanel buttonBar = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 0));
+        buttonBar.setBackground(Panel.PANEL_BG);
+
+        RoundedButton confirm = new RoundedButton("Ok", Panel.BUTTON_TEXT, Panel.BUTTON, Panel.ON_PRIMARY);
+        Runnable confirmAction = () -> {
+          result[0] = textField.getText();
+          dialog.dispose();
+        };
+        confirm.addActionListener(e -> confirmAction.run());
+
+        textField.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyPressed (KeyEvent e){
+                if (e.getKeyCode() == KeyEvent.VK_ENTER) confirmAction.run();
+            }
+        });
+
+        RoundedButton cancel = new RoundedButton("Cancel", Panel.BUTTON_TEXT, Panel.BUTTON, Panel.ON_PRIMARY);
+        cancel.addActionListener(e -> dialog.dispose());
+
+        buttonBar.add(confirm);
+        buttonBar.add(cancel);
+
+        assemble(dialog, contents, buttonBar);
+        dialog.getRootPane().setDefaultButton(confirm);
+        SwingUtilities.invokeLater(textField::requestFocusInWindow);
+        dialog.setVisible(true);
+
+        return result[0];
+    }
+
+    public static String showPassInput(Component parent, String title, String message) {
+        JDialog dialog = buildBaseDialog(parent, title);
+        String[] result = {""};
+
+        JPanel contents = buildPanel();
+        contents.add(bodyLabel(message));
+
+        PasswordField textField = new PasswordField(Panel.FIELDTEXT, Panel.FIELD, Panel.FIELDTEXT);
+        textField.setPreferredSize(new Dimension(Integer.MAX_VALUE, 38));
+        textField.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+        contents.add(Box.createVerticalStrut(10));
+        contents.add(textField);
+
+        JPanel buttonBar = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 0));
+        buttonBar.setBackground(Panel.PANEL_BG);
+
+        RoundedButton confirm = new RoundedButton("Ok", Panel.BUTTON_TEXT, Panel.BUTTON, Panel.ON_PRIMARY);
+        Runnable confirmAction = () -> {
+            result[0] = new String(textField.getPassword());
+            System.out.println(result[0]);
+            dialog.dispose();
+        };
+        confirm.addActionListener(e -> confirmAction.run());
+
+        textField.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyPressed (KeyEvent e){
+                if (e.getKeyCode() == KeyEvent.VK_ENTER) confirmAction.run();
+            }
+        });
+
+        RoundedButton cancel = new RoundedButton("Cancel", Panel.BUTTON_TEXT, Panel.BUTTON, Panel.ON_PRIMARY);
+        cancel.addActionListener(e -> dialog.dispose());
+
+        buttonBar.add(confirm);
+        buttonBar.add(cancel);
+
+        assemble(dialog, contents, buttonBar);
+        dialog.getRootPane().setDefaultButton(confirm);
+        SwingUtilities.invokeLater(textField::requestFocusInWindow);
+        dialog.setVisible(true);
+
+        return result[0];
+    }
 
     /**
      * Builds & Assemblies
