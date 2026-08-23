@@ -334,7 +334,7 @@ public class Panel extends JFrame {
         form.add(generate, gbc);
 
         gbc.gridx = 1; gbc.gridy = 2; gbc.weightx = 1;
-        form.add(meter);
+        form.add(meter, gbc);
 
         generate.addActionListener(e -> {
             password.setText(Generator.generate());
