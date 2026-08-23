@@ -137,7 +137,6 @@ public class OptionPane {
         RoundedButton confirm = new RoundedButton("Ok", Panel.BUTTON_TEXT, Panel.BUTTON, Panel.ON_PRIMARY);
         Runnable confirmAction = () -> {
             result[0] = new String(textField.getPassword());
-            System.out.println(result[0]);
             dialog.dispose();
         };
         confirm.addActionListener(e -> confirmAction.run());
@@ -175,8 +174,13 @@ public class OptionPane {
     }
 
     private static JDialog buildBaseDialog(Component parent, String title) {
-        Window owner = SwingUtilities.getWindowAncestor(parent);
-        JDialog dialog = new JDialog(owner instanceof Frame ? (Frame) owner : null, title, true);
+        Frame owner = null;
+        if (parent != null) {
+            Window ancestor = SwingUtilities.getWindowAncestor(parent);
+            if (ancestor instanceof Frame) owner = (Frame) ancestor;
+        }
+
+        JDialog dialog = new JDialog(owner, title, true);
         dialog.setUndecorated(true);
         dialog.setResizable(false);
         return dialog;
