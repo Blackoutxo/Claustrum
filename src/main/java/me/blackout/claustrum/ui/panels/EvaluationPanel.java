@@ -116,4 +116,8 @@ public class EvaluationPanel extends JPanel {
         else if (reused.size() > 2) warningTxt = "Critical! " + reused.size() + " entries have re-used the same passwords!";
         else warningTxt = "Fine";
     }
+
+    private void evaluateMasterKey() {
+
+    }
 }
