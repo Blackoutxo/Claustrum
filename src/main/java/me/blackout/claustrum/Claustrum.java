@@ -74,7 +74,8 @@ public class Claustrum {
 
         // Backup Daily
         if (settings.autoBackUp == 2) {
-            if (!Utils.getConfigValue("Last Backup", LocalDate.now().toString()).equals(LocalDate.now().toString()))
+            if (!Utils.getConfigValue("Last Backup", LocalDate.now().toString()).equals(LocalDate.now().toString())
+                || Utils.getConfigValue("Last Backup", "").isEmpty())
                 file.backup();
         }
 
