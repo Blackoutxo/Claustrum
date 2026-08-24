@@ -5,6 +5,7 @@ import me.blackout.claustrum.ui.elements.OptionPane;
 import me.blackout.claustrum.ui.panels.SettingsPanel;
 import me.blackout.claustrum.utils.Utils;
 import me.blackout.claustrum.utils.file.FileManager;
+import me.blackout.claustrum.utils.generator.Generator;
 
 import javax.swing.*;
 import java.awt.*;
@@ -31,10 +32,13 @@ public class Claustrum {
         // Load config
         Utils.loadConfig();
 
+        // Check and load theme
+        loadTheme();
+
         // Input Box
         String message = file.read(FileManager.KEY_FILE).isEmpty() ? "Set master key" : "Enter master key";
 
-        input = OptionPane.showPassInput(null, message, "");
+        input = OptionPane.showMaskedInput(null, message, "");
 
         // Generate salt once
         if (file.read(FileManager.SALT_FILE).isEmpty()) {
@@ -86,10 +90,24 @@ public class Claustrum {
         // Set Icon for application
         try { Utils.setIcon(panel);  } catch (IOException ignored) {}
 
+        // Check for masterkey
+        checkMasterkey();
+
         // Assemble components and display window
         panel.pack();
         panel.setLocationRelativeTo(null);
         panel.setResizable(true);
         panel.setVisible(true);
+    }
+
+    public static void checkMasterkey() {
+        double bits = Generator.estimateEntropy(masterKey);
+        if (bits > 90) return;
+        OptionPane.showMessage(null, "WARNING", "Your masterkey is extremely weak below the strong threshold, Change it immediately!");
+    }
+
+    public static void loadTheme() {
+        if (Utils.getConfigValue("Theme", "Dark").equals("Dark")) Panel.applyDarkTheme();
+        else Panel.applyLightTheme();
     }
 }
