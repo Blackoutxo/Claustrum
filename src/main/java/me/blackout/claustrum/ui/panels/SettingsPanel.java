@@ -20,7 +20,6 @@ public class SettingsPanel extends JPanel {
 
     public int autoBackUp = 0;
     public boolean backupClean = false;
-    public static boolean darkTheme = true;
     private static String input = "";
 
     private FileManager file = new FileManager();
@@ -29,7 +28,7 @@ public class SettingsPanel extends JPanel {
     public int clipboardCT = 0;
 
     public void loadState() {
-        darkTheme = Utils.getConfigValue("Theme", "Dark").equals("Dark");
+        Utils.darkTheme = Utils.getConfigValue("Theme", "Dark").equals("Dark");
         autoBackUp = Utils.getConfigValue("Auto Backup", "Off").equals("Off") ? 0
                 : Utils.getConfigValue("Auto Backup", "Off").equals("Daily") ? 2 : 1;
         backupClean = Utils.getConfigValue("Backup Cleanup", "Off").equals("On");
@@ -58,8 +57,8 @@ public class SettingsPanel extends JPanel {
         settings.add(radioSettingItem("Theme",
                 new String[]{"Light", "Dark"},
                 selected -> {
-                    darkTheme = selected.equals("Dark");
-                    Utils.switchTheme(darkTheme);
+                    Utils.darkTheme = selected.equals("Dark");
+                    Utils.switchTheme(Utils.darkTheme);
         }));
 
         // File Path location
@@ -80,7 +79,7 @@ public class SettingsPanel extends JPanel {
         // Change master key
         settings.add(buttonSettingItem("Master Key", "Change",
                 () -> {
-                   input = OptionPane.showPassInput(null, "Enter master key", "");
+                   input = OptionPane.showMaskedInput(null, "Enter master key", "");
 
                    // Check current masterkey entry
                    if (!input.equals(Claustrum.masterKey)) {
@@ -89,7 +88,7 @@ public class SettingsPanel extends JPanel {
                    }
 
                    // Open new dialog to set masterkey
-                   Claustrum.masterKey = OptionPane.showPassInput(null, "Set new master key", "");
+                   Claustrum.masterKey = OptionPane.showMaskedInput(null, "Set new master key", "");
                    OptionPane.showMessage(null, "Password Changed", "Your old master key has now been changed");
 
                    save();
