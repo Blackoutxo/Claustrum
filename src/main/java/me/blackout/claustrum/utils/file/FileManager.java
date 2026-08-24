@@ -254,7 +254,7 @@ public class FileManager {
     /**
      * Encryption & Decryption
      */
-    private String encryptField(String token, Key key) throws GeneralSecurityException {
+    public String encryptField(String token, Key key) throws GeneralSecurityException {
         byte[] iv = new byte[12];
         secRandom.nextBytes(iv);
 
@@ -271,7 +271,7 @@ public class FileManager {
         return Base64.getEncoder().encodeToString(combined);
     }
 
-    private String decryptField(String token, Key key) throws GeneralSecurityException {
+    public String decryptField(String token, Key key) throws GeneralSecurityException {
         byte[] combined = Base64.getDecoder().decode(token);
 
         byte[] iv = new byte[12];
