@@ -49,11 +49,8 @@ public class FilesPanel extends JPanel {
 
         center.add(header);
 
-        // Button
-        RoundedButton encryptFile = new RoundedButton("Encrypt File", Panel.BUTTON_TEXT, Panel.BUTTON, Panel.ON_PRIMARY);
-        encryptFile.addActionListener(e -> {
-            browse(selectFile);
-        });
+        // Read file
+        read();
 
         // text area
         JTextArea textArea = new JTextArea();
@@ -66,6 +63,34 @@ public class FilesPanel extends JPanel {
         textArea.setLineWrap(true);
         textArea.setWrapStyleWord(true);
         textArea.setSize(new Dimension(Integer.MAX_VALUE, Integer.MAX_VALUE));
+
+        // Button
+        StringBuilder line = new StringBuilder();
+        RoundedButton encryptFile = new RoundedButton("Encrypt File", Panel.BUTTON_TEXT, Panel.BUTTON, Panel.ON_PRIMARY);
+        encryptFile.addActionListener(e -> {
+            fileData.clear();
+            browse(selectFile);
+            read();
+
+            // Clear any previous relics
+            textArea.setText("");
+
+            // Loop file data
+            for (String string : fileData) {
+                line.append(string);
+                textArea.setText(line.toString());
+            }
+
+            // Write data
+            if (!selectFile.getText().isEmpty()) writeData();
+        });
+
+        RoundedButton openFile = new RoundedButton("Open File", Panel.BUTTON_TEXT, Panel.BUTTON, Panel.ON_PRIMARY);
+        openFile.addActionListener(e -> {
+            browse(selectFile);
+            if (selectFile.getText().isEmpty()) return;
+            read();
+        });
 
         // Scrollpane
         JScrollPane scroll = new JScrollPane(textArea);
@@ -84,9 +109,12 @@ public class FilesPanel extends JPanel {
         // Bottom bar
         JPanel bottomBar = new JPanel(new FlowLayout(FlowLayout.RIGHT, 0, 0));
         bottomBar.setOpaque(false);
-        bottomBar.setBorder(new EmptyBorder(16, 0, 0, 0)); // space above the button
+        bottomBar.setBorder(new EmptyBorder(16, 0, 0, 0));
+        bottomBar.add(encryptFile);
+        bottomBar.add(Box.createHorizontalStrut(10));
+        bottomBar.add(openFile);
 
-        //bottomBar.add(addButton);
+        center.add(bottomBar, BorderLayout.SOUTH);
 
         add(center);
     }
@@ -103,32 +131,37 @@ public class FilesPanel extends JPanel {
         }
     }
 
-    private void decrypt() {
-        for (String string : fileData) {
+    private void open() throws GeneralSecurityException, IOException {
+        if (selectFile.getText().isEmpty()) return;
+        String masterkey = OptionPane.showMaskedInput(null, "Enter master key", "A masterkey you use to secure this file separate from app's");
+        Key key = Utils.generateKey(masterkey);
 
+        for (String string : fileData) {
+            String data = file.decryptField(string, key);
+            readableData.add(data);
         }
     }
 
-    private void readEncrypt() {
+    private void read() {
+        if (selectFile.getText().isEmpty()) return;
         fileData.add(file.read(selectFile.getText()));
     }
 
     private void writeData() {
+        if (selectFile.getText().isEmpty()) return;
         String masterkey = OptionPane.showMaskedInput(null, "Enter master key", "A masterkey you use to secure this file separate from app's");
         StringBuilder line = new StringBuilder();
 
         Key key = null;
-        try {
-            key = Utils.generateKey(masterkey);
-        } catch (GeneralSecurityException | IOException ignored) {}
+        try {   key = Utils.generateKey(masterkey);   } catch (GeneralSecurityException | IOException ignored) {}
 
         for (String string : fileData) {
             String data = null;
-            try { data = file.encryptField(string, key);   } catch (GeneralSecurityException ignored) {}
+            try {   data = file.encryptField(string, key);    } catch (GeneralSecurityException ignored) {}
             line.append(data);
         }
 
-        try (FileWriter writer = new FileWriter(selectFile.getText(), true)) {
+        try (FileWriter writer = new FileWriter(selectFile.getText(), false)) {
             writer.write(line.toString());
             writer.write(System.lineSeparator());
         } catch (IOException ignored) {}
