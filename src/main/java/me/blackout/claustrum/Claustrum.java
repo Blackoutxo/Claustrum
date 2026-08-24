@@ -84,7 +84,7 @@ public class Claustrum {
         if (panel != null) panel.dispose();
 
         // Init panel
-        try { panel = new Panel(); } catch (IOException | FontFormatException ignored) {}
+        try { panel = new Panel(); } catch (IOException | FontFormatException | GeneralSecurityException ignored) {}
         panel.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         // Set Icon for application

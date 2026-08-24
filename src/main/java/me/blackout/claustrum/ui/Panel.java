@@ -70,7 +70,7 @@ public class Panel extends JFrame {
     private final SettingsPanel settingsPanel = new SettingsPanel();
 
     // Panel
-    public Panel() throws IOException, FontFormatException {
+    public Panel() throws IOException, FontFormatException, GeneralSecurityException {
         super("Claustrum");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(980, 600);
