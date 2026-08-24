@@ -25,7 +25,6 @@ public class CardRenderer extends JPanel {
     private boolean favouritesOnly = false;
     private boolean dark;
 
-    private final SettingsPanel settingsPanel = new SettingsPanel();
     private final FileManager file = new FileManager();
     public final JPanel listContainer = new JPanel();
     public static Utils.Entry selectedEntry = null;
@@ -37,7 +36,7 @@ public class CardRenderer extends JPanel {
         this.hover = hover;
         this.textColor = textColor;
         this.border = border;
-        this.dark = settingsPanel.darkTheme;
+        this.dark = Utils.darkTheme;
 
         this.consumer = consumer;
 
