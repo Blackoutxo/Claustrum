@@ -70,12 +70,17 @@ public class FileManager {
      * Read file
      */
     public String read(String file) {
+        StringBuilder lines = new StringBuilder();
         try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
-            String line = reader.readLine();
-            if (line != null) return line;
+            String line;
+            while ((line = reader.readLine()) != null) {
+                if (line.isBlank()) continue;
+
+                lines.append(line).append("\n");
+            }
         } catch (IOException ignored) {}
 
-        return "";
+        return lines.toString();
     }
 
     /**
