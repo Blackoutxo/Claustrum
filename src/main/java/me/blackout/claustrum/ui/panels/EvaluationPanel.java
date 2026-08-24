@@ -110,7 +110,7 @@ public class EvaluationPanel extends JPanel {
     public void checkReused() {
         // Set text
         if (Utils.weakPass.size() > 10) warningTxt = "Warning! more than 10 password are below than reasonable threshold";
-        if (Utils.weakPass.size() > 1) warningTxt = "Some password are less than reasonable threshold, be wary!";
+        if (Utils.weakPass.size() > 1 && Utils.weakPass.size() < 10) warningTxt = "Some password are less than reasonable threshold, be wary!";
         else warningTxt = "All passwords secure!";
     }
 
