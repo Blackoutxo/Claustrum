@@ -117,7 +117,7 @@ public class OptionPane {
         return result[0];
     }
 
-    public static String showPassInput(Component parent, String title, String message) {
+    public static String showMaskedInput(Component parent, String title, String message) {
         JDialog dialog = buildBaseDialog(parent, title);
         String[] result = {""};
 
