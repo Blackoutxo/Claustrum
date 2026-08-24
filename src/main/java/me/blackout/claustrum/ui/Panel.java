@@ -4,6 +4,7 @@ import me.blackout.claustrum.Main;
 import me.blackout.claustrum.ui.elements.*;
 import me.blackout.claustrum.ui.panels.EvaluationPanel;
 import me.blackout.claustrum.ui.panels.FavouritePanel;
+import me.blackout.claustrum.ui.panels.FilesPanel;
 import me.blackout.claustrum.ui.panels.SettingsPanel;
 import me.blackout.claustrum.utils.file.FileManager;
 import me.blackout.claustrum.utils.Utils;
@@ -63,9 +64,10 @@ public class Panel extends JFrame {
     private final CardRenderer favouriteCardRenderer = new CardRenderer(TEXT, PANEL_BG, CARD_BG, CARD_HOVER, CARD_BORDER, entry -> openDetailDialog());
 
     // Panels
-    private final SettingsPanel settingsPanel = new SettingsPanel();
     private final FavouritePanel favouritePanel = new FavouritePanel(favouriteCardRenderer);
     private final EvaluationPanel evalPanel = new EvaluationPanel();
+    private final FilesPanel filesPanel = new FilesPanel();
+    private final SettingsPanel settingsPanel = new SettingsPanel();
 
     // Panel
     public Panel() throws IOException, FontFormatException {
@@ -82,6 +84,7 @@ public class Panel extends JFrame {
         panelContainer.add(mainPanel(), "dashboard");
         panelContainer.add(favouritePanel, "favourite");
         panelContainer.add(evalPanel, "evaluation");
+        panelContainer.add(filesPanel, "files");
         panelContainer.add(settingsPanel, "settings");
 
         add(sideBar(), BorderLayout.WEST);
@@ -169,7 +172,7 @@ public class Panel extends JFrame {
         logoLabel.setFont(Utils.spaceGrotesk.deriveFont(Font.BOLD, 30f));
 
         // Home
-        JLabel home = navItem("Dashboard", "home.png", SettingsPanel.darkTheme);
+        JLabel home = navItem("Dashboard", "dashboard.png", Utils.darkTheme);
         home.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
@@ -179,7 +182,7 @@ public class Panel extends JFrame {
         });
 
         // Favourite
-        JLabel favourite = navItem("Favourite", "favourite.png", SettingsPanel.darkTheme);
+        JLabel favourite = navItem("Favourite", "favourite.png", Utils.darkTheme);
         favourite.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
@@ -189,7 +192,7 @@ public class Panel extends JFrame {
         });
 
         // Evaluation
-        JLabel eval = navItem("Evaluation", "eval_board.png", SettingsPanel.darkTheme);
+        JLabel eval = navItem("Evaluation", "eval_board.png", Utils.darkTheme);
         eval.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
@@ -199,11 +202,21 @@ public class Panel extends JFrame {
             }
         });
 
+        // Files
+        JLabel files = navItem("Files", "files.png", Utils.darkTheme);
+        files.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                cardLayout.show(panelContainer, "files");
+            }
+        });
+
         // Settings
-        JLabel settings = navItem("Settings", "settings.png", SettingsPanel.darkTheme);
+        JLabel settings = navItem("Settings", "settings.png", Utils.darkTheme);
         settings.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
+                settingsPanel.loadState();
                 cardLayout.show(panelContainer, "settings");
             }
         });
@@ -212,6 +225,7 @@ public class Panel extends JFrame {
         sideBar.add(home);
         sideBar.add(favourite);
         sideBar.add(eval);
+        sideBar.add(files);
         sideBar.add(settings);
         sideBar.add(Box.createVerticalStrut(24));
         return sideBar;
