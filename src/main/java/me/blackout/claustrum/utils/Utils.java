@@ -34,6 +34,7 @@ public class Utils {
 
     private final SettingsPanel settings = new SettingsPanel();
     private final int timeoutMillis = settings.clipboardCT * 60 * 1000;
+    public static boolean darkTheme;
 
     public static Font spaceGrotesk;
 
