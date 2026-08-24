@@ -1,6 +1,7 @@
 package me.blackout.claustrum.utils.file;
 
 import me.blackout.claustrum.Claustrum;
+import me.blackout.claustrum.ui.panels.SettingsPanel;
 import me.blackout.claustrum.utils.Utils;
 
 import javax.crypto.*;
@@ -55,6 +56,9 @@ public class FileManager {
         // Guard against double-prepending if nullPath() ever runs twice
         if (!KEY_FILE.contains(File.separator)) KEY_FILE = KEY_PATH + File.separator + KEY_FILE;
         if (!SALT_FILE.contains(File.separator)) SALT_FILE = SALT_PATH + File.separator + SALT_FILE;
+
+        // Append default pathway to settings for displaying
+        SettingsPanel.KpathField.setText(KEY_PATH);
     }
 
     public void createDirectory() {
@@ -219,14 +223,17 @@ public class FileManager {
         File backupDir = new File(backupPath);
         if (!backupDir.exists()) backupDir.mkdirs();
 
+        // pathway
         Path keySource = Path.of(KEY_FILE);
         Path saltSource = Path.of(SALT_FILE);
         Path configSource = Path.of(CLAUSTRUM_CONFIG);
 
+        // Copy files to their backup path
         Files.copy(keySource, Path.of(backupPath, keySource.getFileName().toString()), StandardCopyOption.REPLACE_EXISTING);
         Files.copy(saltSource, Path.of(backupPath, saltSource.getFileName().toString()), StandardCopyOption.REPLACE_EXISTING);
         Files.copy(configSource, Path.of(backupPath, configSource.getFileName().toString()), StandardCopyOption.REPLACE_EXISTING);
 
+        // Add or Check for existing last backup date
         Optional<Utils.Config> option = Utils.findTitleConfig("Last Backup");
 
         if (option.isEmpty()) Utils.config.add(new Utils.Config("Last Backup", LocalDate.now().toString()));
