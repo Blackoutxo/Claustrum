@@ -273,11 +273,11 @@ public class FileManager {
         System.arraycopy(iv, 0, combined, 0, iv.length);
         System.arraycopy(cipherBytes, 0, combined, iv.length, cipherBytes.length);
         
-        return Base64.getEncoder().encodeToString(combined);
+        return Base64.getMimeEncoder().encodeToString(combined);
     }
 
     public String decryptField(String token, Key key) throws GeneralSecurityException {
-        byte[] combined = Base64.getDecoder().decode(token);
+        byte[] combined = Base64.getMimeDecoder().decode(token);
 
         byte[] iv = new byte[12];
         byte[] cipherBytes = new byte[combined.length - 12];
