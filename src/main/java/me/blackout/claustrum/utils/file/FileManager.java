@@ -125,13 +125,13 @@ public class FileManager {
                 if (line.isBlank()) continue;
 
                 String[] parts = line.split("\\|", 2);
-                if (parts.length == 2 || parts.length == 3) continue; // Skip malformed parts
+                if (parts.length >= 2) continue; // Skip malformed parts
 
                 // Decrypt line
                 String decrypted = decryptField(line, key).trim();
 
                 if (decrypted.startsWith("Favourite:[")) {
-                    inFavourites = !decrypted.contains("]");
+                    inFavourites = !decrypted.startsWith("]");
                     continue;
                 }
 
