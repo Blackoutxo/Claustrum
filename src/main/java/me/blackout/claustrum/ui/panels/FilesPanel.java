@@ -18,14 +18,10 @@ import java.util.List;
 public class FilesPanel extends JPanel {
 
     // Instances
-    private FileManager file = new FileManager();
+    private final FileManager file = new FileManager();
 
     // Pathways
-    private JTextField selectFile = new JTextField();
-
-    // Data vars
-    private List<String> fileData = new ArrayList<>();
-    private List<String> readableData = new ArrayList<>();
+    private final JTextField selectFile = new JTextField();
 
     public FilesPanel() {
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
@@ -44,10 +40,9 @@ public class FilesPanel extends JPanel {
         JLabel header = new JLabel("Files");
         header.setFont(Utils.spaceGrotesk.deriveFont(Font.BOLD, 32f));
         header.setForeground(Panel.TEXT);
-        header.setAlignmentX(CENTER_ALIGNMENT);
-        header.setBorder(new EmptyBorder(16, 0, 16, 0));
+        header.setBorder(new EmptyBorder(5, 0, 5, 0));
 
-        center.add(header);
+        center.add(header, BorderLayout.NORTH);
 
         // text area
         JTextArea textArea = new JTextArea();
@@ -64,7 +59,7 @@ public class FilesPanel extends JPanel {
         // Buttons
         RoundedButton encryptFile = new RoundedButton("Encrypt File", Panel.BUTTON_TEXT, Panel.BUTTON, Panel.ON_PRIMARY);
         encryptFile.addActionListener(e -> {
-            textArea.setText("");
+            textArea.setText(""); // Clear text area & file pathway every action
             selectFile.setText("");
             browse(selectFile);
 
