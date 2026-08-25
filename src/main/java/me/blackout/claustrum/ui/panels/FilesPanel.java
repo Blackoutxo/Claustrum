@@ -49,9 +49,6 @@ public class FilesPanel extends JPanel {
 
         center.add(header);
 
-        // Read file
-        read();
-
         // text area
         JTextArea textArea = new JTextArea();
         textArea.setBackground(Panel.PANEL_BG.brighter());
@@ -64,32 +61,35 @@ public class FilesPanel extends JPanel {
         textArea.setWrapStyleWord(true);
         textArea.setSize(new Dimension(Integer.MAX_VALUE, Integer.MAX_VALUE));
 
-        // Button
-        StringBuilder line = new StringBuilder();
+        // Buttons
         RoundedButton encryptFile = new RoundedButton("Encrypt File", Panel.BUTTON_TEXT, Panel.BUTTON, Panel.ON_PRIMARY);
         encryptFile.addActionListener(e -> {
-            fileData.clear();
-            browse(selectFile);
-            read();
-
-            // Clear any previous relics
             textArea.setText("");
+            selectFile.setText("");
+            browse(selectFile);
 
             // Loop file data
-            for (String string : fileData) {
-                line.append(string);
-                textArea.setText(line.toString());
-            }
+            textArea.setText(file.read(selectFile.getText()));
 
             // Write data
-            if (!selectFile.getText().isEmpty()) writeData();
+            if (!selectFile.getText().isEmpty()) writeData(file.read(selectFile.getText()));
         });
 
         RoundedButton openFile = new RoundedButton("Open File", Panel.BUTTON_TEXT, Panel.BUTTON, Panel.ON_PRIMARY);
         openFile.addActionListener(e -> {
+            textArea.setText("");
+            selectFile.setText("");
             browse(selectFile);
+
             if (selectFile.getText().isEmpty()) return;
-            read();
+
+            textArea.setText(open());
+        });
+
+        RoundedButton save = new RoundedButton("Save", Panel.BUTTON_TEXT, Panel.BUTTON, Panel.ON_PRIMARY);
+        save.addActionListener(e-> {
+
+            writeData(textArea.getText());
         });
 
         // Scrollpane
@@ -107,11 +107,12 @@ public class FilesPanel extends JPanel {
         center.add(scroll);
 
         // Bottom bar
-        JPanel bottomBar = new JPanel(new FlowLayout(FlowLayout.RIGHT, 0, 0));
+        JPanel bottomBar = new JPanel(new FlowLayout(FlowLayout.CENTER, 50, 0));
         bottomBar.setOpaque(false);
         bottomBar.setBorder(new EmptyBorder(16, 0, 0, 0));
+
         bottomBar.add(encryptFile);
-        bottomBar.add(Box.createHorizontalStrut(10));
+        bottomBar.add(save);
         bottomBar.add(openFile);
 
         center.add(bottomBar, BorderLayout.SOUTH);
@@ -120,6 +121,7 @@ public class FilesPanel extends JPanel {
     }
 
     private void browse(JTextField text) {
+        text.setText("");
         JFileChooser chooser = new JFileChooser();
         chooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
         chooser.setDialogTitle("Choose backup location");
@@ -131,39 +133,40 @@ public class FilesPanel extends JPanel {
         }
     }
 
-    private void open() throws GeneralSecurityException, IOException {
-        if (selectFile.getText().isEmpty()) return;
-        String masterkey = OptionPane.showMaskedInput(null, "Enter master key", "A masterkey you use to secure this file separate from app's");
-        Key key = Utils.generateKey(masterkey);
+    // File handling
+    private String open() {
+        if (selectFile.getText().isEmpty()) return "";
+        String masterkey = OptionPane.showMaskedInput(null, "Enter master key", "Masterkey for this file");
 
-        for (String string : fileData) {
-            String data = file.decryptField(string, key);
-            readableData.add(data);
-        }
+        // Return on empty
+        if (masterkey.isEmpty()) return "";
+
+        // Generate a key
+        Key key = null;
+        try {   key = Utils.generateKey(masterkey);       } catch (GeneralSecurityException | IOException ignored) {}
+        String data = null;
+        try {   data = file.decryptField(file.read(selectFile.getText()), key);    } catch (GeneralSecurityException ignored) {}
+
+        return data;
     }
 
-    private void read() {
+    private void writeData(String value) {
         if (selectFile.getText().isEmpty()) return;
-        fileData.add(file.read(selectFile.getText()));
-    }
+        String masterkey = OptionPane.showMaskedInput(null, "Enter master key", "Masterkey for this file");
 
-    private void writeData() {
-        if (selectFile.getText().isEmpty()) return;
-        String masterkey = OptionPane.showMaskedInput(null, "Enter master key", "A masterkey you use to secure this file separate from app's");
-        StringBuilder line = new StringBuilder();
+        if (masterkey.isEmpty()) return;
 
+        // Generate key
         Key key = null;
         try {   key = Utils.generateKey(masterkey);   } catch (GeneralSecurityException | IOException ignored) {}
 
-        for (String string : fileData) {
-            String data = null;
-            try {   data = file.encryptField(string, key);    } catch (GeneralSecurityException ignored) {}
-            line.append(data);
-        }
+        // Encrypt data
+        String data = null;
+        try {   data = file.encryptField(value, key);    } catch (GeneralSecurityException ignored) {}
 
+        // write
         try (FileWriter writer = new FileWriter(selectFile.getText(), false)) {
-            writer.write(line.toString());
-            writer.write(System.lineSeparator());
+            writer.write(data);
         } catch (IOException ignored) {}
     }
 }
