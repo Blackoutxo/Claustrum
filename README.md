@@ -18,5 +18,29 @@ Here's how you can clone the project
 git --clone https://github.com/blackoutxo/Claustrum
 ```
 
-For running the application, one must have JDK 17 installed. Once installed, run it from CMD with 'java -jar Claustrum.jar'. The opened application asks to set for password which the application doesn't ask when the user actually starts storing passkeys
+For running the application, one must have JDK 17 installed. Once installed, run it from CMD with 'java -jar Claustrum.jar'. The opened application asks to set for password which only SETS when user starts storing data into the application.
 
+## Project Structure
+
+Claustrum/
+|
+|────src/main/
+|        |──── java/me/blackout/claustrum                # Contains UI, Utils folder, Main class to run the app
+|        |                      |──── ui/                # Main UI elements lie here with main panel
+|        |                      |     |──── elements/    # Has Custom rendering of Swing components 
+|        |                      |     |──── panels/      # Uses elements and contains various panels
+|        |                      |
+|        |                      |──── utils/             # Config, entries, favourites loading
+|        |                            |──── file/        # Handles all I/O read/write/append encryption & decryption
+|        |                            |──── generator/   # Handles password strength estimation & generation
+|        |
+|        |──── resources/                                # Contains all visual resources
+|              |──── fonts/SpaceGrotesk                  # Bundle of space grotesk font
+|              |──── icons                               # Contains logos, dark/light themed icons
+|
+|──── build.gradle
+|──── gradlew
+|──── gradlew.bat
+|──── README.md
+|──── LICENSE
+|──── settings.gradle
