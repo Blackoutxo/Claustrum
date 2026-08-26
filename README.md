@@ -22,6 +22,7 @@ For running the application, one must have JDK 17 installed. Once installed, run
 
 ## Project Structure
 
+```
 Claustrum/
 |
 |────src/main/
@@ -44,3 +45,4 @@ Claustrum/
 |──── README.md
 |──── LICENSE
 |──── settings.gradle
+```
