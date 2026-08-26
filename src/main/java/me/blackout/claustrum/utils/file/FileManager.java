@@ -130,16 +130,12 @@ public class FileManager {
                 // Decrypt line
                 String decrypted = decryptField(line, key).trim();
 
-                if (decrypted.startsWith("Favourite:[")) {
-                    inFavourites = !decrypted.startsWith("]");
+                if (decrypted.startsWith("Favourite:")) {
+                    inFavourites = true;
                     continue;
                 }
 
                 if (inFavourites) {
-                    if (decrypted.startsWith("]")) {
-                        inFavourites = false;
-                        continue;
-                    }
 
                     // Add favourite
                     Utils.favourites.add(decrypted);
@@ -209,13 +205,12 @@ public class FileManager {
         }
 
         // Favourite entries
-        line.append(encryptField("Favourite:[", key));
+        line.append(encryptField("Favourite:", key));
         line.append(System.lineSeparator());
         for (String favourite : Utils.favourites) {
             String encryptedTitle = encryptField(favourite, key);
             line.append(encryptedTitle).append(System.lineSeparator());
         }
-        line.append(encryptField("]", key));
 
         try (FileWriter writer = new FileWriter(KEY_FILE, false)) {
             writer.write(line.toString());
