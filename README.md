@@ -3,7 +3,7 @@
 A privacy focused robust password manager. I created Claustrum to securely and safely store my password even in plain text. I do not trust online password managers as it is online and NOT SECURE however much one can guarantee that it is safe & such. As the growing rate of loss of privacy, Wouldn't it better to have a cross-platform password-manager?
 
 ## Overview
-Claustrum stores your saved credentials (title + password pairs) in a single encrypted file on disk, unlocked with one master password. Nothing is stored in plaintext except salt on disk, all passwords are encrypted at rest using AES-GCM, with the encryption key derived from your master password via PBKDF2.
+Claustrum stores your saved credentials (title + password pairs) in a single encrypted file on disk, unlocked with one master password. Nothing is stored in plaintext except salt on disk, all passwords are encrypted at rest using AES-GCM, with the encryption key derived from your master password via PBKDF2. Here's a guide [Claustrum]().
 
 ## Features
 - **Master-password gated:** All the stored passkey and credentials are unlocked by one master-password entry. (One wrong entry loudly crashes the application)
