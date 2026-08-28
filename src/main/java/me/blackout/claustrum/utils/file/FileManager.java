@@ -139,7 +139,6 @@ public class FileManager {
                 Utils.favourites.add(decrypted);
             }
         }
-        System.out.println(Utils.favourites);
     }
 
     /**
