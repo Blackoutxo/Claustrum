@@ -30,6 +30,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static me.blackout.claustrum.utils.Utils.allEntries;
+import static me.blackout.claustrum.utils.Utils.favourites;
 
 public class Panel extends JFrame {
     // ---------------------------------------------------------------
@@ -566,7 +567,10 @@ public class Panel extends JFrame {
 
         if (confirm) {
             allEntries.remove(entry);
+            favourites.remove(entry.title());
+
             file.saveEntries();
+            file.saveFavourite();
         }
     }
 
