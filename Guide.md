@@ -49,4 +49,37 @@
 - On the side-bar navigation,
 - Click on the text "Settings",
 - Settings panel opens
-- 
+- There would be a text named "Theme" with two options Light and dark
+- Choose your theme
+- Done! You have changed your theme
+
+## Changing your masterkey
+- Click on "Settings" in side-bar,
+- On the bottom-most part,
+- There's Change masterkey button,
+- Press 'Change' button,
+- Type in your Current Password,
+- Then type in your new password.
+- You have changed your password!
+
+## How to secure my readable file?
+- Click on "Files" in side-bar,
+- When first securing your file press on "Encrypt File" button,
+- Select your file to be secured,
+- After selecting your file,
+- Enter a password for THAT file or just use the same password for the application,
+- Voila! You have secured your readable file.
+
+## How to Open my secured file?
+- On the "Files" panel,
+- Click the "Open File" button,
+- Select your file to open,
+- After selecting your file, Enter the password you used to secure the file,
+- Shows file's text content (Success), Did not show anything (Fail),
+
+## How can I save new texts I have to the secured file?
+- On the "Files" panel,
+- After opening your file / Securing your file,
+- Just type in the panel where your file content is shown,
+- Press on "Save" button,
+- Voila! your new text content is saved.
