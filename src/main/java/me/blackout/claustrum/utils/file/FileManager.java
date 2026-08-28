@@ -19,13 +19,16 @@ public class FileManager {
     public SecureRandom secRandom = new SecureRandom();
     public Key key;
 
-    private static String userPath = System.getProperty("user.home") + File.separator;
-    public static String CLAUSTRUM_CONFIG = userPath + "Claustrum\\config.dat";
+    public static String userPath =  "";
+    public static String CLAUSTRUM_CONFIG = "Claustrum\\config.dat";
+
     public static String BACKUP_PATH = "";
     public static String KEY_PATH = "";
     public static String SALT_PATH = "";
-    public static String KEY_FILE = KEY_PATH + "ClaustrumKey.dat";
-    public static String SALT_FILE = SALT_PATH + "ClaustrumSalt.dat";
+
+    public static String KEY_FILE = "ClaustrumKey.dat";
+    public static String SALT_FILE = "ClaustrumSalt.dat";
+    public static String FAVOURITE_FILE = "FavouriteCLST.dat";
 
     /**
      * Create File
@@ -35,27 +38,35 @@ public class FileManager {
 
         File file = new File(KEY_FILE);
         File saltyFile = new File(SALT_FILE);
+        File favouriteFile = new File(FAVOURITE_FILE);
         File config = new File(CLAUSTRUM_CONFIG);
 
-        createDirectory();
+        createDirectory(); // Create directory
 
         // Check for existing file
-        if (file.exists() && saltyFile.exists() && config.exists()) return;
+        if (!file.exists()) file.createNewFile();
+        if (!saltyFile.exists()) saltyFile.createNewFile();
+        if (!favouriteFile.exists()) favouriteFile.createNewFile();
+        if (!config.exists()) config.createNewFile();
 
-        // Create file
-        config.createNewFile(); // Config file
-        file.createNewFile(); // Key file
-        saltyFile.createNewFile(); // Salt file
+//        // Create file
+//        file.createNewFile(); // Key file
+//        saltyFile.createNewFile(); // Salt file
+//        favouriteFile.createNewFile(); // Favourite file
+//        config.createNewFile(); // Config file
     }
 
     public static void nullPath() {
+        userPath = Utils.getConfigValue("File Path Location", System.getProperty("user.home") + File.separator);
         KEY_PATH = Utils.getConfigValue("File Path Location", userPath + "Claustrum");
         SALT_PATH = Utils.getConfigValue("File Path Location", userPath + "Claustrum");
         BACKUP_PATH = Utils.getConfigValue("Backup Location", userPath + "CLSTBackup");
+        CLAUSTRUM_CONFIG = userPath + CLAUSTRUM_CONFIG;
 
         // Guard against double-prepending if nullPath() ever runs twice
         if (!KEY_FILE.contains(File.separator)) KEY_FILE = KEY_PATH + File.separator + KEY_FILE;
         if (!SALT_FILE.contains(File.separator)) SALT_FILE = SALT_PATH + File.separator + SALT_FILE;
+        if (!FAVOURITE_FILE.contains(File.separator)) FAVOURITE_FILE = KEY_PATH + File.separator + FAVOURITE_FILE;
 
         // Append default pathway to settings for displaying
         SettingsPanel.KpathField.setText(KEY_PATH);
@@ -94,7 +105,7 @@ public class FileManager {
                 if (line.isBlank()) continue;
 
                 String[] parts = line.split("\\|");
-                if (parts.length < 2) continue; // Skip malformed parts
+                if (parts.length < 3) continue; // Skip malformed parts
 
                 // Decrypt title & password
                 String title = decryptField(parts[0], key);
@@ -118,30 +129,17 @@ public class FileManager {
 
     private void loadFavourite() throws GeneralSecurityException, IOException {
         key = Utils.generateKey(Claustrum.masterKey);
-        try (BufferedReader reader = new BufferedReader(new FileReader(KEY_FILE))) {
+        try (BufferedReader reader = new BufferedReader(new FileReader(FAVOURITE_FILE))) {
             String line;
-            boolean inFavourites = false;
+
             while ((line = reader.readLine()) != null) {
                 if (line.isBlank()) continue;
 
-                String[] parts = line.split("\\|", 2);
-                if (parts.length >= 2) continue; // Skip malformed parts
-
-                // Decrypt line
-                String decrypted = decryptField(line, key).trim();
-
-                if (decrypted.startsWith("Favourite:")) {
-                    inFavourites = true;
-                    continue;
-                }
-
-                if (inFavourites) {
-
-                    // Add favourite
-                    Utils.favourites.add(decrypted);
-                }
+                String decrypted = decryptField(line, key);
+                Utils.favourites.add(decrypted);
             }
         }
+        System.out.println(Utils.favourites);
     }
 
     /**
@@ -204,16 +202,20 @@ public class FileManager {
             line.append(title).append("|").append(password).append("|").append(tags).append(System.lineSeparator());
         }
 
-        // Favourite entries
-        line.append(encryptField("Favourite:", key));
-        line.append(System.lineSeparator());
-        for (String favourite : Utils.favourites) {
-            String encryptedTitle = encryptField(favourite, key);
-            line.append(encryptedTitle).append(System.lineSeparator());
-        }
-
         try (FileWriter writer = new FileWriter(KEY_FILE, false)) {
             writer.write(line.toString());
+        }
+    }
+
+    public void saveFavourite() throws GeneralSecurityException, IOException {
+        key = Utils.generateKey(Claustrum.masterKey);
+
+        try (FileWriter writer = new FileWriter(FAVOURITE_FILE, false)) {
+            for (String title : Utils.favourites) {
+                writer.write(encryptField(title, key));
+                writer.write(title);
+                writer.write(System.lineSeparator());
+            }
         }
     }
 
@@ -226,11 +228,13 @@ public class FileManager {
         // pathway
         Path keySource = Path.of(KEY_FILE);
         Path saltSource = Path.of(SALT_FILE);
+        Path favouriteSource = Path.of(FAVOURITE_FILE);
         Path configSource = Path.of(CLAUSTRUM_CONFIG);
 
         // Copy files to their backup path
         Files.copy(keySource, Path.of(backupPath, keySource.getFileName().toString()), StandardCopyOption.REPLACE_EXISTING);
         Files.copy(saltSource, Path.of(backupPath, saltSource.getFileName().toString()), StandardCopyOption.REPLACE_EXISTING);
+        Files.copy(favouriteSource, Path.of(backupPath, favouriteSource.getFileName().toString()), StandardCopyOption.REPLACE_EXISTING);
         Files.copy(configSource, Path.of(backupPath, configSource.getFileName().toString()), StandardCopyOption.REPLACE_EXISTING);
 
         // Add or Check for existing last backup date
