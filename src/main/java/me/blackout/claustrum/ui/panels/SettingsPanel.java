@@ -317,7 +317,6 @@ public class SettingsPanel extends JPanel {
 
     // Save for new encryption without all the catch block hassle
     private void save() {
-        try {   file.saveEntries();
-        } catch (IOException | GeneralSecurityException ignored) {}
+        try {   file.saveEntries();   } catch (IOException | GeneralSecurityException ignored) {}
     }
 }
