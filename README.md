@@ -16,6 +16,7 @@ Claustrum stores your saved credentials (title + password pairs) in a single enc
 - **Password Generation:** Custom password generator to generate strong password when adding entry.
 - **Dual theme:** Two themes, Dark and light by switching from settings.
 - **Sidebar navigation:** Navigation in sidebar for (Home/Favourite/Evaluation/Files/Settings)
+- **Periodic Clipboard clear:** Clears your clipboard periodically.
 
 ## Tech stack
 | Stack       | Tech                                                                                   |
