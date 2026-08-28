@@ -36,16 +36,6 @@ Claustrum stores your saved credentials (title + password + tags) in a single en
 **Password strength check**
 - Checks every password and gives special focus to Masterkey when it is below the entropy estimation.
 
-## Setup / Instructions
-If you want to commit and update the project and or to keep it going, fork it, star it and commit if possible.
-
-Here's how you can clone the project
-```
-git --clone https://github.com/blackoutxo/Claustrum
-```
-
-For running the application, one must have JDK 17 installed. Once installed, run it from CMD with 'java -jar Claustrum.jar'. The opened application asks to set for password which only SETS when user starts storing data into the application.
-
 ## Project Structure
 
 ```
@@ -72,3 +62,15 @@ Claustrum/
 |──── LICENSE
 |──── settings.gradle
 ```
+
+## Setup / Instructions
+If you want to commit and update the project and or to keep it going, fork it, star it and commit if possible.
+
+Here's how you can clone the project
+```
+git --clone https://github.com/blackoutxo/Claustrum
+```
+
+For running the application, one must have JDK 17 installed. Once installed, run it from CMD with 'java -jar Claustrum.jar'. The opened application asks to set for password which only SETS when user starts storing data into the application.
+
+If you are not able to help the project live on, at-least star the project so I'll be motivated to.
