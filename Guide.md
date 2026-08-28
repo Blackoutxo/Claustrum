@@ -3,15 +3,14 @@
 # Full guide from first start
 
 ## First open
-- Application opens with a interface with texts "Set your master key",
 
 <img width="351" height="178" alt="setmk" src="https://github.com/user-attachments/assets/876a396e-20dd-496c-9a1f-61b764f7ac8a" />
+<img width="954" height="545" alt="add_K" src="https://github.com/user-attachments/assets/91dfd361-e6c1-455f-b381-80b09a1bd805" />
 
+- Application opens with a interface with texts "Set your master key",
 - You type in your password to be used,
 - After entering the password, the application opens
 - Application is in "Dashboard" where a button "+ Add Key" lies
-
-<img width="954" height="545" alt="add_K" src="https://github.com/user-attachments/assets/91dfd361-e6c1-455f-b381-80b09a1bd805" />
 
 **Caution:** Application only sets your first entered password AFTER you start saving your passwords otherwise it will continuously keep asking your for settings password. 
 
