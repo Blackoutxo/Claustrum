@@ -1,7 +1,6 @@
 package me.blackout.claustrum.ui.elements;
 
 import me.blackout.claustrum.Main;
-import me.blackout.claustrum.ui.panels.SettingsPanel;
 import me.blackout.claustrum.utils.Utils;
 import me.blackout.claustrum.utils.file.FileManager;
 
@@ -144,7 +143,7 @@ public class CardRenderer extends JPanel {
                   else Utils.favourites.remove(entry.title());
 
                 loadIcon(icon, favourite);
-                try {      file.saveEntries();      } catch (IOException | GeneralSecurityException ex) {throw new RuntimeException(ex);}
+                try {  file.saveFavourite();   } catch (GeneralSecurityException | IOException ignored) {}
                 e.consume();
             }
         });
