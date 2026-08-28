@@ -87,7 +87,7 @@ public class FileManager {
             while ((line = reader.readLine()) != null) {
                 if (line.isBlank()) continue;
 
-                lines.append(line).append("\n");
+                lines.append(line).append(System.lineSeparator());
             }
         } catch (IOException ignored) {}
 
