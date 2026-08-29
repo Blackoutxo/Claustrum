@@ -58,6 +58,11 @@ public class SettingsPanel extends JPanel {
                 new String[]{"Light", "Dark"},
                 selected -> {
                     Utils.darkTheme = selected.equals("Dark");
+
+                    Utils.config.removeIf(cfg -> cfg.setting().equalsIgnoreCase("Theme"));
+                    Utils.config.add(new Utils.Config("Theme", selected));
+                    Utils.saveConfig();
+
                     Utils.switchTheme(Utils.darkTheme);
         }));
 
