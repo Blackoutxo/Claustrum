@@ -1,6 +1,7 @@
 <h1 style="text-align: center;">Claustrum Guide</h1>
 
-# Full guide from first start
+## Full guide from first start
+
 
 ## First open
 
