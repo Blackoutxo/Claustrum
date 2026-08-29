@@ -87,6 +87,7 @@ public class Utils {
 
     // Config
     public static void loadConfig() {
+        config.clear();
         try (BufferedReader reader = new BufferedReader(new FileReader(FileManager.CLAUSTRUM_CONFIG))) {
             String line;
             while ((line = reader.readLine()) != null) {
@@ -95,12 +96,8 @@ public class Utils {
                 String[] parts = line.split("\\|", 2);
                 if (parts.length != 2) continue; // Skip malformed parts
 
-                // Decrypt title & password
-                String setting = parts[0];
-                String state = parts[1];
-
                 // Add to entry
-                Utils.config.add(new Utils.Config(setting, state));
+                Utils.config.add(new Utils.Config(parts[0], parts[1]));
             }
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -164,9 +161,9 @@ public class Utils {
 
     // Record
     public record Entry(String title, String password, List<String> tag) {
-        public Entry(String title, String password) {
-            this(title, password, new ArrayList<>());
-        }
+//        public Entry(String title, String password) {
+//            this(title, password, new ArrayList<>());
+//        }
     }
 
     public record Config(String setting, String state) { }
