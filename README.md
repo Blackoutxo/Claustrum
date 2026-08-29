@@ -71,6 +71,15 @@ Here's how you can clone the project
 git --clone https://github.com/blackoutxo/Claustrum
 ```
 
-For running the application, one must have JDK 17 installed. Once installed, run it from CMD with 'java -jar Claustrum.jar'. The opened application asks to set for password which only SETS when user starts storing data into the application.
+### How to Build the project for (exe, app, jar)
+
+On your terminal type in these exact commands except for the brackets with content in it.
+```
+./gradlew build      (jar)
+./gradlew createExe  (exe)
+./gradlew createApp  (app)
+```
+
+For running the application, one must have JDK 17 installed. Once installed, run it from CMD with 'java -jar Claustrum.jar'.
 
 If you are not able to help the project live on, at-least star the project so I'll be motivated to.
