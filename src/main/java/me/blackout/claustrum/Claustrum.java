@@ -38,6 +38,7 @@ public class Claustrum {
         // Input Box
         String message = file.read(FileManager.KEY_FILE).isEmpty() ? "Set master key" : "Enter master key";
 
+        // Ask user input for masterkey
         input = OptionPane.showMaskedInput(null, message, "");
 
         // Generate salt once
