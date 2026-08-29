@@ -217,7 +217,7 @@ public class Panel extends JFrame {
         settings.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                settingsPanel.loadState();
+                //settingsPanel.loadState();
                 cardLayout.show(panelContainer, "settings");
             }
         });
