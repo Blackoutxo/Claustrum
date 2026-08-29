@@ -42,7 +42,7 @@ Claustrum stores your saved credentials (title + password + tags) in a single en
 Claustrum/
 |
 |────src/main/
-|        |──── java/me/blackout/claustrum                # Contains UI, Utils folder, Main class to run the app
+|        |──── java/me/blackout/claustrum                # Contains UI, Utils folder, Main class to run Claustrum
 |        |                      |──── ui/                # Main UI elements lie here with main panel
 |        |                      |     |──── elements/    # Has Custom rendering of Swing components 
 |        |                      |     |──── panels/      # Uses elements and contains various panels
