@@ -40,7 +40,6 @@ public class SettingsPanel extends JPanel {
         setLayout(new BorderLayout());
         setBackground(Panel.PANEL_BG);
         setBorder(new EmptyBorder(24, 24, 24, 24));
-        try { Utils.registerFont(); } catch (IOException | FontFormatException ignored) {}
 
         JLabel header = new JLabel("Settings");
         header.setHorizontalAlignment(SwingConstants.CENTER);
