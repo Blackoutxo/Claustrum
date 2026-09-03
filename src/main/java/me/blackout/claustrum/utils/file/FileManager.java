@@ -213,11 +213,12 @@ public class FileManager {
         key = Utils.generateKey(Claustrum.masterKey);
 
         for (String title : Utils.favourites) {
-            line.append(title).append(System.lineSeparator());
+            String encrypted = encryptField(title, key);
+            line.append(encrypted).append(System.lineSeparator());
         }
 
         try (FileWriter writer = new FileWriter(FAVOURITE_FILE, false)) {
-            writer.write(encryptField(line.toString(), key));
+            writer.write(line.toString());
         }
     }
 
@@ -274,11 +275,12 @@ public class FileManager {
         System.arraycopy(iv, 0, combined, 0, iv.length);
         System.arraycopy(cipherBytes, 0, combined, iv.length, cipherBytes.length);
         
-        return Base64.getMimeEncoder().encodeToString(combined);
+        return Base64.getEncoder().encodeToString(combined);
     }
 
     public String decryptField(String token, Key key) throws GeneralSecurityException {
-        byte[] combined = Base64.getMimeDecoder().decode(token);
+        String cleaned = token.replaceAll("\\s+", "");
+        byte[] combined = Base64.getDecoder().decode(cleaned);
 
         byte[] iv = new byte[12];
         byte[] cipherBytes = new byte[combined.length - 12];
