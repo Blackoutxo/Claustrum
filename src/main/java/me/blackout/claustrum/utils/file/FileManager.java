@@ -129,6 +129,8 @@ public class FileManager {
 
     private void loadFavourite() throws GeneralSecurityException, IOException {
         key = Utils.generateKey(Claustrum.masterKey);
+        Utils.favourites.clear();
+
         try (BufferedReader reader = new BufferedReader(new FileReader(FAVOURITE_FILE))) {
             String line;
 
@@ -207,14 +209,15 @@ public class FileManager {
     }
 
     public void saveFavourite() throws GeneralSecurityException, IOException {
+        StringBuilder line = new StringBuilder();
         key = Utils.generateKey(Claustrum.masterKey);
 
+        for (String title : Utils.favourites) {
+            line.append(title).append(System.lineSeparator());
+        }
+
         try (FileWriter writer = new FileWriter(FAVOURITE_FILE, false)) {
-            for (String title : Utils.favourites) {
-                writer.write(encryptField(title, key));
-                writer.write(title);
-                writer.write(System.lineSeparator());
-            }
+            writer.write(encryptField(line.toString(), key));
         }
     }
 
